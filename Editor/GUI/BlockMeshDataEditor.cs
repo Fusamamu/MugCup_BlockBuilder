@@ -68,8 +68,8 @@ namespace BlockBuilder.Editor.GUI
 
 	    public override void OnInspectorGUI()
 	    {
-		    isolatedBlockTexture   = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Scripts/BlockBuilder/Images/Icons/Isolated Block.png");
-		    topSurfaceBlockTexture = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Scripts/BlockBuilder/Images/Icons/Top Surface Block.png");
+		    isolatedBlockTexture   = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Images/Icons/Isolated Block.png");
+		    topSurfaceBlockTexture = AssetDatabase.LoadAssetAtPath<Texture>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Images/Icons/Top Surface Block.png");
 		    
 		    EditorGUI.DrawRect(new Rect(0, 0, 300, 50), Color.black);
 		    EditorGUILayout.Space(50);

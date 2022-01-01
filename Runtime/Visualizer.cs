@@ -6,8 +6,9 @@ using Color = UnityEngine.Color;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using BlockBuilder;
 
-namespace BlockBuilder
+namespace MugCup_BlockBuilder
 {
 #if UNITY_EDITOR
     public static class Visualizer

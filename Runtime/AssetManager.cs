@@ -22,7 +22,7 @@ namespace BlockBuilder
         {
             VisualizerPointerMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Resources/Materials/VisualizerPointer.mat");
             
-            DefaultHouse = AssetDatabase.LoadAssetAtPath<Block>("Assets/Resources/Prefabs/Buildings/House1x.prefab");
+            DefaultHouse    = AssetDatabase.LoadAssetAtPath<Block>("Assets/Resources/Prefabs/Buildings/House1x.prefab");
 
             AssetCollection = Resources.Load<AssetCollection>("BlockBuilder/Setting/AssetCollection");
         }

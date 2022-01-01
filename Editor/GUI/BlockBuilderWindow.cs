@@ -3,6 +3,7 @@ using UnityEngine;
 using BlockBuilder.Core;
 using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
+using MugCup_BlockBuilder;
 using MugCup_BlockBuilder.Runtime.Core;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -13,7 +14,7 @@ namespace BlockBuilder.Editor.GUI
 {
     public class BlockBuilderWindow : EditorWindow
     {
-        private static InterfaceSetting interfaceSetting;
+        private static InterfaceSetting   interfaceSetting;
         private static GridDataSettingSO  gridDataSettingSo;
 
         private static Block[] blocks;
@@ -23,8 +24,9 @@ namespace BlockBuilder.Editor.GUI
 
         private void OnEnable()
         {
-            interfaceSetting   = AssetDatabase.LoadAssetAtPath<InterfaceSetting>("Assets/Scripts/BlockBuilder/Editor Resources/Setting/InterfaceSetting.asset");
-            gridDataSettingSo  = Resources.Load<GridDataSettingSO>("BlockBuilder/Setting/GridDataSetting");
+            interfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset");
+            gridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/GridDataSetting.asset" );
+            
             SceneView.duringSceneGui += OnScene;
 
             blocks = new Block[0];

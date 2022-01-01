@@ -119,31 +119,6 @@ namespace BlockBuilder.Runtime.Core
 			var _blockToBeRemoved = GetIBlock(_nodePos);
 			Destroy(_blockToBeRemoved.gameObject);
 		}
-
-		// public void AddIBlockRef_Top(IBlock _newBlock, Vector3Int _nodePos)
-		// {
-		// 	GridUtility.AddNodeUp(_newBlock, _nodePos, gridData.GridUnitSize, ref gridUnitIBlocks);
-		// }
-		//
-		// public void AddIBlockRef_Left(IBlock _newBlock, Vector3Int _nodePos)
-		// {
-		// 	GridUtility.AddNodeLeft(_newBlock, _nodePos, gridData.GridUnitSize, ref gridUnitIBlocks);
-		// }
-		//
-		// public void AddIBlockRef_Right(IBlock _newBlock, Vector3Int _nodePos)
-		// {
-		// 	GridUtility.AddNodeLeft(_newBlock, _nodePos, gridData.GridUnitSize, ref gridUnitIBlocks);
-		// }
-		//
-		// public void AddIBlockRef_Forward(IBlock _newBlock, Vector3Int _nodePos)
-		// {
-		// 	GridUtility.AddNodeLeft(_newBlock, _nodePos, gridData.GridUnitSize, ref gridUnitIBlocks);
-		// }
-		//
-		// public void AddIBlockRef_Back(IBlock _newBlock, Vector3Int _nodePos)
-		// {
-		// 	GridUtility.AddNodeLeft(_newBlock, _nodePos, gridData.GridUnitSize, ref gridUnitIBlocks);
-		// }
 		
 		public void AddIBlockRef(IBlock _newBlock, Vector3Int _nodePos)
 		{

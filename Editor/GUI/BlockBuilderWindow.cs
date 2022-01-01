@@ -6,11 +6,12 @@ using BlockBuilder.Scriptable;
 using MugCup_BlockBuilder;
 using MugCup_BlockBuilder.Runtime.Core;
 #if UNITY_EDITOR
+using BlockBuilder.Core.Scriptable;
 using UnityEditor;
 #endif
 
 #if UNITY_EDITOR
-namespace BlockBuilder.Editor.GUI
+namespace MugCup_BlockBuilder.Editor.GUI
 {
     public class BlockBuilderWindow : EditorWindow
     {
@@ -29,7 +30,7 @@ namespace BlockBuilder.Editor.GUI
             
             SceneView.duringSceneGui += OnScene;
 
-            blocks = new Block[0];
+            blocks = Array.Empty<Block>();
         }
 
         private void OnGUI()
@@ -51,6 +52,7 @@ namespace BlockBuilder.Editor.GUI
                 case 1:
                     break;
                 case 2:
+                    DisplaySettingPanel();
                     break;
                 case 3:
                     break;;
@@ -66,6 +68,7 @@ namespace BlockBuilder.Editor.GUI
             if (interfaceSetting.MapSettingFoldout)
             {
                 EditorGUILayout.LabelField("Column", EditorStyles.boldLabel, GUILayout.Width(45), GUILayout.ExpandWidth(false));
+                
                 gridDataSettingSo.Column = EditorGUILayout.IntField(gridDataSettingSo.Column, GUILayout.ExpandWidth(true));
        
                 // SerializedObject _gridDataSO = new SerializedObject(gridDataSetting);
@@ -76,18 +79,20 @@ namespace BlockBuilder.Editor.GUI
                     GUILayout.Label("Map Data Setting");
                     
                     GUILayout.BeginVertical("GroupBox");
+                    
                     gridDataSettingSo.MapSize      = EditorGUILayout.Vector3IntField("Map Size",      gridDataSettingSo.MapSize);
                     gridDataSettingSo.GridUnitSize = EditorGUILayout.Vector3IntField("Map Unit Size", gridDataSettingSo.GridUnitSize);
                     
                     GUILayout.BeginHorizontal();
 
-                    int _newRow = gridDataSettingSo.MapSize.x;
+                    int _newRow    = gridDataSettingSo.MapSize.x;
                     int _newColumn = gridDataSettingSo.MapSize.z;
                     int _newHeight = gridDataSettingSo.MapSize.y;
                     
                     float originalValue = EditorGUIUtility.labelWidth;
+                    
                     EditorGUIUtility.labelWidth = 40;
-                    _newRow    = EditorGUILayout.IntField("Row", _newRow);
+                    _newRow    = EditorGUILayout.IntField("Row",    _newRow   );
                     _newColumn = EditorGUILayout.IntField("Column", _newColumn);
                     _newHeight = EditorGUILayout.IntField("Height", _newHeight);
                     EditorGUIUtility.labelWidth = originalValue;
@@ -141,6 +146,14 @@ namespace BlockBuilder.Editor.GUI
 
             string[] _buildingToolTabs = {"Add Block", "Subtract Block"};
             interfaceSetting.BuildToolTabSelection = GUILayout.Toolbar(interfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
+        }
+
+        private static void DisplaySettingPanel()
+        {
+            gridDataSettingSo = (GridDataSettingSO)EditorGUILayout.ObjectField("Grid Data Setting", gridDataSettingSo, typeof(GridDataSettingSO), true);
+            var _meshData     = (BlockMeshData)EditorGUILayout.ObjectField("Block Mesh Data Setting", null, typeof(BlockMeshData), true);
+
+            var _material     = (Material)EditorGUILayout.ObjectField("Default Block Material", null, typeof(Material), true);
         }
 
         private void OnScene(SceneView _sceneView)
@@ -203,6 +216,7 @@ namespace BlockBuilder.Editor.GUI
                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                         {
                             Vector3 _targetPos = new Vector3();
+                            
                             switch (GridBlockGenerator.SelectedFace)
                             {
                                 case NormalFace.PosY:
@@ -242,7 +256,7 @@ namespace BlockBuilder.Editor.GUI
             // If mouse leaves SceneView window
             if (Event.current.type == EventType.MouseLeaveWindow)
             {
-               Visualizer.ClearPointer();
+                Visualizer.ClearPointer();
             }
         }
 

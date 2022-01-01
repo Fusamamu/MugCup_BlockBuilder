@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2db0ad27d2dd446a9865443f584b8fe, type: 3}
+  m_Name: MaterialDataSetting
+  m_EditorClassIdentifier: 
+  DefaultBlockMaterial: {fileID: 2100000, guid: a62333a1f27b54c448d90201b02fc375, type: 2}
+  VisualizerPointerMaterial: {fileID: 2100000, guid: ae4088ca4ad274ab7b6953183e74e47c, type: 2}

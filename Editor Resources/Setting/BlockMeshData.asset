@@ -12,24 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61253bb4c8654435483b131cedced749, type: 3}
   m_Name: BlockMeshData
   m_EditorClassIdentifier: 
-  IsolatedBlock: {fileID: -3635022865341962096, guid: cc7eff4abf9994d4dbe1c391a2fddd11, type: 3}
-  TopSurfaceBlock: {fileID: -8636304435943586821, guid: 9be4fcb096fc240c09bd90975e78c3f0, type: 3}
-  SideW: {fileID: -2066349916942294783, guid: c2b5666655c4a4110a295aecda32aca2, type: 3}
-  SideN: {fileID: -2066349916942294783, guid: 684a05111164644b1a8e13b6cf33df07, type: 3}
-  SideE: {fileID: -2066349916942294783, guid: 7f7a13ed7724b4e0f906285ee4017efa, type: 3}
-  SideS: {fileID: -2066349916942294783, guid: 2c6d8a405f5554817947f655813aea2e, type: 3}
-  CornerNW: {fileID: -2341998442819346921, guid: 14bd510916e344a2b88f18a35568820f, type: 3}
-  CornerNE: {fileID: -2341998442819346921, guid: f06355df4e12243428036a9d5012d06b, type: 3}
-  CornerSW: {fileID: -2341998442819346921, guid: 1901d657d481241c6b3836d6b84ced17, type: 3}
-  CornerSE: {fileID: -2341998442819346921, guid: f3e131b16040f42fa8172034548b2319, type: 3}
-  Side_1_W: {fileID: -4347809119544129898, guid: d5a6ff2f823134318995b5f7f39e7a1a, type: 3}
-  Side_1_N: {fileID: -4347809119544129898, guid: a6365441a4eb344b3b3139dad2bf67d4, type: 3}
-  Side_1_S: {fileID: -4347809119544129898, guid: a968966e6b22b4eb195c688ef0e5870b, type: 3}
-  Side_1_E: {fileID: -4347809119544129898, guid: 4f2bb1ece03e44f88bcf9b8e25f2b25e, type: 3}
-  Side_4_PlusShape: {fileID: 6176384082171913370, guid: 2f38ab57d23b443888cbd4beb33f241a, type: 3}
-  IShape_WtoE: {fileID: 5724772902982048, guid: 95d38e4c4a96f4a6faa030f643e370f2, type: 3}
-  IShape_StoN: {fileID: 7093663906936196781, guid: 8804009d51c2b4929b07b6de834f0a8d, type: 3}
-  LShape_NW: {fileID: 3527251369853235123, guid: 8b950ee1596f841c8853cc1ca4cebc6e, type: 3}
-  LShape_NE: {fileID: 0}
-  LShape_SE: {fileID: 0}
-  LShape_SW: {fileID: 0}
+  IsolatedBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  TopSurfaceBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  SideW: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  SideN: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  SideE: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  SideS: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  CornerNW: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  CornerNE: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  CornerSW: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  CornerSE: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  Side_1_W: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  Side_1_N: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  Side_1_S: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  Side_1_E: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  Side_4_PlusShape: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  IShape_WtoE: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  IShape_StoN: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  LShape_NW: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  LShape_NE: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  LShape_SE: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  LShape_SW: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}

@@ -16,7 +16,7 @@ namespace BlockBuilder.Runtime.Core
 	{
 		[SerializeField] private GameObject blockDefaultPrefab;
 
-		[SerializeField] private IBlock[] gridUnitIBlocks;
+		[SerializeField] private IBlock[] gridUnitIBlocks;//=>redundant remove?
 		
 		[SerializeField] private GridDataSettingSO gridData;
 		[SerializeField] private BlockMeshData     meshData;
@@ -61,7 +61,13 @@ namespace BlockBuilder.Runtime.Core
 				Utility.CreateWorldTextPro(_posText, _targetPos, _parent.transform);
 			}
 		}
-		
+
+		private void Start()
+		{
+			gameObject.AddComponent<GridBlockSelection>();
+			gameObject.AddComponent<BlockEditor>();
+		}
+
 		public void UpdateMeshBlocks(IEnumerable<Block> _blocks)
 		{
 			foreach (Block _block in _blocks)
@@ -101,8 +107,7 @@ namespace BlockBuilder.Runtime.Core
 			RemoveIBlockRef(_nodePos);
 		}
 #endregion
-		//public bool IsOccupied(Vector3Int _blockPos) => GetIBlock(_blockPos) != null;
-
+		
 		public bool IsOccupied(Vector3Int _nodePos)
 		{
 			if (GetIBlock(_nodePos) != null) {

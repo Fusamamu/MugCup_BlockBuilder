@@ -1,18 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
+using UnityEngine;
 using BlockBuilder;
 using BlockBuilder.Core;
 using BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
-using UnityEngine;
-using MugCup_Utilities;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
-    public class BlockEditor : Singleton<BlockEditor>
+    public class BlockEditor : MonoBehaviour
     {
 #region Dependencies
         private BlockManager    blockManager;
@@ -31,6 +28,12 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private static bool enable = false;
 
         private readonly Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
+
+        private void Awake()
+        {
+            blockManager = BlockManager.Instance;
+            gridBlockSelection = FindObjectOfType<GridBlockSelection>();
+        }
 
         private void Start()
         {
@@ -51,6 +54,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             {
                 Vector3Int _hitNodePos = GetHitNodePosition();
                 NormalFace _normalFace = GetHitNormalFace();
+                
                 Block      _newBlock   = AssetManager.AssetCollection.DefualtBlock;
                 AddBlock(_newBlock, _hitNodePos, _normalFace);
             }

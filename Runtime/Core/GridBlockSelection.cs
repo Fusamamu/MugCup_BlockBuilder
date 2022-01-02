@@ -22,7 +22,7 @@ namespace BlockBuilder.Runtime.Core
 
 #region Callbacks
 		public static event Action<Vector3> OnGridHit = delegate { };
-		public static event Action OnOutOfGridBounds = delegate { };
+		public static event Action OnOutOfGridBounds  = delegate { };
 #endregion
 
 		private static bool enable = true;
@@ -65,6 +65,8 @@ namespace BlockBuilder.Runtime.Core
 		private void Awake()
 		{
 			mainCamera = Camera.main;
+
+			groundMask = LayerMask.GetMask("Block");
 		}
 		
 		private void Update()

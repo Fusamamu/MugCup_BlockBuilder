@@ -16,7 +16,7 @@ namespace BlockBuilder.Runtime.Core
         {
             int _rowUnit    = _gridUnitSize.x;
             int _columnUnit = _gridUnitSize.z;
-            
+
             for (int x = 0; x < _rowUnit; x++)
             {
                 for (int z = 0; z < _columnUnit; z++)

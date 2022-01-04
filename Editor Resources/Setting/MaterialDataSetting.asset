@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2db0ad27d2dd446a9865443f584b8fe, type: 3}
   m_Name: MaterialDataSetting
   m_EditorClassIdentifier: 
-  DefaultBlockMaterial: {fileID: 2100000, guid: a62333a1f27b54c448d90201b02fc375, type: 2}
-  VisualizerPointerMaterial: {fileID: 2100000, guid: ae4088ca4ad274ab7b6953183e74e47c, type: 2}
+  DefaultBlockMaterial: {fileID: 2100000, guid: f16cbad6aa0914986b419a2df088bffc, type: 2}
+  VisualizerPointerMaterial: {fileID: 2100000, guid: bf9e2178b0dee41028925e655932fe41, type: 2}

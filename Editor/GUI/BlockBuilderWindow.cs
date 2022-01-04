@@ -76,6 +76,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 // EditorGUILayout.PropertyField(_row);
                 
                 GUILayout.BeginVertical("HelpBox");
+                
                     GUILayout.Label("Map Data Setting");
                     
                     GUILayout.BeginVertical("GroupBox");

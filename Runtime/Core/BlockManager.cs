@@ -15,51 +15,45 @@ namespace BlockBuilder.Runtime.Core
 	public class BlockManager : Singleton<BlockManager>, IBlockManager
 	{
 		[SerializeField] private GameObject blockDefaultPrefab;
-
-		[SerializeField] private IBlock[] gridUnitIBlocks;//=>redundant remove?
-		
-		[SerializeField] private GridDataSettingSO gridData;
-		[SerializeField] private BlockMeshData     meshData;
-
-		private List<Block> resultPath = new List<Block>();
 		
 		protected override void Awake()
 		{
-			GridBlockData.CacheData(ref gridData, ref meshData);
 			GridBlockData.Initialized();
+
+			var _gridBlocks   = GridBlockData.GridUnitIBlocks;
+			var _gridUnitSize = GridBlockData.GridUnitSize;
+			var _gridLevel    = 0;
+			var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
 			
-			GridBlockGenerator.PopulateGridIBlocksByLevel<Block>
-				(GridBlockData.GridUnitIBlocks, GridBlockData.GridUnitSize, 0, blockDefaultPrefab);
+			GridBlockGenerator.PopulateGridIBlocksByLevel<Block>(_gridBlocks, _gridUnitSize, _gridLevel, _blockPrefab);
 			
-			GridBlockData.InitializeBlocksData();
-			
-			gridUnitIBlocks = GridBlockData.GridUnitIBlocks; //Why have to be between these lines??  For it to work//
+			GridBlockData.InitializeBlocksData();//-->1 Same
 			
 			GridBlockData.AvailableBlocksApplyAll(UpdateMeshBlock);
-			GridBlockData.AvailableBlocksApplyAll(_block =>
+			
+			GridBlockData.AvailableBlocksApplyAll(_block => //--2 Same
 			{
 				_block.GetSurroundingIBlocksReference();
 				_block.SetBitMask();
 			});
-			
-			// Block _blockA = GetBlock(new Vector3Int(2, 0, 2));
-			// Block _blockB = GetBlock(new Vector3Int(7, 0, 7));
-
-			// AStar<Block>.InitializeGridData(gridData.GridUnitSize, gridUnitBlocks);
-			// resultPath = AStar<Block>.FindPath(_blockA, _blockB).ToList();
 				
-			GameObject _parent = new GameObject("[-------Grid Position Text-------");
+			GameObject _textParent = new GameObject("[-------Grid Position Text-------]");
 			
-			foreach (IBlock _block in GridBlockData.GridUnitIBlocks)
+			GridBlockData.AvailableBlocksApplyAll(_block =>
 			{
-				if(_block == null) continue;
-				
 				Vector3Int _nodePos = ((INode)_block).NodePosition;
 				string _posText = _nodePos.ToString();
 				
 				Vector3 _targetPos = _block.transform.position + Vector3.up * 1.5f;
-				Utility.CreateWorldTextPro(_posText, _targetPos, _parent.transform);
-			}
+				Utility.CreateWorldTextPro(_posText, _targetPos, _textParent.transform);
+			});
+
+			var _blockParent = new GameObject("[-------------Blocks-------------]");
+			
+			GridBlockData.AvailableBlocksApplyAll(_block =>
+			{
+				_block.transform.SetParent(_blockParent.transform);
+			});
 		}
 
 		private void Start()
@@ -78,7 +72,7 @@ namespace BlockBuilder.Runtime.Core
 		{
 			Vector3Int _targetNodePos = _block.NodePosition;
 				
-			Block _blockPrefab = meshData.GetBlockPrefab(_block.BitMask);
+			Block _blockPrefab = GridBlockData.GetBlockMeshData().GetBlockPrefab(_block.BitMask);
 				
 			if(_blockPrefab == null) return;
 				
@@ -91,7 +85,7 @@ namespace BlockBuilder.Runtime.Core
 		{
 			if (IsOccupied(_nodePos)) return;
 			
-			Vector3 _targetNodeWorldPos = gridData.GetGridWorldNodePosition(_nodePos);
+			Vector3 _targetNodeWorldPos = GridBlockData.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
 			
 			var _newBlock = Instantiate(_prefab, _targetNodeWorldPos, _prefab.transform.localRotation);
 			_newBlock.Init(_targetNodeWorldPos, _nodePos);
@@ -127,12 +121,12 @@ namespace BlockBuilder.Runtime.Core
 		
 		public void AddIBlockRef(IBlock _newBlock, Vector3Int _nodePos)
 		{
-			GridUtility.AddNode(_newBlock, _nodePos, gridData.GridUnitSize, ref gridUnitIBlocks);
+			GridUtility.AddNode(_newBlock, _nodePos, GridBlockData.GetGridDataSetting().GridUnitSize, ref GridBlockData.GridUnitIBlocks);
 		}
 		
 		public void RemoveIBlockRef(Vector3Int _nodePos)
 		{
-			GridUtility.RemoveNode(_nodePos, gridData.GridUnitSize, ref gridUnitIBlocks);
+			GridUtility.RemoveNode(_nodePos, GridBlockData.GetGridDataSetting().GridUnitSize, ref GridBlockData.GridUnitIBlocks);
 		}
 
 #region Get Blocks
@@ -147,32 +141,25 @@ namespace BlockBuilder.Runtime.Core
 #region Get IBlocks
 		public IBlock GetIBlock(Vector3Int _nodePos)
 		{
-			return GridUtility.GetNode(_nodePos, gridData.GridUnitSize, gridUnitIBlocks);
+			return GridUtility.GetNode(_nodePos, GridBlockData.GetGridDataSetting().GridUnitSize, GridBlockData.GridUnitIBlocks);
 		}
 
 		public List<IBlock> GetIBlocks(Vector3Int _startPos, Vector3Int _endPos)
 		{
-			return GridUtility.GetNodesRectArea(_startPos, _endPos, gridData.GridUnitSize, gridUnitIBlocks);
+			return GridUtility.GetNodesRectArea(_startPos, _endPos, GridBlockData.GetGridDataSetting().GridUnitSize, GridBlockData.GridUnitIBlocks);
 		}
 
 		public List<IBlock> GetIBlocks3x3Cube(Vector3Int _nodePos)
 		{
-			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, gridData.GridUnitSize, gridUnitIBlocks).ToList();
+			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, GridBlockData.GetGridDataSetting().GridUnitSize, GridBlockData.GridUnitIBlocks).ToList();
 		}
 #endregion
 
 		private void OnDrawGizmos()
 		{
 			if(!Application.isPlaying) return;
-			// if (resultPath.Count == 0) return;
-			//
-			// foreach (Block _block in resultPath)
-			// {
-			// 	Gizmos.color = Color.yellow;
-			// 	Gizmos.DrawSphere(_block.transform.position + Vector3.up, 0.25f);
-			// }
 
-			foreach (var _block in gridUnitIBlocks)
+			foreach (var _block in GridBlockData.GridUnitIBlocks)
 			{
 				if (_block != null)
 				{

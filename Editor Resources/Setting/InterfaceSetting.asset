@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: InterfaceSetting
   m_EditorClassIdentifier: 
   CurrentMode: 0
-  CurrentMainTapSelection: 1
+  CurrentMainTapSelection: 0
   BuildToolTabSelection: 1
   MapSettingFoldout: 1

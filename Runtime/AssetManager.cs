@@ -12,19 +12,39 @@ namespace BlockBuilder
 {
     public static class AssetManager
     {
-        public static Material VisualizerPointerMaterial;
+        public static AssetCollection AssetCollection 
+        {
+            get
+            {
+                if(!assetLoaded)
+                    LoadAssets();
 
-        public static Block DefaultHouse;
+                return assetCollection;
+            }
+        }
 
-        public static AssetCollection AssetCollection;
+        public static MaterialData MaterialData 
+        {
+            get
+            {
+                if(!assetLoaded)
+                    LoadAssets();
 
+                return materialData;
+            }
+        }
+
+        private static AssetCollection assetCollection;
+        private static MaterialData    materialData;
+
+        private static bool assetLoaded = false;
+        
         public static void LoadAssets()
         {
-            VisualizerPointerMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Resources/Materials/VisualizerPointer.mat");
-            
-            DefaultHouse    = AssetDatabase.LoadAssetAtPath<Block>("Assets/Resources/Prefabs/Buildings/House1x.prefab");
+            assetCollection = AssetDatabase.LoadAssetAtPath<AssetCollection>(DataPath.AssetCollectionPath);
+            materialData    = AssetDatabase.LoadAssetAtPath<MaterialData>   (DataPath.MaterialDataPath   );
 
-            AssetCollection = Resources.Load<AssetCollection>("BlockBuilder/Setting/AssetCollection");
+            assetLoaded = true;
         }
     }
 }

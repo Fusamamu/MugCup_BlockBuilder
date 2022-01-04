@@ -7,7 +7,8 @@ using BlockBuilder.Core.Scriptable;
 using BlockBuilder.Scriptable;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
-using MugCup_Utilities;
+//using MugCup_BlockBuilder.Editor;
+using UnityEditor;
 
 namespace BlockBuilder.Runtime.Core
 {
@@ -22,12 +23,6 @@ namespace BlockBuilder.Runtime.Core
         
         public static Vector3Int MapSize;
         public static Vector3Int GridUnitSize;
-
-        public static void CacheData(ref GridDataSettingSO _gridData, ref BlockMeshData _meshData)
-        {
-            LoadGridDataSetting(ref _gridData);
-            LoadMeshBlocksData (ref _meshData);
-        }
 
         public static void LoadGridBlocksData (ref IBlock[] _blockData)         => GridUnitIBlocks = _blockData;
         public static void LoadGridDataSetting(ref GridDataSettingSO _gridData) => gridData = _gridData;
@@ -55,10 +50,21 @@ namespace BlockBuilder.Runtime.Core
 #region Initialize GridUnitSize Overloads
         public static void Initialized()
         {
+            var _gridDataSetting = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>(DataPath.GridDataSettingPath     );
+            var _meshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
+            
+            CacheData(ref _gridDataSetting, ref _meshDataSetting);
+            
             if(!TryGetGridDataSetting(out var _gridData)) return;
             
             InitializeGridUnitSize(_gridData);
             InitializeGridArray();
+        }
+        
+        public static void CacheData(ref GridDataSettingSO _gridData, ref BlockMeshData _meshData)
+        {
+            LoadGridDataSetting(ref _gridData);
+            LoadMeshBlocksData (ref _meshData);
         }
         
         public static void InitializeGridUnitSize(int _row, int _column, int _height)

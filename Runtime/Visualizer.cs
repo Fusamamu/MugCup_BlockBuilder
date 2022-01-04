@@ -31,7 +31,7 @@ namespace MugCup_BlockBuilder
             
             pointer = Object.Instantiate(_block, Vector3.zero, Quaternion.identity);
             pointer.name = "Pointer";
-            pointer.GetComponent<Renderer>().material = AssetManager.VisualizerPointerMaterial;
+            pointer.GetComponent<Renderer>().material = AssetManager.MaterialData.VisualizerPointerMaterial;
             pointer.GetComponent<Collider>().enabled = false;
             pointer.transform.localScale *= 1.2f;
             

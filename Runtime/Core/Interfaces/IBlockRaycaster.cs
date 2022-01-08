@@ -10,7 +10,9 @@ namespace MugCup_BlockBuilder.Runtime.Core.Interfaces
 		public bool GetRaycastHit();
 		
 		public T GetHitObject<T>() where T : Block;
-		
+
+		public T GetHitObjects<T>() where T : IEnumerable<Block>;
+
 		public Vector3 GetHitNormal();
 	}
 }

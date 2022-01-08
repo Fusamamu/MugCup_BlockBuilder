@@ -1,53 +1,45 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
+using Unity.Collections;
 
 namespace BlockBuilder.Runtime.Core
 {
 	public class GridBlockSelection : MonoBehaviour, IBlockRaycaster
 	{
-		private Camera mainCamera;
-		
-		public LayerMask groundMask;
-		
-		[SerializeField] private Block startBlock;
-		[SerializeField] private Block endBlock;
-
 		private Vector3Int startPos;
 		private Vector3Int currentPos;
 		private Vector3Int endNodePos;
-
+		
+		private Block    hitBlock;
+		private Vector3  hitNormal;
+		
 		private BoundsInt bounds;
+		
+		private Ray ray;
+		private RaycastHit hit;
 
+		[ReadOnly] [SerializeField] private Camera    mainCamera;
+		[ReadOnly] [SerializeField] private LayerMask groundMask;　//-> This can't define layer by script beforehand. Need user to set in Unity
+		
 #region Callbacks
-		public static event Action<Vector3> OnGridHit = delegate { };
-		public static event Action OnOutOfGridBounds  = delegate { };
+		public event Action<Vector3> OnGridHit          = delegate { };
+		public event Action          OnOutOfGridBounds  = delegate { };
 #endregion
-
-		private static bool enable = true;
-
-		public static void Enable () => enable = true;
-		public static void Disable() => enable = false;
 		
 #region Public API
-		public static void ClearAllEvents()
-		{
-			OnGridHit         = null;
-			OnOutOfGridBounds = null;
-		}
-		
-		public Block GetHitBlock()
-		{
-			if (hitBlock != null)
-				return hitBlock;
-			return null;
-		}
-
-		public T GetHitObject<T>() where T : Block
+		public T GetHitObject<T>()  where T : Block
 		{
 			if (hitBlock != null)
 				return hitBlock as T;
+			
+			return default;
+		}
+
+		public T GetHitObjects<T>() where T : IEnumerable<Block>
+		{
 			return default;
 		}
 		
@@ -56,23 +48,15 @@ namespace BlockBuilder.Runtime.Core
 			return hitNormal;
 		}
 #endregion
-
-		private Block hitBlock;
-		private Vector3 hitNormal;
-		private Ray ray;
-		private RaycastHit hit;
 		
 		private void Awake()
 		{
 			mainCamera = Camera.main;
-
 			groundMask = LayerMask.GetMask("Block");
 		}
 		
 		private void Update()
 		{
-			if(!enable) return;
-			
 			if (!GetRaycastHit())
 			{
 				hitBlock = null;
@@ -81,11 +65,11 @@ namespace BlockBuilder.Runtime.Core
 			}
 			
 			hitNormal = hit.normal;
-			hitBlock  = GetBlockFromRaycast();
+			hitBlock  = hit.collider.GetComponent<Block>();
 
 			if (hitBlock != null)
 			{
-				Vector3Int _hitPos = hitBlock.NodePosition;
+				var _hitPos = hitBlock.NodePosition;
 				OnGridHit?.Invoke(_hitPos);
 			}
 		}
@@ -98,16 +82,6 @@ namespace BlockBuilder.Runtime.Core
 				return true;
 			
 			return false;
-		}
-
-		private Block GetBlockFromRaycast()
-		{
-			return hit.collider.GetComponent<Block>();
-		}
-
-		private Vector3Int GetBlockPosition()
-		{
-			return GetBlockFromRaycast().NodePosition;
 		}
 		
 		private void OnDrawGizmos()

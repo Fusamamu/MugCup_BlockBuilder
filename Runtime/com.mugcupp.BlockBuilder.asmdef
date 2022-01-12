@@ -2,6 +2,7 @@
     "name": "com.mugcupp.BlockBuilder",
     "rootNamespace": "",
     "references": [
+        "GUID:75469ad4d38634e559750d17036d5f7c",
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
         "GUID:9e4029491a1ac462986fcb0195dc0517",
         "GUID:6dacba126246b44f292fb39a88e24d2a"

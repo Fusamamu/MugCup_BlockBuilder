@@ -14,18 +14,12 @@ namespace MugCup_BlockBuilder.Runtime.Core
 #region Dependencies
         private BlockManager    blockManager;
         private IBlockRaycaster gridBlockSelection;
-
-        public void Construct(BlockManager _blockManager, GridBlockSelection _gridBlockSelection)
-        {
-            blockManager       = _blockManager;
-            gridBlockSelection = _gridBlockSelection;
-        }
 #endregion
         
-        public static void Enable () => enable = true;
-        public static void Disable() => enable = false;
+        // public static void Enable () => enable = true;
+        // public static void Disable() => enable = false;
         
-        private static bool enable = false;
+        // private static bool enable = false;
 
         private readonly Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
 
@@ -48,7 +42,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         private void Update()
         {
-            if(!enable) return;
+            //if(!enable) return;
             
             if (Input.GetMouseButtonDown(0))
             {

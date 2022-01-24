@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 using BlockBuilder;
 using BlockBuilder.Core;
@@ -12,20 +12,17 @@ namespace MugCup_BlockBuilder.Runtime.Core
     public class BlockEditor : MonoBehaviour
     {
 #region Dependencies
-        private BlockManager    blockManager;
-        private IBlockRaycaster gridBlockSelection;
+        private BlockManager      blockManager;
+        private PointerVisualizer pointerVisualizer;
+        private IBlockRaycaster   gridBlockSelection;
 #endregion
         
-        // public static void Enable () => enable = true;
-        // public static void Disable() => enable = false;
-        
-        // private static bool enable = false;
-
         private readonly Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
 
         private void Awake()
         {
             blockManager = BlockManager.Instance;
+            pointerVisualizer  = FindObjectOfType<PointerVisualizer>();
             gridBlockSelection = FindObjectOfType<GridBlockSelection>();
         }
 
@@ -42,8 +39,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         private void Update()
         {
-            //if(!enable) return;
-            
             if (Input.GetMouseButtonDown(0))
             {
                 Vector3Int _hitNodePos = GetHitNodePosition();
@@ -117,6 +112,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         {
             blockManager.RemoveBlock(_nodePos);
 
+            //Need to refactor this do 2 things// Remove n update blocks
             List<IBlock> _blocks = blockManager.GetIBlocks3x3Cube(_nodePos);
 
             Block[] _checkedBlocks = _blocks.Select(_block => _block as Block).Where(_block => _block != null).ToArray();

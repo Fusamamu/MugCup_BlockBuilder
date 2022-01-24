@@ -22,7 +22,7 @@ namespace BlockBuilder
                 return assetCollection;
             }
         }
-
+        
         public static MaterialData MaterialData 
         {
             get

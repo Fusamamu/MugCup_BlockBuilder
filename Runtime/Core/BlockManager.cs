@@ -5,8 +5,6 @@ using System.Linq;
 using UnityEngine;
 using MugCup_Utilities;
 using MugCup_PathFinder.Runtime;
-using BlockBuilder.Scriptable;
-using BlockBuilder.Core.Scriptable;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 
@@ -14,7 +12,8 @@ namespace BlockBuilder.Runtime.Core
 {
 	public class BlockManager : Singleton<BlockManager>, IBlockManager
 	{
-		[SerializeField] private GameObject blockDefaultPrefab;
+		private const string TextParentName  = "[-------Grid Position Text-------]";
+		private const string BlockParentName = "[-------------Blocks-------------]";
 		
 		protected override void Awake()
 		{
@@ -37,18 +36,19 @@ namespace BlockBuilder.Runtime.Core
 				_block.SetBitMask();
 			});
 				
-			GameObject _textParent = new GameObject("[-------Grid Position Text-------]");
+			var _textParent = new GameObject(TextParentName);
 			
 			GridBlockData.AvailableBlocksApplyAll(_block =>
 			{
 				Vector3Int _nodePos = ((INode)_block).NodePosition;
-				string _posText = _nodePos.ToString();
 				
-				Vector3 _targetPos = _block.transform.position + Vector3.up * 1.5f;
+				var _posText   = _nodePos.ToString();
+				var _targetPos = _block.transform.position + Vector3.up * 1.5f;
+				
 				Utility.CreateWorldTextPro(_posText, _targetPos, _textParent.transform);
 			});
 
-			var _blockParent = new GameObject("[-------------Blocks-------------]");
+			var _blockParent = new GameObject(BlockParentName);
 			
 			GridBlockData.AvailableBlocksApplyAll(_block =>
 			{
@@ -60,6 +60,7 @@ namespace BlockBuilder.Runtime.Core
 		{
 			gameObject.AddComponent<GridBlockSelection>();
 			gameObject.AddComponent<BlockEditor>();
+			gameObject.AddComponent<PointerVisualizer>();
 		}
 
 		public void UpdateMeshBlocks(IEnumerable<Block> _blocks)
@@ -85,7 +86,7 @@ namespace BlockBuilder.Runtime.Core
 		{
 			if (IsOccupied(_nodePos)) return;
 			
-			Vector3 _targetNodeWorldPos = GridBlockData.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
+			var _targetNodeWorldPos = GridBlockData.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
 			
 			var _newBlock = Instantiate(_prefab, _targetNodeWorldPos, _prefab.transform.localRotation);
 			_newBlock.Init(_targetNodeWorldPos, _nodePos);
@@ -121,12 +122,18 @@ namespace BlockBuilder.Runtime.Core
 		
 		public void AddIBlockRef(IBlock _newBlock, Vector3Int _nodePos)
 		{
-			GridUtility.AddNode(_newBlock, _nodePos, GridBlockData.GetGridDataSetting().GridUnitSize, ref GridBlockData.GridUnitIBlocks);
+			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+			
+			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitIBlocks);
 		}
 		
 		public void RemoveIBlockRef(Vector3Int _nodePos)
 		{
-			GridUtility.RemoveNode(_nodePos, GridBlockData.GetGridDataSetting().GridUnitSize, ref GridBlockData.GridUnitIBlocks);
+			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+			
+			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitIBlocks);
 		}
 
 #region Get Blocks
@@ -141,17 +148,26 @@ namespace BlockBuilder.Runtime.Core
 #region Get IBlocks
 		public IBlock GetIBlock(Vector3Int _nodePos)
 		{
-			return GridUtility.GetNode(_nodePos, GridBlockData.GetGridDataSetting().GridUnitSize, GridBlockData.GridUnitIBlocks);
+			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+			
+			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnitIBlocks);
 		}
 
 		public List<IBlock> GetIBlocks(Vector3Int _startPos, Vector3Int _endPos)
 		{
-			return GridUtility.GetNodesRectArea(_startPos, _endPos, GridBlockData.GetGridDataSetting().GridUnitSize, GridBlockData.GridUnitIBlocks);
+			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+			
+			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnitIBlocks);
 		}
 
 		public List<IBlock> GetIBlocks3x3Cube(Vector3Int _nodePos)
 		{
-			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, GridBlockData.GetGridDataSetting().GridUnitSize, GridBlockData.GridUnitIBlocks).ToList();
+			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+			
+			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
 		}
 #endregion
 

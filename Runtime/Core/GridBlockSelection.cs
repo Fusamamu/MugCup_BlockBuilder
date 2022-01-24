@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Collections;
-using MugCup_BlockBuilder.Runtime.Core;
-using MugCup_BlockBuilder.Runtime.Core.Interfaces;
-using MugCup_Utilities;
-using MugCup_Utilities.Runtime.DesignPattern.Observer;
 using UnityEngine.InputSystem;
+using Unity.Collections;
+using MugCup_BlockBuilder.Runtime.Core.Interfaces;
+using MugCup_Utilities.Runtime.DesignPattern.Observer;
 
-namespace BlockBuilder.Runtime.Core
+namespace MugCup_BlockBuilder.Runtime.Core
 {
 	public enum GridEvent
 	{
@@ -18,12 +16,15 @@ namespace BlockBuilder.Runtime.Core
 	
 	public class GridBlockSelection : MC_Observable<GridEvent>, IBlockRaycaster
 	{
+		public Vector3Int HitPosition => hitPos;
+		
 		private Vector3Int startPos;
 		private Vector3Int currentPos;
 		private Vector3Int endNodePos;
 		
 		private Block    hitBlock;
 		private Vector3  hitNormal;
+		private Vector3Int  hitPos;
 		
 		private BoundsInt bounds;
 		
@@ -42,6 +43,7 @@ namespace BlockBuilder.Runtime.Core
 			return default;
 		}
 
+		//WIP//
 		public T GetHitObjects<T>() where T : IEnumerable<Block>
 		{
 			return default;
@@ -64,7 +66,7 @@ namespace BlockBuilder.Runtime.Core
 			if (!GetRaycastHit())
 			{
 				hitBlock = null;
-				PostEvent(GridEvent.ON_GRID_HIT, this);
+				PostEvent(GridEvent.ON_GIRD_OUT_OF_BOUND, this);
 				return;
 			}
 			
@@ -73,8 +75,8 @@ namespace BlockBuilder.Runtime.Core
 
 			if (hitBlock != null)
 			{
-				var _hitPos = hitBlock.NodePosition;
-				PostEvent(GridEvent.ON_GIRD_OUT_OF_BOUND, this);
+				hitPos = hitBlock.NodePosition;
+				PostEvent(GridEvent.ON_GRID_HIT, this);
 			}
 		}
 		
@@ -84,10 +86,7 @@ namespace BlockBuilder.Runtime.Core
 			
 			ray = mainCamera.ScreenPointToRay(_mousePosition);
 			
-			if(Physics.Raycast(ray, out hit, Mathf.Infinity, groundMask))
-				return true;
-			
-			return false;
+			return Physics.Raycast(ray, out hit, Mathf.Infinity, groundMask);
 		}
 		
 		private void OnDrawGizmos()

@@ -15,27 +15,31 @@ namespace MugCup_BlockBuilder
     {
         private static GameObject pointer;
 
+        private const string PointerName = "Pointer";
+
         public static GameObject GetPointerReference()
         {
-            CreatePointer();
+            if (pointer == null)
+                pointer = CreatePointer();
+            
             return pointer;
         }
 
-        private static void CreatePointer()
+        public static GameObject CreatePointer()
         {
-            if (pointer != null) return;
-            
             AssetManager.LoadAssets();
                 
             GameObject _block = GameObject.CreatePrimitive(PrimitiveType.Cube);
             
-            pointer = Object.Instantiate(_block, Vector3.zero, Quaternion.identity);
-            pointer.name = "Pointer";
-            pointer.GetComponent<Renderer>().material = AssetManager.MaterialData.VisualizerPointerMaterial;
-            pointer.GetComponent<Collider>().enabled = false;
-            pointer.transform.localScale *= 1.2f;
+            var _pointer  = Object.Instantiate(_block, Vector3.zero, Quaternion.identity);
+            _pointer.name = PointerName;
+            _pointer.GetComponent<Renderer>().material = AssetManager.MaterialData.VisualizerPointerMaterial;
+            _pointer.GetComponent<Collider>().enabled = false;
+            _pointer.transform.localScale *= 1.2f;
             
             Object.DestroyImmediate(_block);
+
+            return _pointer;
         }
 
         public static void DrawLine(Vector3 _pointA, Vector3 _pointB, Color _color, float _datSize)

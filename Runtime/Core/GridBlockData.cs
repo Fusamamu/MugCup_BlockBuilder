@@ -60,6 +60,16 @@ namespace BlockBuilder.Runtime.Core
             InitializeGridUnitSize(_gridData);
             InitializeGridArray();
         }
+
+        public static void InitializeWith(GridDataSettingSO _gridDataSetting, BlockMeshData _meshDataSetting)
+        {
+            CacheData(ref _gridDataSetting, ref _meshDataSetting);
+            
+            if(!TryGetGridDataSetting(out var _gridData)) return;
+            
+            InitializeGridUnitSize(_gridData);
+            InitializeGridArray();
+        }
         
         public static void CacheData(ref GridDataSettingSO _gridData, ref BlockMeshData _meshData)
         {

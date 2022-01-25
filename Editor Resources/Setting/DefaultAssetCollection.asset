@@ -9,17 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62049b732aafa4754be7b8bd50086040, type: 3}
-  m_Name: GridDataSetting
+  m_Script: {fileID: 11500000, guid: 972c67e200ea349e7bebbdc4bb629979, type: 3}
+  m_Name: DefaultAssetCollection
   m_EditorClassIdentifier: 
-  Row: 1
-  Column: 1
-  Height: 1
-  UnitRow: 10
-  UnitColumn: 10
-  UnitHeight: 10
-  BlockWidth: 1
-  BlockHeight: 1
-  BlockDepth: 1
-  MapOrigin: {x: 0, y: 0, z: 0}
-  TilePadding: 0
+  DefualtBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}

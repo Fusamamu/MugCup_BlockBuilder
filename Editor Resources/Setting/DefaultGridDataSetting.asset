@@ -9,8 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2db0ad27d2dd446a9865443f584b8fe, type: 3}
-  m_Name: MaterialDataSetting
+  m_Script: {fileID: 11500000, guid: 62049b732aafa4754be7b8bd50086040, type: 3}
+  m_Name: DefaultGridDataSetting
   m_EditorClassIdentifier: 
-  DefaultBlockMaterial: {fileID: 2100000, guid: f16cbad6aa0914986b419a2df088bffc, type: 2}
-  VisualizerPointerMaterial: {fileID: 2100000, guid: bf9e2178b0dee41028925e655932fe41, type: 2}
+  Row: 1
+  Column: 1
+  Height: 1
+  UnitRow: 10
+  UnitColumn: 10
+  UnitHeight: 10
+  BlockWidth: 1
+  BlockHeight: 1
+  BlockDepth: 1
+  MapOrigin: {x: 0, y: 0, z: 0}
+  TilePadding: 0

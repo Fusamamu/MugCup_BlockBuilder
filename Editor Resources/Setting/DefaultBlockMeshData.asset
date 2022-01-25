@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61253bb4c8654435483b131cedced749, type: 3}
-  m_Name: BlockMeshData
+  m_Name: DefaultBlockMeshData
   m_EditorClassIdentifier: 
   IsolatedBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
   TopSurfaceBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}

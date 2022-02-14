@@ -10,6 +10,7 @@ using MugCup_Utilities.Runtime;
 using MugCup_PathFinder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
+using MugCup_BlockBuilder.Runtime.Core.Managers;
 
 namespace BlockBuilder.Runtime.Core
 {
@@ -105,6 +106,7 @@ namespace BlockBuilder.Runtime.Core
 
 		private void AddRequiredComponents()
 		{
+			gameObject.AddComponent<InputManager>();
 			gameObject.AddComponent<GridBlockSelection>();
 			gameObject.AddComponent<BlockEditor>();
 			gameObject.AddComponent<PointerVisualizer>();

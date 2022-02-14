@@ -103,11 +103,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		{
 			var _mousePosition = Vector3.zero;
 			
-			#if ENABLE_INPUT_SYSTEM
 			_mousePosition = Mouse.current.position.ReadValue();
-			#elif ENABLE_LEGACY_INPUT_MANAGER
-			_mousePosition = Input.mousePosition;
-			#endif
 			
 			return _mousePosition;
 		}

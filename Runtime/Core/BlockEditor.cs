@@ -6,6 +6,7 @@ using BlockBuilder;
 using BlockBuilder.Core;
 using BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
+using MugCup_BlockBuilder.Runtime.Core.Managers;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
@@ -15,6 +16,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private BlockManager      blockManager;
         private PointerVisualizer pointerVisualizer;
         private IBlockRaycaster   gridBlockSelection;
+        private IInputManager     inputManager;
 #endregion
         
         private readonly Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
@@ -24,6 +26,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             blockManager = BlockManager.Instance;
             pointerVisualizer  = FindObjectOfType<PointerVisualizer>();
             gridBlockSelection = FindObjectOfType<GridBlockSelection>();
+            inputManager       = FindObjectOfType<InputManager>();
         }
 
         private void Start()
@@ -39,7 +42,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (inputManager.CheckLeftMouseClicked())
             {
                 Vector3Int _hitNodePos = GetHitNodePosition();
                 NormalFace _normalFace = GetHitNormalFace();
@@ -48,7 +51,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 AddBlock(_newBlock, _hitNodePos, _normalFace);
             }
 
-            if (Input.GetMouseButtonDown(1))
+            if (inputManager.CheckRightMouseClicked())
             {
                 Vector3Int _hitNodePos = GetHitNodePosition();
                 RemoveBlock(_hitNodePos);

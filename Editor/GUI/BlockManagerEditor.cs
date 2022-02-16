@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
+using MugCup_BlockBuilder.Runtime.Core;
 
 namespace MugCup_BlockBuilder.Editor.GUI
 {
@@ -31,6 +32,23 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
         public override void OnInspectorGUI()
         {
+            var _myGUIStyle = new GUIStyle {
+                normal    =
+                {
+                    textColor  = Color.white,
+                    background = CreateColorTexture(50, 50, new Color(0.7f, 0.51f, 0.2f))
+                },
+                
+                alignment = TextAnchor.MiddleCenter,
+                fontStyle = FontStyle.Bold
+            };
+            
+            EditorGUILayout.LabelField("Block Builder Package Manager", _myGUIStyle, GUILayout.Height(23));
+            
+            EditorGUILayout.Space(0.5f);
+            EditorGUILayout.LabelField("Information", EditorStyles.boldLabel);
+            
+            EditorGUILayout.Space(0.5f);
             EditorGUILayout.HelpBox
                ($"Set Mode to Custom if you want to provide data with "    +
                 $"your own custom grid data setting and mesh block data."  +
@@ -42,7 +60,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
             if (blockManager.Mode  == BlockManager.ManagerMode.Custom)
             {
-              
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Custom Data Fields", EditorStyles.boldLabel);
                 
@@ -61,13 +78,62 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 {
                     EditorGUILayout.HelpBox("Missing Custom Mesh Block Data Scriptable Object.", MessageType.Warning);
                 }
-
             }
-                
+            
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Current Grid Data Setting", EditorStyles.boldLabel);
+            
+            var _gridDataSetting = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>(DataPath.GridDataSettingPath     );
+            var _meshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
+
+            EditorGUILayout.Space(0.5f);
+            
+            EditorGUILayout.BeginHorizontal(_myGUIStyle);
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("Grid Unit Size", EditorStyles.boldLabel);
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField("Map Unit Size", EditorStyles.boldLabel);
+            EditorGUILayout.EndHorizontal();
+
+            DisplayInAdjacentTwoColumns("Unit Row",    _gridDataSetting.UnitRow   .ToString(), "Row",    _gridDataSetting.Row.   ToString());
+            DisplayInAdjacentTwoColumns("Unit Column", _gridDataSetting.UnitColumn.ToString(), "Column", _gridDataSetting.Column.ToString());
+            DisplayInAdjacentTwoColumns("Unit Height", _gridDataSetting.UnitHeight.ToString(), "Height", _gridDataSetting.Height.ToString());
+           
+            EditorGUILayout.Space();    
             if (GUILayout.Button("Block Builder Window"))
             {
                     
             }
+            
+            //ToDo
+            //Debug Mode
+            //Save Data
+        }
+
+        private static void DisplayInAdjacentTwoColumns(string _c1, string _cc1, string _c2, string _cc2)
+        {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField(_c1, _cc1);
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.LabelField(_c2, _cc2);
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+        }
+        
+        private static Texture2D CreateColorTexture(int _width, int _height, Color _color)
+        {
+            var _pixel = new Color[_width *_height];
+ 
+            for(var _i = 0; _i < _pixel.Length; _i++)
+                _pixel[_i] = _color;
+ 
+            var _resultTexture = new Texture2D(_width, _height);
+            
+            _resultTexture.SetPixels(_pixel);
+            _resultTexture.Apply();
+ 
+            return _resultTexture;
         }
     }
 }

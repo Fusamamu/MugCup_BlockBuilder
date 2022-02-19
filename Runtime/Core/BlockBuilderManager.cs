@@ -13,7 +13,7 @@ using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 
 namespace BlockBuilder.Runtime.Core
 {
-	public class BlockManager : Singleton<BlockManager>, IBlockManager
+	public class BlockBuilderManager : Singleton<BlockBuilderManager>, IBlockManager
 	{
 		public enum ManagerMode
 		{
@@ -108,6 +108,7 @@ namespace BlockBuilder.Runtime.Core
 			gameObject.AddComponent<InputManager>();
 			gameObject.AddComponent<GridBlockSelection>();
 			gameObject.AddComponent<BlockEditor>();
+			gameObject.AddComponent<BlockSelectionManager>();
 			gameObject.AddComponent<PointerVisualizer>();
 		}
 

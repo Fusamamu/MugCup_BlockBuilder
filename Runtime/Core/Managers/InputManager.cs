@@ -12,6 +12,7 @@ namespace MugCup_BlockBuilder.Runtime.Core.Managers
         private void Awake()
         {
             var _cameraController = new CameraControllerInputAction();
+            
             _cameraController.CameraMovement.Enable();
             _cameraController.CameraMovement.Move.performed += _context =>
             {

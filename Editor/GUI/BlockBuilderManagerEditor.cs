@@ -7,27 +7,33 @@ using UnityEditor;
 using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
 using MugCup_BlockBuilder.Runtime.Core;
+using UnityEditor.AnimatedValues;
 
 namespace MugCup_BlockBuilder.Editor.GUI
 {
-    [CustomEditor(typeof(BlockManager))]
+    [CustomEditor(typeof(BlockBuilderManager))]
     [CanEditMultipleObjects]
-    public class BlockManagerEditor : UnityEditor.Editor
+    public class BlockBuilderManagerEditor : UnityEditor.Editor
     {
-        private BlockManager blockManager;
+        private BlockBuilderManager blockBuilderManager;
         
         private SerializedProperty mode;
 
         private SerializedProperty gridDataSetting;
         private SerializedProperty meshBlockDataSetting;
 
+        private AnimBool displayCustomDataFields;
+
         private void OnEnable()
         {
-            blockManager = (BlockManager)target;
+            blockBuilderManager = (BlockBuilderManager)target;
             
             mode                 = serializedObject.FindProperty("Mode");
             gridDataSetting      = serializedObject.FindProperty("CustomGridDataSetting");
             meshBlockDataSetting = serializedObject.FindProperty("CustomBlockMeshData");
+
+            displayCustomDataFields = new AnimBool();
+            displayCustomDataFields.valueChanged.AddListener(Repaint);
         }
 
         public override void OnInspectorGUI()
@@ -43,6 +49,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 fontStyle = FontStyle.Bold
             };
             
+            //Make Logo For Block Builder Packager
+            //Make MugCup Logo
             EditorGUILayout.LabelField("Block Builder Package Manager", _myGUIStyle, GUILayout.Height(23));
             
             EditorGUILayout.Space(0.5f);
@@ -56,29 +64,33 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 $"that come with the package.", MessageType.None, true);
             
             EditorGUILayout.Space();
-            blockManager.Mode = (BlockManager.ManagerMode)EditorGUILayout.EnumPopup("Mode Selection", blockManager.Mode);
+            blockBuilderManager.Mode = (BlockBuilderManager.ManagerMode)EditorGUILayout.EnumPopup("Mode Selection", blockBuilderManager.Mode);
 
-            if (blockManager.Mode  == BlockManager.ManagerMode.Custom)
+            displayCustomDataFields.target = blockBuilderManager.Mode == BlockBuilderManager.ManagerMode.Custom;
+
+            if (EditorGUILayout.BeginFadeGroup(displayCustomDataFields.faded))
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Custom Data Fields", EditorStyles.boldLabel);
                 
-                blockManager.CustomGridDataSetting = (GridDataSettingSO)EditorGUILayout
-                    .ObjectField(blockManager.CustomGridDataSetting, typeof(GridDataSettingSO), true);
+                blockBuilderManager.CustomGridDataSetting = (GridDataSettingSO)EditorGUILayout
+                    .ObjectField(blockBuilderManager.CustomGridDataSetting, typeof(GridDataSettingSO), true);
 
-                blockManager.CustomBlockMeshData   = (BlockMeshData)    EditorGUILayout
-                    .ObjectField(blockManager.CustomBlockMeshData,    typeof(BlockMeshData),    true);
+                blockBuilderManager.CustomBlockMeshData   = (BlockMeshData)    EditorGUILayout
+                    .ObjectField(blockBuilderManager.CustomBlockMeshData,    typeof(BlockMeshData),    true);
                 
                 EditorGUILayout.Space();
-                if (blockManager.CustomGridDataSetting == null)
+                if (blockBuilderManager.CustomGridDataSetting == null)
                 {
                     EditorGUILayout.HelpBox("Missing Custom Grid Data Setting Scriptable Object.", MessageType.Warning);
                 }
-                if (blockManager.CustomBlockMeshData == null)
+                if (blockBuilderManager.CustomBlockMeshData == null)
                 {
                     EditorGUILayout.HelpBox("Missing Custom Mesh Block Data Scriptable Object.", MessageType.Warning);
                 }
             }
+            EditorGUILayout.EndFadeGroup();
+            
             
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Current Grid Data Setting", EditorStyles.boldLabel);

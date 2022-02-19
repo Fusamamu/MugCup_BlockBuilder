@@ -2,6 +2,10 @@ Shader "Unlit/RectangleShader"
 {
     Properties
     {
+        _OffsetPos ("Offset Position", Vector) = (0, 0, 0, 0)
+        _Rotation  ("Rotation", Float) = 0.0
+        _Rounding ("Rounding", Float) = 0.1
+        
         _GridRow   ("Grid Row", Int)     = 4
         _GridColor ("Grid Color", Color) = (1.0, 1.0, 1.0, 1.0)
         
@@ -18,7 +22,10 @@ Shader "Unlit/RectangleShader"
     {
         Tags { "RenderType"="Transparent" "Queue"="Transparent"}
         LOD 100
-
+        
+        Blend SrcAlpha OneMinusSrcAlpha
+        ZWrite Off
+        
         Pass
         {
             CGPROGRAM
@@ -26,6 +33,7 @@ Shader "Unlit/RectangleShader"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+            #include "SDF.cginc"
 
             struct appdata
             {
@@ -53,44 +61,9 @@ Shader "Unlit/RectangleShader"
 
             float4 _HalfSize;
 
-            float2 rotate(float2 samplePosition, float rotation)
-            {
-                const float PI = 3.14159;
-                
-                float angle = rotation * PI * 2 * -1;
-                float sine, cosine;
-                
-                sincos(angle, sine, cosine);
-                
-                return float2(cosine * samplePosition.x + sine * samplePosition.y, cosine * samplePosition.y - sine * samplePosition.x);
-            }
-
-            float2 translate(float2 samplePosition, float2 offset)
-            {
-                //move samplepoint in the opposite direction that we want to move shapes in
-                return samplePosition - offset;
-            }
-
-            float2 scale(float2 samplePosition, float scale)
-            {
-                return samplePosition / scale;
-            }
-
-            float circle(float2 samplePosition, float radius)
-            {
-                //get distance from center and grow it according to radius
-                return length(samplePosition) - radius;
-            }
-
-            float rectangle(float2 samplePosition, float2 halfSize)
-            {
-                float2 componentWiseEdgeDistance = abs(samplePosition) - halfSize;
-
-                float outsideDistance = length(max(componentWiseEdgeDistance, 0));
-                float insideDistance  = min(max(componentWiseEdgeDistance.x, componentWiseEdgeDistance.y), 0);
-                
-                return outsideDistance + insideDistance;
-            }
+            float _Rotation;
+            float4 _OffsetPos;
+            float _Rounding;
 
             v2f vert (appdata v)
             {
@@ -102,10 +75,16 @@ Shader "Unlit/RectangleShader"
                 return o;
             }
 
+            float AABoxSDF(float2 pos, float2 dimension, float rounding)
+            {
+                float2 dist = abs(pos) - dimension;
+                return length(max(dist, 0)) + min(max(dist.x, dist.y), 0) - rounding;
+            }
+
             fixed4 frag (v2f i) : SV_Target
             {
-                //i.uv *= _GridRow;
-                //i.uv = frac(i.uv);
+                i.uv *= _GridRow;
+                i.uv = frac(i.uv);
                 
                 fixed4 col;
 
@@ -123,7 +102,43 @@ Shader "Unlit/RectangleShader"
                 //col = fixed4(r, r, r, 1);
                 //col *= _GridColor;
 
-                col = rectangle(i.uv.xz, float2(_HalfSize.x, _HalfSize.y));
+                //float dist       = rectangle(i.uv.xz, float2(_HalfSize.x, _HalfSize.y));
+                //float distChange = fwidth(dist) * 0.5;
+                
+                //float antialias = smoothstep(distChange, -distChange, dist);
+
+                //col = float4(antialias, antialias, antialias, 1.0);
+                //////
+
+                //col = AABoxSDF(i.uv.xz, _HalfSize, _Rounding);
+
+                //float2 newPos = Translate(i.uv.xz, _OffsetPos);
+
+                //newPos = RotateMatrix(newPos, _Rotation);
+
+                //col = AABoxSDFOutside(i.uv.xz, _HalfSize);
+                
+                fixed4 shapeOne = AABoxSDFRoundedOutside(i.uv.xz, _HalfSize, _Rounding);
+
+                float2 newPos = Translate(i.uv.xz, _OffsetPos);
+                fixed4 shapeTwo = AABoxSDFRoundedOutside(newPos, _HalfSize, 0);
+
+                col = Union(shapeOne, shapeTwo);
+
+                col = shapeTwo;
+
+                float outside = AABoxSDF(newPos, _HalfSize);
+                float inside  = AABoxSDF(newPos, _HalfSize * 0.5f);
+                float result  = Subtract(outside, inside);
+
+                
+                float distChange = fwidth(result) * 0.5;
+                float antialias = smoothstep(distChange, -distChange, result);
+
+                fixed4 shapeThree = fixed4(antialias, antialias, antialias, 1.0);
+                col = shapeThree;
+                
+                //col = fixed4(i.uv.x, 0, 0, 1.0);
                 
                 return col;
             }

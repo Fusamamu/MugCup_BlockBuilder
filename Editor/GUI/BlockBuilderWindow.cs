@@ -3,6 +3,7 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 using BlockBuilder.Core.Scriptable;
+using UnityEditor.AnimatedValues;
 #endif
 using BlockBuilder.Core;
 using BlockBuilder.Scriptable;
@@ -18,6 +19,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
         private static GridDataSettingSO  gridDataSettingSo;
 
         private static Block[] blocks;
+
+        private static AnimBool displayBuilderMode;
         
         [MenuItem("Tools/Block Builder/Open Block Builder Window", false, 16)]
         public static void ShowWindow() => GetWindow(typeof(GUI.BlockBuilderWindow), false, "Block Builder").Show();
@@ -30,11 +33,14 @@ namespace MugCup_BlockBuilder.Editor.GUI
             SceneView.duringSceneGui += OnScene;
 
             blocks = Array.Empty<Block>();
+
+            displayBuilderMode = new AnimBool();
+            displayBuilderMode.valueChanged.AddListener(Repaint);
         }
 
         private void OnGUI()
         {
-            GUILayout.BeginArea(new Rect(15, 15, EditorGUIUtility.currentViewWidth - 30, 500));
+            GUILayout.BeginArea(new Rect(15, 15, EditorGUIUtility.currentViewWidth - 30, 800));
             
             GUILayout.Label("BlockBuilder", EditorStyles.boldLabel);
             GUILayout.Space(10);
@@ -66,14 +72,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
             
             if (interfaceSetting.MapSettingFoldout)
             {
-                EditorGUILayout.LabelField("Column", EditorStyles.boldLabel, GUILayout.Width(45), GUILayout.ExpandWidth(false));
-                
-                gridDataSettingSo.Column = EditorGUILayout.IntField(gridDataSettingSo.Column, GUILayout.ExpandWidth(true));
-       
-                // SerializedObject _gridDataSO = new SerializedObject(gridDataSetting);
-                // SerializedProperty _row = _gridDataSO.FindProperty("Row");
-                // EditorGUILayout.PropertyField(_row);
-                
                 GUILayout.BeginVertical("HelpBox");
                 
                     GUILayout.Label("Map Data Setting");
@@ -88,43 +86,26 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     int _newRow    = gridDataSettingSo.MapSize.x;
                     int _newColumn = gridDataSettingSo.MapSize.z;
                     int _newHeight = gridDataSettingSo.MapSize.y;
-                    
-                    float originalValue = EditorGUIUtility.labelWidth;
-                    
-                    EditorGUIUtility.labelWidth = 40;
-                    _newRow    = EditorGUILayout.IntField("Row",    _newRow   );
-                    _newColumn = EditorGUILayout.IntField("Column", _newColumn);
-                    _newHeight = EditorGUILayout.IntField("Height", _newHeight);
-                    EditorGUIUtility.labelWidth = originalValue;
 
                     gridDataSettingSo.MapSize = new Vector3Int(_newRow, _newHeight, _newColumn);
                     
                     GUILayout.EndHorizontal();
-                    
                     GUILayout.EndVertical();
-                    
                 
                 GUILayout.EndVertical();
             }
 
-            // if (blocks.Length > 0)
-            // {
-            //     EditorGUILayout.ObjectField(blocks[0].gameObject, typeof(Block), true);
-            // }
-            
+            var _newStyle = new GUIStyle(UnityEngine.GUI.skin.button);
 
-            GUIStyle newStylee = new GUIStyle(UnityEngine.GUI.skin.button);
-            newStylee.margin = new RectOffset(10, 10, 10, 10);
-            
             Undo.RecordObject(gridDataSettingSo,"Undo");
-            if (GUILayout.Button("Generate Map", newStylee, GUILayout.Height(30)))
+            if (GUILayout.Button("Generate Map", _newStyle, GUILayout.Height(30)))
             {
                 Vector3Int _mapSize  = gridDataSettingSo.MapSize;
                 Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
                 GridBlockGenerator.GenerateMap(_mapSize, _unitSize);
             }
 
-            if (GUILayout.Button("Generate Grid", newStylee, GUILayout.Height(30)))
+            if (GUILayout.Button("Generate Grid", _newStyle, GUILayout.Height(30)))
             {
                 Vector3Int _mapSize  = gridDataSettingSo.MapSize;
                 Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
@@ -137,7 +118,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
               
             }
             
-            if(GUILayout.Button("Delete Blocks", newStylee, GUILayout.Height(30)))
+            if(GUILayout.Button("Delete Blocks", _newStyle, GUILayout.Height(30)))
             {
                 var _blocks = GameObject.FindGameObjectsWithTag("Block");
                 foreach(GameObject _block in _blocks)
@@ -146,6 +127,36 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
             string[] _buildingToolTabs = {"Add Block", "Subtract Block"};
             interfaceSetting.BuildToolTabSelection = GUILayout.Toolbar(interfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
+            
+            
+            DisplayBuilderModeSelectionInApplication();
+        }
+        
+        private static void DisplayBuilderModeSelectionInApplication()
+        {
+            displayBuilderMode.target = Application.isPlaying;
+
+            if (EditorGUILayout.BeginFadeGroup(displayBuilderMode.faded))
+            {
+                GUILayout.Label("Builder Mode", EditorStyles.boldLabel);
+
+                EditorGUILayout.BeginHorizontal();
+                
+                    if (GUILayout.Button("Edit"   , EditorStyles.miniButton))
+                    {
+                        var _stateManager = BlockBuilderManager.Instance.GetManager<StateManager>();
+                        _stateManager.RequestChangeState(BuilderMode.EditMode);
+                    }
+
+                    if (GUILayout.Button("Handler", EditorStyles.miniButton))
+                    {
+                        var _stateManager = BlockBuilderManager.Instance.GetManager<StateManager>();
+                        _stateManager.RequestChangeState(BuilderMode.HandlerMode);
+                    }
+                    
+                EditorGUILayout.EndHorizontal();
+            }
+            EditorGUILayout.EndFadeGroup();
         }
 
         private static void DisplaySettingPanel()

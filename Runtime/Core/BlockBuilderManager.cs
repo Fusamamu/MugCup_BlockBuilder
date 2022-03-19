@@ -3,15 +3,15 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using BlockBuilder.Scriptable;
+using BlockBuilder.Runtime.Core;
 using BlockBuilder.Core.Scriptable;
 using MugCup_Utilities;
 using MugCup_Utilities.Runtime;
 using MugCup_PathFinder.Runtime;
-using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Managers;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 
-namespace BlockBuilder.Runtime.Core
+namespace MugCup_BlockBuilder.Runtime.Core
 {
 	public class BlockBuilderManager : Singleton<BlockBuilderManager>, IBlockManager
 	{
@@ -27,7 +27,37 @@ namespace BlockBuilder.Runtime.Core
 
 		private const string TextParentName  = "[-------Grid Position Text-------]";
 		private const string BlockParentName = "[-------------Blocks-------------]";
-		
+
+		private readonly Dictionary<Type, BaseBuilderManager> managerCollections = new Dictionary<Type, BaseBuilderManager>();
+
+		[SerializeField] private List<BaseBuilderManager> bbb = new List<BaseBuilderManager>();
+
+		public void Print()
+		{
+			managerCollections.Keys.ToList().ForEach(_t => Debug.LogWarning($"{_t}"));
+		}
+
+		public T GetManager<T>() where T : BaseBuilderManager
+		{
+			if (managerCollections.ContainsKey(typeof(T)))
+			{
+				return managerCollections[typeof(T)] as T;
+			}
+			return default;
+		}
+
+		public void AddManager(BaseBuilderManager _manager)
+		{
+			var _type = _manager.GetType();
+			
+			if (!managerCollections.ContainsKey(_type))
+			{
+				managerCollections.Add(_type, _manager);
+				return;
+			}
+			managerCollections[_type] = _manager;
+		}
+
 		protected override void Awake()
 		{
 			Initialize();
@@ -36,6 +66,7 @@ namespace BlockBuilder.Runtime.Core
 		private void Start()
 		{
 			AddRequiredComponents();
+			InitializeManagers();
 		}
 		
 		private void Initialize()
@@ -59,7 +90,7 @@ namespace BlockBuilder.Runtime.Core
 				_block.SetBitMask();
 			});
 
-			CreateTextOverlay();
+			CreateTextOverlay  ();
 			GroupBlocksToParent();
 		}
 		
@@ -81,7 +112,7 @@ namespace BlockBuilder.Runtime.Core
 			{
 				Vector3Int _nodePos = ((INode)_block).NodePosition;
 
-				var _posText = _nodePos.ToString();
+				var _posText   = _nodePos.ToString();
 				var _targetPos = _block.transform.position + Vector3.up * 1.5f;
 
 				Utility.CreateWorldTextPro(_posText, _targetPos, _textParent.transform);
@@ -105,13 +136,32 @@ namespace BlockBuilder.Runtime.Core
 
 		private void AddRequiredComponents()
 		{
-			gameObject.AddComponent<InputManager>();
-			gameObject.AddComponent<GridBlockSelection>();
-			gameObject.AddComponent<BlockEditor>();
+			gameObject.AddComponent<InputManager>         ();
+			gameObject.AddComponent<GridBlockSelection>   ();
+			gameObject.AddComponent<BlockEditorManager>   ();
 			gameObject.AddComponent<BlockSelectionManager>();
-			gameObject.AddComponent<PointerVisualizer>();
+			gameObject.AddComponent<PointerVisualizer>    ();
+
+			gameObject.AddComponent<StateManager>();//Testing//
 		}
 
+		private void InitializeManagers()
+		{
+			var _managers = FindObjectsOfType<BaseBuilderManager>();
+			_managers.ToList().ForEach(_o =>
+			{
+				_o.Init();
+				AddManager(_o);
+			});
+			
+			
+			
+			_managers.ToList().ForEach(_o => Debug.LogWarning(_o));
+		}
+
+		
+		//Might need to move all code below into another class(BlockManager)//
+		
 		public void UpdateMeshBlocks(IEnumerable<Block> _blocks)
 		{
 			foreach (var _block in _blocks)
@@ -148,7 +198,7 @@ namespace BlockBuilder.Runtime.Core
 			if (!IsOccupied(_nodePos)) return;
 			
 			DestroyIBlockObject(_nodePos);
-			RemoveIBlockRef(_nodePos);
+			RemoveIBlockRef    (_nodePos);
 		}
 #endregion
 		

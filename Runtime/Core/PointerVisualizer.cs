@@ -28,5 +28,18 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 pointer.transform.position = _hitPosition;
             });
         }
+
+        public void ShowPointer() => pointer.SetActive(true );
+        public void HidePointer() => pointer.SetActive(false);
+
+        public void ChangePointerType()
+        {
+            
+        }
+
+        public void OnBuilderModeChanged()
+        {
+            //Change Pointer?
+        }
     }
 }

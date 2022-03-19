@@ -2,15 +2,13 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using BlockBuilder;
 using BlockBuilder.Core;
-using BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 using MugCup_BlockBuilder.Runtime.Core.Managers;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
-    public class BlockEditor : MonoBehaviour
+    public sealed class BlockEditorManager : BaseBuilderManager
     {
 #region Dependencies
         private BlockBuilderManager blockBuilderManager;
@@ -20,14 +18,26 @@ namespace MugCup_BlockBuilder.Runtime.Core
 #endregion
         
         private readonly Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
-
-        private void Awake()
+        
+        public override void Init()
         {
+            base.Init();
+            
             blockBuilderManager = BlockBuilderManager.Instance;
             
-            pointerVisualizer  = FindObjectOfType<PointerVisualizer>();
+            pointerVisualizer  = FindObjectOfType<PointerVisualizer> ();
             gridBlockSelection = FindObjectOfType<GridBlockSelection>();
-            inputManager       = FindObjectOfType<InputManager>();
+            inputManager       = FindObjectOfType<InputManager>      ();
+        }
+
+        private void OnEnable()
+        {
+            
+        }
+
+        private void OnDisable()
+        {
+            
         }
 
         private void Start()
@@ -123,7 +133,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             foreach (var _block in _checkedBlocks)
             {
-                var _checkedBlock = _block as Block;
+                var _checkedBlock = _block;
                 if (_checkedBlock != null)
                 {
                     _checkedBlock.GetSurroundingIBlocksReference();

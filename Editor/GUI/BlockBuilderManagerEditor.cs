@@ -23,6 +23,11 @@ namespace MugCup_BlockBuilder.Editor.GUI
         private SerializedProperty meshBlockDataSetting;
 
         private AnimBool displayCustomDataFields;
+        
+        private static GUIStyle toggleButtonStyleNormal  = null;
+        private static GUIStyle toggleButtonStyleToggled = null;
+
+        private static bool useDebug;
 
         private void OnEnable()
         {
@@ -114,12 +119,66 @@ namespace MugCup_BlockBuilder.Editor.GUI
             EditorGUILayout.Space();    
             if (GUILayout.Button("Block Builder Window"))
             {
-                    
+                EditorWindow.GetWindow(typeof(BlockBuilderWindow), false, "Block Builder").Show();
+            }
+            
+            if (toggleButtonStyleNormal == null)
+            {
+                toggleButtonStyleNormal  = "Button";
+                toggleButtonStyleToggled = new GUIStyle(toggleButtonStyleNormal);
+                toggleButtonStyleToggled.normal.background = toggleButtonStyleToggled.active.background;
+            }
+            
+            GUILayout.BeginHorizontal(  );
+
+            if ( GUILayout.Button( "Something", toggleButtonStyleNormal ) )
+            {
+                // _setValue = true;
+                // _smoothValue = false;
+            }
+
+            if ( GUILayout.Button("safjsf", toggleButtonStyleToggled))
+            {
+                // _smoothValue = true;
+                // _setValue = false;
+            }
+
+            GUILayout.EndHorizontal();
+            
+            useDebug = GUILayout.Toggle(useDebug, "Toggle me !", "Button");
+
+            if (useDebug)
+            {
+                SceneView.duringSceneGui += OnScene;
+            }
+            else
+            {
+                SceneView.duringSceneGui -= OnScene;
             }
             
             //ToDo
             //Debug Mode
             //Save Data
+        }
+        
+        private static void OnScene(SceneView _sceneview)
+        {
+            Handles.BeginGUI();
+            GUILayout.BeginArea(new Rect(20, 20, 300, 100));
+            
+            if (GUILayout.Button("Generate Grid Unit")) 
+            {
+                if (Application.isPlaying)
+                {
+                    
+                }
+            }
+
+            // selectedBlock = EditorGUILayout.ObjectField("Selected Block", selectedBlock, typeof(GameObject), true) as GameObject;
+            // blockPosition = EditorGUILayout.Vector3IntField("Block Position", blockPosition);
+        
+            GUILayout.EndArea();
+            Handles.EndGUI();
         }
 
         private static void DisplayInAdjacentTwoColumns(string _c1, string _cc1, string _c2, string _cc2)

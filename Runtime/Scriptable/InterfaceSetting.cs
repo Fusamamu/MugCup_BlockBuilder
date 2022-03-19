@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using MugCup_BlockBuilder.Runtime.Core;
 using UnityEngine;
 
 namespace BlockBuilder.Scriptable
@@ -15,5 +16,7 @@ namespace BlockBuilder.Scriptable
         [SerializeField] public int BuildToolTabSelection   = -1;
 
         [SerializeField] public bool MapSettingFoldout = false;
+
+        [SerializeField] public BuilderMode BuilderMode;
     }
 } 

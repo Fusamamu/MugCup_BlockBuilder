@@ -92,13 +92,13 @@ namespace BlockBuilder.Runtime.Core
             
              Block[] _blocks = new Block[_rowUnit * _columnUnit * _levelUnit];
             
-             for (int y = 0; y < _levelUnit; y++)
+             for (int _y = 0; _y < _levelUnit; _y++)
              {
-                 for (int x = 0; x < _rowUnit; x++)
+                 for (int _x = 0; _x < _rowUnit; _x++)
                  {
-                     for (int z = 0; z < _columnUnit; z++)
+                     for (int _z = 0; _z < _columnUnit; _z++)
                      {
-                         Vector3 _position = new Vector3(x, y, z);
+                         Vector3 _position = new Vector3(_x, _y, _z);
             
                          Block _block = Object.Instantiate(_blockPrefab, _position, Quaternion.identity).AddComponent<Block>();
                          
@@ -108,9 +108,9 @@ namespace BlockBuilder.Runtime.Core
                              _block.transform.SetParent(_parent.transform);
                          }
                      
-                         _block.Init(_block.transform.position, new Vector3Int(x, y, z));
+                         _block.Init(_block.transform.position, new Vector3Int(_x, _y, _z));
                          
-                         _blocks[z + _gridUnitSize.x * (x + _gridUnitSize.y * y)] = _block;
+                         _blocks[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = _block;
                      }
                  }
              }

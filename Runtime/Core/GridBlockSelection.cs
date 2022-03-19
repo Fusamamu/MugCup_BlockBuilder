@@ -35,7 +35,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		[ReadOnly] [SerializeField] private LayerMask groundMask;　//-> This can't define layer by script beforehand. Need user to set in Unity
 		
 #region Public API
-		public T GetHitObject<T>()  where T : Block
+		public T GetHitObject<T>() where T : Block
 		{
 			if (hitBlock != null)
 				return hitBlock as T;

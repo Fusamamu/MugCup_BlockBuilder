@@ -33,7 +33,7 @@ namespace BlockBuilder.Runtime.Core
         public static IEnumerable<Block>  GetAvailableBlocks()  => GridUnitIBlocks.Where(_iBlock => _iBlock != null).Select(_iBlock => _iBlock as Block);
 
         public static GridDataSettingSO GetGridDataSetting() => gridData;
-        public static BlockMeshData     GetBlockMeshData()   => meshData;
+        public static BlockMeshData     GetBlockMeshData  () => meshData;
 
         private static GridDataSettingSO gridData;
         private static BlockMeshData     meshData;
@@ -107,23 +107,23 @@ namespace BlockBuilder.Runtime.Core
         
             GridUnitSize = new Vector3Int(RowUnit, LevelUnit, ColumnUnit);
             
-            GRID_SIZE_INIT= true;
+            GRID_SIZE_INIT = true;
         }
         
         public static void InitializeGridArray()
         { 
-            int RowUnit    = gridData.GridUnitSize.x;
-            int ColumnUnit = gridData.GridUnitSize.z;
-            int LevelUnit  = gridData.GridUnitSize.y;
+            int _rowUnit    = gridData.GridUnitSize.x;
+            int _columnUnit = gridData.GridUnitSize.z;
+            int _levelUnit  = gridData.GridUnitSize.y;
 
-            Vector3Int GridUnitSize = gridData.GridUnitSize;
+            Vector3Int _gridUnitSize = gridData.GridUnitSize;
             
-            GridUnitIBlocks = new IBlock[RowUnit * ColumnUnit * LevelUnit];
+            GridUnitIBlocks = new IBlock[_rowUnit * _columnUnit * _levelUnit];
 
-            for (int y = 0; y < LevelUnit; y++)
-            for (int x = 0; x < RowUnit; x++)
-            for (int z = 0; z < ColumnUnit; z++)
-                GridUnitIBlocks[z + GridUnitSize.x * (x + GridUnitSize.y * y)] = null;
+            for (int _y = 0; _y < _levelUnit ; _y++)
+            for (int _x = 0; _x < _rowUnit   ; _x++)
+            for (int _z = 0; _z < _columnUnit; _z++)
+                GridUnitIBlocks[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = null;
         }
 #endregion
         

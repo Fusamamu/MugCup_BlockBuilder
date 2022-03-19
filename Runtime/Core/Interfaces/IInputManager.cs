@@ -8,5 +8,8 @@ namespace MugCup_BlockBuilder.Runtime.Core.Interfaces
     {
         public bool CheckLeftMouseClicked();
         public bool CheckRightMouseClicked();
+        public bool CheckLeftMouseDown();
+        public bool CheckLeftMouseUp();
+
     }
 }

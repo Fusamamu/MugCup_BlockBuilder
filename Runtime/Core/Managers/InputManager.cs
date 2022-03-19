@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace MugCup_BlockBuilder.Runtime.Core.Managers
 {
-    public class InputManager : MonoBehaviour, IInputManager
+    public class InputManager : BaseBuilderManager, IInputManager
     {
         private void Awake()
         {
@@ -28,6 +28,16 @@ namespace MugCup_BlockBuilder.Runtime.Core.Managers
         public bool CheckRightMouseClicked()
         {
             return Mouse.current.rightButton.wasPressedThisFrame;
+        }
+
+        public bool CheckLeftMouseDown()
+        {
+            return Mouse.current.leftButton.isPressed;
+        }
+
+        public bool CheckLeftMouseUp()
+        {
+            return Mouse.current.leftButton.wasReleasedThisFrame;
         }
     }
 }

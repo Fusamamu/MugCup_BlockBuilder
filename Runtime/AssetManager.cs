@@ -8,7 +8,7 @@ using BlockBuilder.Runtime.Scriptable;
 using BlockBuilder.Scriptable;
 using MugCup_BlockBuilder.Runtime.Core;
 
-namespace BlockBuilder
+namespace MugCup_BlockBuilder
 {
     public static class AssetManager
     {

@@ -46,7 +46,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         private void Update()
         {
-            if (inputManager.CheckLeftMouseDown() && blockSelectionManager.HasCurrentSelected())
+            if (inputManager.CheckLeftMouseDown())
             {
                 
             }

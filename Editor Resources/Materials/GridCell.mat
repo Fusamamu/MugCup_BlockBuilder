@@ -103,15 +103,15 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _LineThickness: 0.04
+    - _LineThickness: 0.01
     - _LineThicknesss: 0.02
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Rounding: 0.07
-    - _SecondRing: -1.5
+    - _Rounding: 0
+    - _SecondRing: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -123,10 +123,11 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GirdSize: {r: 2, g: 0, b: 2, a: 0}
     - _InsideRingColor: {r: 1, g: 0.9987244, b: 0.07058823, a: 1}
     - _OutsideRingColor: {r: 1, g: 0.3443396, b: 0.3443396, a: 1}
-    - _Position: {r: 0.5, g: 0.48, b: 1, a: 1}
-    - _RectSize: {r: 0.66, g: 0.59, b: 1, a: 1}
-    - _RectSize2: {r: 0.31, g: 0.3, b: 1, a: 1}
+    - _Position: {r: 0.5, g: 0.5, b: 1, a: 1}
+    - _RectSize: {r: 0.5, g: 0.5, b: 1, a: 1}
+    - _RectSize2: {r: 0, g: 0, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
+    //Can be changed to Observer object.
     public class PointerVisualizer : MonoBehaviour
     {
         [SerializeField] private GridBlockSelection gridBlockSelection;

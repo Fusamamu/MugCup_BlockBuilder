@@ -9,6 +9,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
 {
     public class BlockSelectionManager : BaseBuilderManager
     {
+	    //Need to check whether IBlockRaycast can use IPointerHandler in new input system or not//
+	    
         [SerializeField] private Block currentSelectedBlock;
 
         [SerializeField] private Dictionary<int, Block> allSelectedBlocks = new Dictionary<int, Block>();

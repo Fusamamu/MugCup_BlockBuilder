@@ -2,12 +2,22 @@ Shader "Unlit/HighlightTileArea"
 {
     Properties
     {
+        //TODO
+        //Make OutLine Animation
+        //Set Gap by Offset Property
+            //RectSize should be controlled by Offset of the highlight out line
+        //Set Gradient inside SDF
+        
+        [KeywordEnum(Fill, Center Outline, Inside Outline, Outside Outline)] _DrawMode("Draw mode", Float) = 0
+        
         _GirdSize ("Gird Size", Vector) = (2.0, 0.0, 2.0, 0.0)
-        //RectSize should be controlled by Offset of the highlight out line
+        _Offset   ("Offset",    Float)  = 0.05
         _RectSize ("Rect Size", Vector) = (0.7, 0.7, 0.0, 0.0) //need to fixe range [0, 1]
-        _MainTex  ("Texture", 2D)       = "white" {}
+        _MainTex  ("Texture",   2D)     = "white" {}
         
         _Rounding ("Rounding Corner", Float) = 0.5
+        
+        _LineThickness ("Line Thinkness", Float) = 0.1
         _Rotation ("Rotation", Float) = 5.0
     }
     SubShader
@@ -42,8 +52,12 @@ Shader "Unlit/HighlightTileArea"
 
             float2 _RectSize;
 
+            float _Offset;
             float _Rounding;
+            float _LineThickness;
             float _Rotation;
+
+            float _DrawMode;
             
             v2f vert (appdata v)
             {
@@ -67,7 +81,12 @@ Shader "Unlit/HighlightTileArea"
 
             float GetTileType(int _type, float2 _pos)
             {
-                float _r         = 0.0f;
+                float2 _originalPos = _pos;
+                
+                float _r1         = 0.0f;
+                float _r2         = 0.0f;
+                float _finalResult = 0.0f;
+                
                 float _distDelta = 0.0f;
                 float _antiAlias = 0.0f;
                 
@@ -76,28 +95,58 @@ Shader "Unlit/HighlightTileArea"
                     case 0:
                         _pos = Translate(_pos, float2(0.5, 0.5));
                         
-                        _r = AABoxSDF(_pos, _RectSize);
+                        _r1 = AABoxSDF(_pos, _RectSize);
 
-                        _distDelta = fwidth(_r);
-				        _antiAlias = smoothstep(_distDelta, -_distDelta, _r);
+                        _distDelta = fwidth(_r1);
+				        _antiAlias = smoothstep(_distDelta, -_distDelta, _r1);
                         
                         return _antiAlias;
                     case 1:
 
-                        //float2 _newRect = float2(_RectSize.x - _Rounding * 2, _RectSize.y - _Rounding * 2);
-                        
-                        _pos      = Translate(_pos, float2(0.5, 0.5 + (1 - _RectSize.y)/4 ));
+                        _pos      = Translate(_pos, float2(0.5, 0.5 + (1 - _RectSize.y)/4));
+                        _pos      = Rotate(_pos, _Rotation);
 
                         _RectSize = float2( _RectSize.x, _RectSize.y + (1 - _RectSize.y)/2);
                         
-                        _r = AABoxSDF(_pos, _RectSize) - _Rounding;
+                        _r1 = AABoxSDF_Separate_Rounded_Corner(_pos, _RectSize, float4(0, 0, _Rounding, _Rounding)) + _LineThickness;
 
-                        _distDelta = fwidth(_r);
-				        _antiAlias = smoothstep(_distDelta, -_distDelta, _r);
+                        if(_DrawMode != 0.0f)
+                            _r1 = abs(_r1) - _LineThickness;
+
+                        _distDelta = fwidth(_r1);
+				        _antiAlias = smoothstep(_distDelta, -_distDelta, _r1);
                         
                         return _antiAlias;
                     case 2:
                         return 0.0f;
+                    case 3:
+
+                        _pos      = Translate(_originalPos, float2(0.0, 1.0));
+                        _RectSize = float2(2.0 - _Offset, 2.0 - _Offset);
+                        
+                        _r1 = AABoxSDF_Separate_Rounded_Corner(_pos, _RectSize, float4(0, 0, 0, _Rounding)) + _LineThickness;
+
+                        if(_DrawMode != 0.0f)
+                            _r1 = abs(_r1) - _LineThickness;
+
+
+                        _pos      = Translate(_originalPos, float2(0.0, 1.0));
+                        _RectSize = float2(_Offset, _Offset);
+                        
+                        _r2 = AABoxSDF_Separate_Rounded_Corner(_pos, _RectSize, float4(0, 0, 0, _Rounding)) - _LineThickness;
+
+                        if(_DrawMode != 0.0f)
+                            _r2 = abs(_r2) - _LineThickness;
+
+
+                        _finalResult = Union(_r1, _r2);
+                    
+
+                        _distDelta = fwidth(_finalResult);
+				        _antiAlias = smoothstep(_distDelta, -_distDelta, _finalResult);
+                        
+                        return _antiAlias;
+                    
                     default:
                         return 0.0f;
                         
@@ -160,7 +209,7 @@ Shader "Unlit/HighlightTileArea"
 
                 //fixed4 col = fixed4(_d, _d, _d, 1.0);
 
-                fixed4 col = GetTileType(1, pos);
+                fixed4 col = GetTileType(3, pos);
                 
                 return col;
             }

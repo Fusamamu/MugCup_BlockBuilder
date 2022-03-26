@@ -60,6 +60,29 @@ float AABoxSDFOutside(float2 pos, float2 rectSize)
     return outsideDist;
 }
 
+float AABoxSDFRounded(float2 _pos, float2 _rectSize, float _rounding)
+{
+    float2 _dist = abs(_pos) - _rectSize * 0.5 + _rounding;
+    
+    float _outsideDist = length(max(_dist, 0));
+    float _insideDist  = min(max(_dist.x, _dist.y), 0);
+    
+    return _outsideDist + _insideDist - _rounding;
+}
+
+float AABoxSDF_Separate_Rounded_Corner(float2 _pos, float2 _rectSize, float4 _rounding)
+{
+    float2 _roundingHorizontal = (_pos.x > 0.0) ? _rounding.xw          : _rounding.yz         ;
+    float  _roundingFinal      = (_pos.y > 0.0) ? _roundingHorizontal.x : _roundingHorizontal.y;
+    
+    float2 _dist = abs(_pos) - _rectSize * 0.5 + _roundingFinal;
+    
+    float _outsideDist = length(max(_dist, 0));
+    float _insideDist  = min(max(_dist.x, _dist.y), 0);
+    
+    return _outsideDist + _insideDist - _roundingFinal;
+}
+
 float AABoxSDFRoundedOutside(float2 pos, float2 rectSize, float rounding)
 {
     float outsideDist = AABoxSDFOutside(pos, rectSize);

@@ -22,7 +22,7 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: HighlightTileArea
   m_Shader: {fileID: 4800000, guid: e9b07a2487e9a4c6b9fed268b2f2fa93, type: 3}
-  m_ShaderKeywords: 
+  m_ShaderKeywords: _DRAWMODE_CENTER_OUTLINE _OVERLAY_ADD _OVERLAY_FILL
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -98,18 +98,22 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DrawMode: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _LineThickness: 0.015
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _Offset: 0.2
+    - _Overlay: 0
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Rotation: 2.12
-    - _Rounding: 0.1
+    - _Rotation: 0
+    - _Rounding: 0.06
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -122,6 +126,6 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GirdSize: {r: 2, g: 2, b: 2, a: 1}
-    - _RectSize: {r: 0.7, g: 0.7, b: 0, a: 0}
+    - _RectSize: {r: 0.9, g: 0.9, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []

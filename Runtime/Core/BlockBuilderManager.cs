@@ -83,7 +83,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			GridBlockData.InitializeBlocksData(); //-->1 Same
 
 			GridBlockData.AvailableBlocksApplyAll(UpdateMeshBlock);
-
 			GridBlockData.AvailableBlocksApplyAll(_block => //--2 Same
 			{
 				_block.GetSurroundingIBlocksReference();
@@ -148,6 +147,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		private void InitializeManagers()
 		{
 			var _managers = FindObjectsOfType<BaseBuilderManager>();
+			
 			_managers.ToList().ForEach(_o =>
 			{
 				_o.Init();

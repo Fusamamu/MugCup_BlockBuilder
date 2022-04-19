@@ -36,6 +36,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public IBlock[] TopIBlocks    = new IBlock[9];
         public IBlock[] MiddleIBlocks = new IBlock[9];
         public IBlock[] BottomIBlocks = new IBlock[9];
+        
+        public VolumePoint[] VolumePoints = new VolumePoint[8];
 
         private void Awake()
         {
@@ -53,9 +55,16 @@ namespace MugCup_BlockBuilder.Runtime.Core
             tag  = "Block";
             name = $"Block: ({_gridPos.x}, {_gridPos.y}, {_gridPos.z})";
             
-            gameObject.layer = LayerMask.NameToLayer("Block");
+            //gameObject.layer = LayerMask.NameToLayer("Block");
+            
+            //VolumePoints = VolumePointGenerator.GeneratedVolumePoints()
         }
 
+        public void SetVolumePoints(VolumePoint[] _volumePoints)
+        {
+            VolumePoints = _volumePoints;
+        }
+        
         public void UpdateBlockData()
         {
             GetSurroundingIBlocksReference();

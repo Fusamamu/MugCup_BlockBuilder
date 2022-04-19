@@ -18,7 +18,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
         private static InterfaceSetting   interfaceSetting;
         private static GridDataSettingSO  gridDataSettingSo;
 
-        private static Block[] blocks;
+        private static Block[]       blocks;
+        private static VolumePoint[] volumePoints;
 
         private static AnimBool displayBuilderMode;
         
@@ -116,6 +117,32 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 blocks = GridBlockGenerator.GenerateGridBlocks(_unitSize, _blockPrefab, _mainMap);
                 DestroyImmediate(_blockPrefab);
               
+            }
+
+            if (GUILayout.Button("Generate Volume Points", _newStyle, GUILayout.Height(30)))
+            {
+                Vector3Int _gridUnitSize  = gridDataSettingSo.GridUnitSize;
+                GameObject _volumePoints  = new GameObject("[Volume Points]");
+                
+                volumePoints = VolumePointGenerator.GeneratedVolumePoints(_gridUnitSize, 0.1f, _volumePoints);
+
+                if (blocks != null && blocks.Length > 0)
+                {
+                    foreach (var _block in blocks)
+                    {
+                        var _coord  = _block.NodePosition;
+                        var _points = VolumePointGenerator.GetVolumePoint(_coord, _gridUnitSize, volumePoints);
+                        
+                        _block.SetVolumePoints(_points);
+                    }
+
+                    foreach (var _point in volumePoints)
+                    {
+                        _point.SetAdjacentBlocks(blocks, _gridUnitSize);
+                    }
+                }
+                
+                
             }
             
             if(GUILayout.Button("Delete Blocks", _newStyle, GUILayout.Height(30)))

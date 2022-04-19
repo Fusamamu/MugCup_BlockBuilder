@@ -17,11 +17,11 @@ namespace BlockBuilder.Runtime.Core
             int _rowUnit    = _gridUnitSize.x;
             int _columnUnit = _gridUnitSize.z;
 
-            for (int x = 0; x < _rowUnit; x++)
+            for (var _x = 0; _x < _rowUnit; _x++)
             {
-                for (int z = 0; z < _columnUnit; z++)
+                for (var _z = 0; _z < _columnUnit; _z++)
                 {
-                    Vector3Int _targetNodePos = new Vector3Int(x, _heightLevel, z);
+                    var _targetNodePos = new Vector3Int(_x, _heightLevel, _z);
                     
                     T _block = Object.Instantiate(_blockPrefab, _targetNodePos, Quaternion.identity).AddComponent<T>();
                     
@@ -41,7 +41,7 @@ namespace BlockBuilder.Runtime.Core
                     
                     _block.Init(_targetNodePos, _targetNodePos);
 
-                    _blocks[z + _gridUnitSize.x * (x + _gridUnitSize.y * _heightLevel)] = _block;
+                    _blocks[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _heightLevel)] = _block;
                 }
             }
         }
@@ -74,6 +74,7 @@ namespace BlockBuilder.Runtime.Core
                         _unit.transform.SetParent(_mainMap.transform);
                         _unit.name = $"Unit: {x}, {y}, {z}";
                         
+                        //need to change array position calculation?
                         _map[x + _mapSize.x * (z + _mapSize.z * y)] = GenerateGridBlocks(_unitSize, _blockPrefab, _unit);
                     }
                 }

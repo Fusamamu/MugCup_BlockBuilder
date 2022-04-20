@@ -8,14 +8,24 @@ namespace MugCup_BlockBuilder
 {
     public class VolumePoint : MonoBehaviour
     {
-        private Vector3Int coord;
+        [SerializeField] private Vector3Int coord;
+        
+        [SerializeField] private int bitMask;
 
         [SerializeField] private Block[] adjacentBlocks = new Block[8];
 
-        private int bitMask;
-
         private MeshFilter mesh;
         private Renderer   renderer;
+
+        public Block UpperNorthEastBlock;
+        public Block UpperNorthWestBlock;
+        public Block UpperSouthWestBlock;
+        public Block UpperSouthEastBlock;
+        
+        public Block LowerNorthEastBlock;
+        public Block LowerNorthWestBlock;
+        public Block LowerSouthWestBlock;
+        public Block LowerSouthEastBlock;
         
         public void Init(Vector3Int _coord)
         {
@@ -25,6 +35,15 @@ namespace MugCup_BlockBuilder
 			
 	        mesh     = GetComponent<MeshFilter>();
 	        renderer = GetComponent<Renderer>();
+
+	        UpperNorthEastBlock = adjacentBlocks[0];
+	        UpperNorthWestBlock = adjacentBlocks[1];
+	        UpperSouthWestBlock = adjacentBlocks[2]; 
+	        UpperSouthEastBlock = adjacentBlocks[3];
+	        LowerNorthEastBlock = adjacentBlocks[4];
+	        LowerNorthWestBlock = adjacentBlocks[5];
+	        LowerSouthWestBlock = adjacentBlocks[6];
+	        LowerSouthEastBlock = adjacentBlocks[7];
         }
 	
         public void SetPosition(float _x, float _y, float _z)
@@ -32,19 +51,9 @@ namespace MugCup_BlockBuilder
 	        transform.position = new Vector3(_x, _y, _z);
         }
 
-        public void SetCornerElement()
-        {	
-	        // int _nextBitMaskValue = bitMask.GetBitMask(nearGridElements);
-	        //
-	        // if((_nextBitMaskValue == 0) && (bitMaskValue != 0))
-	        // {
-	        // 	bitMask = _nextBitMaskValue;
-	        // }
-	        // else
-	        // {
-	        // 	bitMask = _nextBitMaskValue;
-	        // 	mesh.mesh = cornerMeshes.instance.GetCornerMesh(bitMaskValue, coord.y);
-	        // }
+        private void SetAdjacentBlocks()
+        {
+	        SetAdjacentBlocks(null, Vector3Int.back);
         }
 
         public void SetAdjacentBlocks(Block[] _blocks, Vector3Int _gridUnitSize)
@@ -60,100 +69,90 @@ namespace MugCup_BlockBuilder
 	        if (_x < _rowUnit && _y < _levelUnit && _z < _columnUnit)
 	        {
 		        //Upper North East Block
-		        adjacentBlocks[0] = _blocks[_z +     _gridUnitSize.x * (_x + _gridUnitSize.y * _y)];
+		        UpperNorthEastBlock = _blocks[_z +     _gridUnitSize.x * (_x + _gridUnitSize.y * _y)];
 	        }
 	        if (_x < _rowUnit && _y < _levelUnit && _z > 0)
 	        {
 		        //Upper North West Block
-		        adjacentBlocks[1] = _blocks[_z - 1 + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)];
+		        UpperNorthWestBlock = _blocks[_z - 1 + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)];
 	        }
 	        
 	        if (_x > 0 && _y < _levelUnit && _z > 0)
 	        {
 		        //Upper South West Block
-		        adjacentBlocks[2] = _blocks[_z - 1 + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * _y)];
+		        UpperSouthWestBlock = _blocks[_z - 1 + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * _y)];
 	        }
 	        if (_x > 0 && _y < _levelUnit && _z < _columnUnit)
 	        {
 		        //Upper South East Block
-		        adjacentBlocks[3] = _blocks[_z     + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * _y)];
+		        UpperSouthEastBlock  = _blocks[_z     + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * _y)];
 	        }
 	        
 	        if (_x < _rowUnit && _y > 0 && _z < _columnUnit)
 	        {
-		        //Bottom North East Block
-		        adjacentBlocks[4] = _blocks[_z +     _gridUnitSize.x * (_x +    _gridUnitSize.y * (_y - 1))];
+		        //Lower North East Block
+		        LowerNorthEastBlock = _blocks[_z +     _gridUnitSize.x * (_x +    _gridUnitSize.y * (_y - 1))];
 	        }
 	        if (_x < _rowUnit && _y > 0 && _z > 0)
 	        {
-		        //Bottom North West Block
-		        adjacentBlocks[5] = _blocks[_z - 1 + _gridUnitSize.x * (_x +    _gridUnitSize.y * (_y - 1))];
+		        //Lower North West Block
+		        LowerNorthWestBlock = _blocks[_z - 1 + _gridUnitSize.x * (_x +    _gridUnitSize.y * (_y - 1))];
 	        }
 	        
 	        if (_x > 0 && _y > 0 && _z > 0)
 	        {
-		        //Bottom South West Block
-		        adjacentBlocks[6] = _blocks[_z - 1 + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * (_y - 1))];
+		        //Lower South West Block
+		        LowerSouthWestBlock = _blocks[_z - 1 + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * (_y - 1))];
 	        }
 	        if (_x > 0 && _y > 0 && _z < _columnUnit)
 	        {
-		        //Bottom South East Block
-		        adjacentBlocks[7] = _blocks[_z     + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * (_y - 1))];
+		        //Lower South East Block
+		        LowerSouthEastBlock = _blocks[_z     + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * (_y - 1))];
 	        }
-	        
-	    
+        }
+        
+        public void SetCornerMesh()
+        {	
+	        //mesh.mesh = cornerMeshes.instance.GetCornerMesh(bitMaskValue, coord.y);
         }
 
+        public void SetBitMask()
+        { 
+	        bitMask = 0b_0000_0000;
 
-	// public void SetNearGridElements()
-	// {
-	// 	int width = levelGenerator.instance.width;
-	// 	int height = levelGenerator.instance.height;
-	//
-	// 	if(coord.x < width && coord.y < height && coord.z < width)
-	// 	{
-	// 		//UpperNorthEast
-	// 		nearGridElements[0] = levelGenerator.instance.gridElements[coord.x + width * (coord.z + width * coord.y)];
-	// 	}
-	// 	if(coord.x > 0 && coord.y < height & coord.z < width)
-	// 	{
-	// 		//UpperNorthWest
-	// 		nearGridElements[1] = levelGenerator.instance.gridElements[coord.x - 1 + width * (coord.z + width * coord.y)];
-	// 	}
-	// 	if(coord.x > 0 && coord.y < height & coord.z > 0)
-	// 	{
-	// 		//UpperSouthWest
-	// 		nearGridElements[2] = levelGenerator.instance.gridElements[coord.x - 1 + width * (coord.z - 1 + width * coord.y)];
-	// 	}
-	// 	if(coord.x < width && coord.y < height && coord.z > 0)
-	// 	{
-	// 		//UpperSouthEast
-	// 		nearGridElements[3] = levelGenerator.instance.gridElements[coord.x + width * (coord.z - 1 + width * coord.y)];
-	// 	}
-	//
-	//
-	// 	if(coord.x < width && coord.y > 0 && coord.z < width)
-	// 	{
-	// 		//LowerNorthEast
-	// 		nearGridElements[4] = levelGenerator.instance.gridElements[coord.x + width * (coord.z + width * (coord.y - 1))];
-	// 	}
-	// 	if(coord.x > 0 && coord.y > 0 & coord.z < width)
-	// 	{
-	// 		//LowerNorthWest
-	// 		nearGridElements[5] = levelGenerator.instance.gridElements[coord.x - 1 + width * (coord.z + width * (coord.y - 1))];
-	// 	}
-	// 	if(coord.x > 0 && coord.y > 0 & coord.z > 0)
-	// 	{
-	// 		//LowerSouthWest
-	// 		nearGridElements[6] = levelGenerator.instance.gridElements[coord.x - 1 + width * (coord.z - 1 + width * (coord.y - 1))];
-	// 	}
-	// 	if(coord.x < width && coord.y > 0 && coord.z > 0)
-	// 	{
-	// 		//LowerSouthEast
-	// 		nearGridElements[7] = levelGenerator.instance.gridElements[coord.x + width * (coord.z - 1 + width * (coord.y - 1))];
-	// 	}
-	// }
-        
+	        if (UpperNorthEastBlock != null && UpperNorthEastBlock.IsEnable)
+	        {
+		        bitMask += 0b_0000_0001;
+	        }
+	        if (UpperNorthWestBlock != null && UpperNorthWestBlock.IsEnable)
+	        {
+		        bitMask += 0b_0000_0010;
+	        }
+	        if (UpperSouthWestBlock != null && UpperSouthWestBlock.IsEnable)
+	        {
+		        bitMask += 0b_0000_0100;
+	        }
+	        if (UpperSouthEastBlock != null && UpperSouthEastBlock.IsEnable)
+	        {
+		        bitMask += 0b_0000_1000;
+	        }
 
+	        if (LowerNorthEastBlock != null && LowerNorthEastBlock.IsEnable)
+	        {
+		        bitMask += 0b_0001_0000;
+	        }
+	        if (LowerNorthWestBlock != null && LowerNorthWestBlock.IsEnable)
+	        {
+		        bitMask += 0b_0010_0000;
+	        }
+	        if (LowerSouthWestBlock != null && LowerSouthWestBlock.IsEnable)
+	        {
+		        bitMask += 0b_0100_0000;
+	        }
+	        if (LowerSouthEastBlock != null && LowerSouthEastBlock.IsEnable)
+	        {
+		        bitMask += 0b_1000_0000;
+	        }
+        }
     }
 }

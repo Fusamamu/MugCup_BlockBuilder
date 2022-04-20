@@ -37,7 +37,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public IBlock[] MiddleIBlocks = new IBlock[9];
         public IBlock[] BottomIBlocks = new IBlock[9];
         
+        
+        
         public VolumePoint[] VolumePoints = new VolumePoint[8];
+        public bool IsEnable;
 
         private void Awake()
         {
@@ -113,6 +116,27 @@ namespace MugCup_BlockBuilder.Runtime.Core
                     BitMask |= _startBit;
                 
                 _startBit >>= 1;
+            }
+        }
+        
+        public void Enable()
+        {
+            IsEnable = true;
+
+            foreach (var _point in VolumePoints)
+            {
+                _point.SetBitMask   ();
+                _point.SetCornerMesh();
+            }
+        }
+        public void Disable()
+        {
+            IsEnable = false;
+            
+            foreach (var _point in VolumePoints)
+            {
+                _point.SetBitMask   ();
+                _point.SetCornerMesh();
             }
         }
         

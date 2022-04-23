@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace MugCup_BlockBuilder.Runtime.Tools
@@ -12,9 +10,26 @@ namespace MugCup_BlockBuilder.Runtime.Tools
 
         [SerializeField] private float intervalSpace = 4f;
 
+        private List<GameObject> dualBlocks = new List<GameObject>();
+
         private Dictionary<string, Vector3> offsetTable = new Dictionary<string, Vector3>();
 
         private void Start()
+        {
+            GenerateCornerMeshPermutation();
+        }
+
+        public List<GameObject> GetDualBlocks()
+        {
+            if (dualBlocks.Count > 0)
+            {
+                return dualBlocks;
+            }
+
+            return null;
+        }
+
+        public void GenerateCornerMeshPermutation()
         {
             unitBlock = GameObject.CreatePrimitive(PrimitiveType.Cube);
             unitBlock.transform.localScale *= 0.85f;
@@ -23,6 +38,19 @@ namespace MugCup_BlockBuilder.Runtime.Tools
             GenerateAllDualBlockPermutations();
             
             DestroyImmediate(unitBlock);
+        }
+
+        public void ClearDualBlocks()
+        {
+            foreach (var _block in dualBlocks)
+            {
+                if(Application.isEditor)
+                    DestroyImmediate(_block);
+                else
+                    Destroy(_block);
+            }
+            
+            dualBlocks.Clear();
         }
 
         private void InitializeOffsetTable()
@@ -113,6 +141,8 @@ namespace MugCup_BlockBuilder.Runtime.Tools
 
                 _bit <<= 1;
             }
+            
+            dualBlocks.Add(_blockGroup);
 
             return (_blockGroup, _bitMaskTable);
         }
@@ -120,6 +150,29 @@ namespace MugCup_BlockBuilder.Runtime.Tools
         private void DebugBit(int _bit)
         {
             Debug.Log(Convert.ToString(_bit, 2).PadLeft(8,'0'));
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (dualBlocks == null || dualBlocks.Count == 0) return;
+
+            foreach (var _block in dualBlocks)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(_block.transform.position, 0.1f);
+                
+                var _children = _block.transform.GetComponentsInChildren<Transform>(true);
+
+                var _blockID = _block.GetInstanceID();
+                
+                foreach (var _child in _children)
+                {
+                    if(_child.GetInstanceID() == _blockID) continue;
+                    
+                    Gizmos.color = Color.yellow;
+                    Gizmos.DrawSphere(_child.position, 0.1f);
+                }
+            }
         }
     }
 }

@@ -21,6 +21,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		}
 
 		public ManagerMode Mode = ManagerMode.Default;
+
+		/// <summary>
+		/// This will replace static class gridblcokdata
+		/// </summary>
+		[SerializeField] private GridBlockDataManager gridBlockDataManager;
 		
 		public GridDataSettingSO CustomGridDataSetting;
 		public BlockMeshData     CustomBlockMeshData;
@@ -69,6 +74,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		{
 			AddRequiredComponents();
 			InitializeManagers();
+		}
+
+		private void InjectGridBlockDataManager()
+		{
+			gridBlockDataManager = FindObjectOfType<GridBlockDataManager>();
 		}
 		
 		private void Initialize()

@@ -28,6 +28,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		private const string TextParentName  = "[-------Grid Position Text-------]";
 		private const string BlockParentName = "[-------------Blocks-------------]";
 
+#region Managers 
 		private readonly Dictionary<Type, BaseBuilderManager> managerCollections = new Dictionary<Type, BaseBuilderManager>();
 
 		[SerializeField] private List<BaseBuilderManager> bbb = new List<BaseBuilderManager>();
@@ -57,6 +58,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			}
 			managerCollections[_type] = _manager;
 		}
+#endregion
 
 		protected override void Awake()
 		{

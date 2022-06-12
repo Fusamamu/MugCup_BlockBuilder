@@ -17,11 +17,24 @@ Block Builder project is an attempt to create a flexible tile block editor tool 
 ## Documentation
 
 ```mermaid
-  graph TD;
-      A-->B;
-      A-->C;
-      B-->D;
-      C-->D;
+classDiagram
+BlockBuilderManager <|-- BlockManager
+<<Singleton>> BlockBuilderManager
+BlockBuilderManager : Init()
+
+BlockManager <|-- GridBlockDataManager
+
+BlockBuilderManager <|-- BlockEditorManager
+BlockBuilderManager <|-- BlockHandleManager
+
+BlockEditorManager <|-- BlockManager
+BlockHandleManager <|-- BlockManager
+
+class GridBlockDataManager{
+<<Singleton>>
+}
+
+
 ```
 
 ### BlockBuilderManager.cs

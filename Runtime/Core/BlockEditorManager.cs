@@ -128,7 +128,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             blockManager.RemoveBlock(_nodePos);
 
             //Need to refactor this do 2 things// Remove n update blocks
-            List<IBlock> _blocks = blockManager.GetIBlocks3x3Cube(_nodePos);
+            List<Block> _blocks = blockManager.GetIBlocks3x3Cube(_nodePos);
 
             Block[] _checkedBlocks = _blocks.Select(_block => _block as Block).Where(_block => _block != null).ToArray();
             

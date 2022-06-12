@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder.Runtime.Core.Interfaces
 {
-    public interface IBlock
-    {
-        public GameObject gameObject { get; }
-        public Transform  transform  { get; }
-    }
+    // public interface IBlock
+    // {
+    //     public GameObject gameObject { get; }
+    //     public Transform  transform  { get; }
+    // }
 }

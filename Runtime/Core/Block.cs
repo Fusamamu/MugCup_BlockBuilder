@@ -8,10 +8,10 @@ using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 namespace MugCup_BlockBuilder.Runtime.Core
 {
     [System.Serializable]
-    public class Block: MonoBehaviour, IBlock, INode
+    public class Block: MonoBehaviour, INode
     {
         //Should Has Reference to the Grid and Map that this Block reside//
-        private static IBlock[] gridBlocks;
+        private static Block[] gridBlocks;
         private static GridDataSettingSO  gridData;
         
         private MeshFilter mesh;
@@ -33,19 +33,19 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         public int BitMask = 0b_000000000_000000000_000000000;
 
-        public IBlock[] TopIBlocks    = new IBlock[9];
-        public IBlock[] MiddleIBlocks = new IBlock[9];
-        public IBlock[] BottomIBlocks = new IBlock[9];
-        
-        
+        public Block[] TopIBlocks    = new Block[9];
+        public Block[] MiddleIBlocks = new Block[9];
+        public Block[] BottomIBlocks = new Block[9];
         
         public VolumePoint[] VolumePoints = new VolumePoint[8];
         public bool IsEnable;
 
         private void Awake()
         {
-            gridBlocks ??= GridBlockData.GetBlocks();
-            gridData   ??= GridBlockData.GetGridDataSetting();
+            var _blockManger = FindObjectOfType<BlockManager>();
+            
+            gridBlocks ??= _blockManger.GetCurrentGridBlockDataManager().GetGridUnitBlocks();
+            gridData   ??= _blockManger.GetCurrentGridBlockDataManager().GetGridDataSetting();
         }
 
         public void Init(Vector3 _worldPos, Vector3Int _gridPos)

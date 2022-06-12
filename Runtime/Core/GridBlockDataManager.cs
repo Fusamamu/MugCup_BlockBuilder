@@ -13,10 +13,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
     //Per stage / Per Scene / Save/Load Scene?
     public class GridBlockDataManager : MonoBehaviour
     {
-        public IBlock[][] Map;
-        public IBlock[] GridUnitIBlocks;
-
-        [SerializeField] private Block[] gridUnitBlocks;
+        [SerializeField] private Block[][] map;
+        [SerializeField] private Block[]   gridUnitBlocks;
         
         public int RowUnit;
         public int ColumnUnit;
@@ -26,14 +24,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public Vector3Int GridUnitSize;
 
         public void LoadGridBlocksData(Block[] _blockData) => gridUnitBlocks = _blockData;
-
-        public void LoadGridBlocksData (ref IBlock[] _blockData)         => GridUnitIBlocks = _blockData;
+        
         public void LoadGridDataSetting(ref GridDataSettingSO _gridData) => gridData = _gridData;
-        public void LoadMeshBlocksData (ref BlockMeshData _meshData)     => meshData = _meshData;
+        public void LoadMeshBlocksData (ref BlockMeshData     _meshData) => meshData = _meshData;
 
-        public  IBlock[] GetBlocks() => GridUnitIBlocks;
-        public  IEnumerable<IBlock> GetAvailableIBlocks() => GridUnitIBlocks.Where(_iBlock => _iBlock != null);
-        public  IEnumerable<Block>  GetAvailableBlocks()  => GridUnitIBlocks.Where(_iBlock => _iBlock != null).Select(_iBlock => _iBlock as Block);
+        public Block[] GetGridUnitBlocks() => gridUnitBlocks;
+
+        public IEnumerable<Block> GetAvailableBlocks() => gridUnitBlocks.Where(_iBlock => _iBlock != null);
 
         public GridDataSettingSO GetGridDataSetting() => gridData;
         public BlockMeshData     GetBlockMeshData  () => meshData;
@@ -46,7 +43,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         public void InitializeMapSize(int _row, int _column, int _height)
         {
-            Map     = new IBlock[_row * _column * _height][];
+            map     = new Block[_row * _column * _height][];
             MapSize = new Vector3Int(_row, _height, _column);
         }
 
@@ -121,12 +118,12 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             Vector3Int _gridUnitSize = gridData.GridUnitSize;
             
-            GridUnitIBlocks = new IBlock[_rowUnit * _columnUnit * _levelUnit];
+            gridUnitBlocks = new Block[_rowUnit * _columnUnit * _levelUnit];
 
             for (int _y = 0; _y < _levelUnit ; _y++)
             for (int _x = 0; _x < _rowUnit   ; _x++)
             for (int _z = 0; _z < _columnUnit; _z++)
-                GridUnitIBlocks[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = null;
+                gridUnitBlocks[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = null;
         }
 #endregion
         
@@ -156,9 +153,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         public  void InitializeBlocksData()
         {
-            foreach (IBlock _block in GetAvailableIBlocks())
+            foreach (Block _block in GetAvailableBlocks())
             {
-                Block _checkedBlock = _block as Block;
+                Block _checkedBlock = _block;
 
                 if (_checkedBlock != null)
                 {

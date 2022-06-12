@@ -12,7 +12,7 @@ namespace BlockBuilder.Runtime.Core
     {
         public static NormalFace SelectedFace;
 
-        public static void PopulateGridIBlocksByLevel<T>(IBlock[] _blocks, Vector3Int _gridUnitSize, int _heightLevel, GameObject _blockPrefab, GameObject _parent = null) where T : Block
+        public static void PopulateGridIBlocksByLevel<T>(Block[] _blocks, Vector3Int _gridUnitSize, int _heightLevel, GameObject _blockPrefab, GameObject _parent = null) where T : Block
         {
             int _rowUnit    = _gridUnitSize.x;
             int _columnUnit = _gridUnitSize.z;

@@ -18,25 +18,29 @@ Block Builder project is an attempt to create a flexible tile block editor tool 
 
 ```mermaid
 classDiagram
-BlockBuilderManager <|-- BlockManager
+BlockBuilderManager *-- BlockManager
+
 <<Singleton>> BlockBuilderManager
 BlockBuilderManager : Init()
 
-BlockManager <|-- GridBlockDataManager
+BlockManager o-- GridBlockDataManager : Blockmanager manage GridBlockData
 
-BlockBuilderManager <|-- BlockEditorManager
-BlockBuilderManager <|-- BlockHandleManager
-BlockBuilderManager <|-- BlockSelectionManager
+BlockBuilderManager *-- BlockEditorManager
+BlockBuilderManager *-- BlockHandleManager
+BlockBuilderManager *-- BlockSelectionManager
 
 BlockEditorManager    <|-- BaseBuilderManager
 BlockHandleManager    <|-- BaseBuilderManager
 BlockSelectionManager <|-- BaseBuilderManager
 
-
-BaseBuilderManager <|-- BlockManager
+BaseBuilderManager *-- BlockManager
 
 class GridBlockDataManager{
 <<Singleton>>
+}
+
+class BaseBuilderManager{
+<<BaseClass>>
 }
 
 

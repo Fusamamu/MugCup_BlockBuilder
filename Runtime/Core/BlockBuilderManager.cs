@@ -22,17 +22,19 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 		public ManagerMode Mode = ManagerMode.Default;
 
+		public GridDataSettingSO CustomGridDataSetting;
+		public BlockMeshData     CustomBlockMeshData;
+
+		private const string TextParentName  = "[-------Grid Position Text-------]";
+		private const string BlockParentName = "[-------------Blocks-------------]";
+		
+		
 		/// <summary>
 		/// This will replace static class gridblcokdata
 		/// </summary>
 		[SerializeField] private GridBlockDataManager gridBlockDataManager;
 		[SerializeField] private BlockManager         blockManager;
 		
-		public GridDataSettingSO CustomGridDataSetting;
-		public BlockMeshData     CustomBlockMeshData;
-
-		private const string TextParentName  = "[-------Grid Position Text-------]";
-		private const string BlockParentName = "[-------------Blocks-------------]";
 
 #region Managers 
 		private readonly Dictionary<Type, BaseBuilderManager> managerCollections = new Dictionary<Type, BaseBuilderManager>();
@@ -71,19 +73,18 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		/// </summary>
 		protected override void Awake()
 		{
-			Initialize();
+			Initialized();
 		}
 		
-		private void Start()
+		private void Initialized()
 		{
 			AddRequiredComponents();
-			InitializeManagers();
-		}
-		
-		private void Initialize()
-		{
+			//Init GridBlockData
 			InjectGridBlockDataManager();
-
+			//Init Managers
+			InitializeManagers();
+			
+			//Generate Grid Blocks
 			var _gridBlocks   = GridBlockData.GridUnitIBlocks;
 			var _gridUnitSize = GridBlockData.GridUnitSize;
 			var _gridLevel    = 0;

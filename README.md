@@ -26,9 +26,14 @@ BlockManager <|-- GridBlockDataManager
 
 BlockBuilderManager <|-- BlockEditorManager
 BlockBuilderManager <|-- BlockHandleManager
+BlockBuilderManager <|-- BlockSelectionManager
 
-BlockEditorManager <|-- BlockManager
-BlockHandleManager <|-- BlockManager
+BlockEditorManager    <|-- BaseBuilderManager
+BlockHandleManager    <|-- BaseBuilderManager
+BlockSelectionManager <|-- BaseBuilderManager
+
+
+BaseBuilderManager <|-- BlockManager
 
 class GridBlockDataManager{
 <<Singleton>>

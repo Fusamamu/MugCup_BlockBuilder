@@ -13,7 +13,7 @@ using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
-	public class BlockBuilderManager : Singleton<BlockBuilderManager>, IBlockManager
+	public class BlockBuilderManager : Singleton<BlockBuilderManager>
 	{
 		public enum ManagerMode
 		{
@@ -26,6 +26,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		/// This will replace static class gridblcokdata
 		/// </summary>
 		[SerializeField] private GridBlockDataManager gridBlockDataManager;
+		[SerializeField] private BlockManager         blockManager;
 		
 		public GridDataSettingSO CustomGridDataSetting;
 		public BlockMeshData     CustomBlockMeshData;
@@ -65,6 +66,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		}
 #endregion
 
+		/// <summary>
+		/// BlockBuilder Package Initialization start from here.
+		/// </summary>
 		protected override void Awake()
 		{
 			Initialize();
@@ -75,15 +79,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			AddRequiredComponents();
 			InitializeManagers();
 		}
-
-		private void InjectGridBlockDataManager()
-		{
-			gridBlockDataManager = FindObjectOfType<GridBlockDataManager>();
-		}
 		
 		private void Initialize()
 		{
-			GetBlockData();
+			InjectGridBlockDataManager();
 
 			var _gridBlocks   = GridBlockData.GridUnitIBlocks;
 			var _gridUnitSize = GridBlockData.GridUnitSize;
@@ -94,7 +93,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 			GridBlockData.InitializeBlocksData(); //-->1 Same
 
-			GridBlockData.AvailableBlocksApplyAll(UpdateMeshBlock);
+			GridBlockData.AvailableBlocksApplyAll(blockManager.UpdateMeshBlock);
+			
 			GridBlockData.AvailableBlocksApplyAll(_block => //--2 Same
 			{
 				_block.GetSurroundingIBlocksReference();
@@ -104,6 +104,43 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			CreateTextOverlay  ();
 			GroupBlocksToParent();
 		}
+		
+		/// <summary>
+		/// Initialize Grid Block Data. Need to be done first before do anything.
+		/// </summary>
+		private void InjectGridBlockDataManager()
+		{
+			gridBlockDataManager = FindObjectOfType<GridBlockDataManager>();
+			
+			gridBlockDataManager.Initialized();
+			
+			switch (Mode)
+			{
+				case ManagerMode.Default:
+					gridBlockDataManager.Initialized();
+					break;
+				case ManagerMode.Custom:
+					gridBlockDataManager.InitializeWith(CustomGridDataSetting, CustomBlockMeshData);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+		
+		// private void GetBlockData()
+		// {
+		// 	switch (Mode)
+		// 	{
+		// 		case ManagerMode.Default:
+		// 			GridBlockData.Initialized();
+		// 			break;
+		// 		case ManagerMode.Custom:
+		// 			GridBlockData.InitializeWith(CustomGridDataSetting, CustomBlockMeshData);
+		// 			break;
+		// 		default:
+		// 			throw new ArgumentOutOfRangeException();
+		// 	}
+		// }
 		
 		private static void GroupBlocksToParent()
 		{
@@ -130,20 +167,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			});
 		}
 
-		private void GetBlockData()
-		{
-			switch (Mode)
-			{
-				case ManagerMode.Default:
-					GridBlockData.Initialized();
-					break;
-				case ManagerMode.Custom:
-					GridBlockData.InitializeWith(CustomGridDataSetting, CustomBlockMeshData);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
 
 		private void AddRequiredComponents()
 		{
@@ -174,126 +197,126 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		
 		//Might need to move all code below into another class(BlockManager)//
 		
-		public void UpdateMeshBlocks(IEnumerable<Block> _blocks)
-		{
-			foreach (var _block in _blocks)
-				UpdateMeshBlock(_block);
-		}
-		
-		private void UpdateMeshBlock(Block _block)
-		{
-			Vector3Int _targetNodePos = _block.NodePosition;
-				
-			Block _blockPrefab = GridBlockData.GetBlockMeshData().GetBlockPrefab(_block.BitMask);
-				
-			if(_blockPrefab == null) return;
-				
-			RemoveBlock(_targetNodePos);
-			AddBlock   (_blockPrefab, _targetNodePos);
-		}
-
-#region Add/Remove Block by Node Position
-		public void AddBlock(Block _prefab, Vector3Int _nodePos)
-		{
-			if (IsOccupied(_nodePos)) return;
-			
-			var _targetNodeWorldPos = GridBlockData.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
-			
-			var _newBlock = Instantiate(_prefab, _targetNodeWorldPos, _prefab.transform.localRotation);
-			_newBlock.Init(_targetNodeWorldPos, _nodePos);
-			
-			AddIBlockRef(_newBlock, _nodePos);
-		}
-
-		public void RemoveBlock(Vector3Int _nodePos)
-		{
-			if (!IsOccupied(_nodePos)) return;
-			
-			DestroyIBlockObject(_nodePos);
-			RemoveIBlockRef    (_nodePos);
-		}
-#endregion
-		
-		public bool IsOccupied(Vector3Int _nodePos)
-		{
-			if (GetIBlock(_nodePos) != null) {
-				Debug.Log($"<color=red>[Warning] : </color> Grid at position {_nodePos} is occupied");
-				return true;
-			}
-
-			Debug.Log($"<color=yellow>[Info] : </color> Grid at position {_nodePos} is empty");
-			return false;
-		}
-		
-		public void DestroyIBlockObject(Vector3Int _nodePos)
-		{
-			var _blockToBeRemoved = GetIBlock(_nodePos);
-			Destroy(_blockToBeRemoved.gameObject);
-		}
-		
-		public void AddIBlockRef(IBlock _newBlock, Vector3Int _nodePos)
-		{
-			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
-			
-			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitIBlocks);
-		}
-		
-		public void RemoveIBlockRef(Vector3Int _nodePos)
-		{
-			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
-			
-			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitIBlocks);
-		}
-
-#region Get Blocks
-		public Block GetBlock(Vector3Int _nodePos) => GetIBlock(_nodePos) as Block;
-		
-		public T GetBlock<T>(Vector3Int _nodePos) where T : IBlock
-		{
-			return (T)GetIBlock(_nodePos);
-		}
-#endregion
-
-#region Get IBlocks
-		public IBlock GetIBlock(Vector3Int _nodePos)
-		{
-			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
-			
-			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnitIBlocks);
-		}
-
-		public List<IBlock> GetIBlocks(Vector3Int _startPos, Vector3Int _endPos)
-		{
-			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
-			
-			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnitIBlocks);
-		}
-
-		public List<IBlock> GetIBlocks3x3Cube(Vector3Int _nodePos)
-		{
-			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
-			
-			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
-		}
-#endregion
-
-		private void OnDrawGizmos()
-		{
-			if(!Application.isPlaying) return;
-
-			foreach (var _block in GridBlockData.GridUnitIBlocks)
-			{
-				if (_block != null)
-				{
-					Gizmos.color = Color.red;
-					Gizmos.DrawSphere(_block.transform.position, 0.05f);
-				}
-			}
-		}
+// 		public void UpdateMeshBlocks(IEnumerable<Block> _blocks)
+// 		{
+// 			foreach (var _block in _blocks)
+// 				UpdateMeshBlock(_block);
+// 		}
+// 		
+// 		private void UpdateMeshBlock(Block _block)
+// 		{
+// 			Vector3Int _targetNodePos = _block.NodePosition;
+// 				
+// 			Block _blockPrefab = GridBlockData.GetBlockMeshData().GetBlockPrefab(_block.BitMask);
+// 				
+// 			if(_blockPrefab == null) return;
+// 				
+// 			RemoveBlock(_targetNodePos);
+// 			AddBlock   (_blockPrefab, _targetNodePos);
+// 		}
+//
+// #region Add/Remove Block by Node Position
+// 		public void AddBlock(Block _prefab, Vector3Int _nodePos)
+// 		{
+// 			if (IsOccupied(_nodePos)) return;
+// 			
+// 			var _targetNodeWorldPos = GridBlockData.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
+// 			
+// 			var _newBlock = Instantiate(_prefab, _targetNodeWorldPos, _prefab.transform.localRotation);
+// 			_newBlock.Init(_targetNodeWorldPos, _nodePos);
+// 			
+// 			AddIBlockRef(_newBlock, _nodePos);
+// 		}
+//
+// 		public void RemoveBlock(Vector3Int _nodePos)
+// 		{
+// 			if (!IsOccupied(_nodePos)) return;
+// 			
+// 			DestroyIBlockObject(_nodePos);
+// 			RemoveIBlockRef    (_nodePos);
+// 		}
+// #endregion
+// 		
+// 		public bool IsOccupied(Vector3Int _nodePos)
+// 		{
+// 			if (GetIBlock(_nodePos) != null) {
+// 				Debug.Log($"<color=red>[Warning] : </color> Grid at position {_nodePos} is occupied");
+// 				return true;
+// 			}
+//
+// 			Debug.Log($"<color=yellow>[Info] : </color> Grid at position {_nodePos} is empty");
+// 			return false;
+// 		}
+// 		
+// 		public void DestroyIBlockObject(Vector3Int _nodePos)
+// 		{
+// 			var _blockToBeRemoved = GetIBlock(_nodePos);
+// 			Destroy(_blockToBeRemoved.gameObject);
+// 		}
+// 		
+// 		public void AddIBlockRef(IBlock _newBlock, Vector3Int _nodePos)
+// 		{
+// 			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+// 			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+// 			
+// 			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitIBlocks);
+// 		}
+// 		
+// 		public void RemoveIBlockRef(Vector3Int _nodePos)
+// 		{
+// 			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+// 			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+// 			
+// 			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitIBlocks);
+// 		}
+//
+// #region Get Blocks
+// 		public Block GetBlock(Vector3Int _nodePos) => GetIBlock(_nodePos) as Block;
+// 		
+// 		public T GetBlock<T>(Vector3Int _nodePos) where T : IBlock
+// 		{
+// 			return (T)GetIBlock(_nodePos);
+// 		}
+// #endregion
+//
+// #region Get IBlocks
+// 		public IBlock GetIBlock(Vector3Int _nodePos)
+// 		{
+// 			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+// 			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+// 			
+// 			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnitIBlocks);
+// 		}
+//
+// 		public List<IBlock> GetIBlocks(Vector3Int _startPos, Vector3Int _endPos)
+// 		{
+// 			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+// 			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+// 			
+// 			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnitIBlocks);
+// 		}
+//
+// 		public List<IBlock> GetIBlocks3x3Cube(Vector3Int _nodePos)
+// 		{
+// 			var _gridUnitSize    = GridBlockData.GetGridDataSetting().GridUnitSize;
+// 			var _gridUnitIBlocks = GridBlockData.GridUnitIBlocks;
+// 			
+// 			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
+// 		}
+// #endregion
+//
+// 		private void OnDrawGizmos()
+// 		{
+// 			if(!Application.isPlaying) return;
+//
+// 			foreach (var _block in GridBlockData.GridUnitIBlocks)
+// 			{
+// 				if (_block != null)
+// 				{
+// 					Gizmos.color = Color.red;
+// 					Gizmos.DrawSphere(_block.transform.position, 0.05f);
+// 				}
+// 			}
+// 		}
 	}
 }

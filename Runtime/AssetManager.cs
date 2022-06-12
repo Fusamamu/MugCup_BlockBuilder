@@ -10,6 +10,7 @@ using MugCup_BlockBuilder.Runtime.Core;
 
 namespace MugCup_BlockBuilder
 {
+    //Editor Asset Manager-> should only be used in unity editor only (Static class helps do that)
     public static class AssetManager
     {
         public static AssetCollection AssetCollection 

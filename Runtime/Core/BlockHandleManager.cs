@@ -32,10 +32,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
         {
             if (!blockSelectionManager)
             {
-                if (blockBuilderManager is BlockBuilderManager _blockBuilderManager)
-                {
-                    blockSelectionManager = _blockBuilderManager.GetManager<BlockSelectionManager>();
-                }
+                // if (blockManager is BlockBuilderManager _blockBuilderManager)
+                // {
+                //     blockSelectionManager = _blockBuilderManager.GetManager<BlockSelectionManager>();
+                // }
             }
         }
 

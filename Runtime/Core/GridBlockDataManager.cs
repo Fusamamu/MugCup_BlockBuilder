@@ -15,6 +15,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
     {
         public IBlock[][] Map;
         public IBlock[] GridUnitIBlocks;
+
+        [SerializeField] private Block[] gridUnitBlocks;
         
         public int RowUnit;
         public int ColumnUnit;
@@ -22,6 +24,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         public Vector3Int MapSize;
         public Vector3Int GridUnitSize;
+
+        public void LoadGridBlocksData(Block[] _blockData) => gridUnitBlocks = _blockData;
 
         public void LoadGridBlocksData (ref IBlock[] _blockData)         => GridUnitIBlocks = _blockData;
         public void LoadGridDataSetting(ref GridDataSettingSO _gridData) => gridData = _gridData;

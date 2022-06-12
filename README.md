@@ -16,6 +16,14 @@ Block Builder project is an attempt to create a flexible tile block editor tool 
 
 ## Documentation
 
+```mermaid
+  graph TD;
+      A-->B;
+      A-->C;
+      B-->D;
+      C-->D;
+```
+
 ### BlockBuilderManager.cs
 BlockBuilderManager manage all grid block data initializations and dependencies. GridDataManger
 is initialized through this. BlockBuilderManager can choose to swap GridDataManagers when needed.

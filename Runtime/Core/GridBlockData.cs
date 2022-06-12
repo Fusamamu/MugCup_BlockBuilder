@@ -151,6 +151,7 @@ namespace BlockBuilder.Runtime.Core
                 _action?.Invoke(_block);
         }
         
+        //Should go to BlockManager
         public static void InitializeBlocksData()
         {
             foreach (IBlock _block in GetAvailableIBlocks())

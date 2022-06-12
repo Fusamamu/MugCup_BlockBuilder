@@ -3,6 +3,8 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 using BlockBuilder.Core.Scriptable;
+using BlockBuilder.Runtime.Scriptable;
+using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 using UnityEditor.AnimatedValues;
 #endif
 using BlockBuilder.Core;
@@ -31,6 +33,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
             interfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset");
             gridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
             
+            AssetManager.LoadAssets();
+            
             SceneView.duringSceneGui += OnScene;
 
             blocks = Array.Empty<Block>();
@@ -47,6 +51,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             GUILayout.Space(10);
             
             string[] _tabCaptions = {"Build", "Paint", "Setting", "Tools"};
+            
             interfaceSetting.CurrentMainTapSelection = GUILayout.Toolbar(interfaceSetting.CurrentMainTapSelection, _tabCaptions, GUILayout.Height(50), GUILayout.ExpandWidth(true));
             GUILayout.Space(10);
            
@@ -110,13 +115,26 @@ namespace MugCup_BlockBuilder.Editor.GUI
             {
                 Vector3Int _mapSize  = gridDataSettingSo.MapSize;
                 Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
+                
                 GameObject _mainMap = new GameObject("Main Map");
+
+                bool _usePrimitive = false;
                 
-                GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                var _defaultBlock = AssetManager.AssetCollection.DefualtBlock.gameObject;
+                if (!_defaultBlock)
+                {
+                    _defaultBlock = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    _usePrimitive = true;
+                }
                 
-                blocks = GridBlockGenerator.GenerateGridBlocks(_unitSize, _blockPrefab, _mainMap);
-                DestroyImmediate(_blockPrefab);
-              
+                //Need to get generated block array into GridDataNodeManager.cs
+                blocks = GridBlockGenerator.GenerateGridBlocks(_unitSize, _defaultBlock, _mainMap);
+
+                    
+                FindObjectOfType<GridBlockDataManager>().LoadGridBlocksData(blocks);
+                
+                if(_usePrimitive)
+                    DestroyImmediate(_defaultBlock);
             }
 
             if (GUILayout.Button("Generate Volume Points", _newStyle, GUILayout.Height(30)))

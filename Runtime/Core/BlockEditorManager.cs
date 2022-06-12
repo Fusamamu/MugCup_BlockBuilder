@@ -13,6 +13,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 #region Dependencies
         private BlockBuilderManager blockBuilderManager;
         private PointerVisualizer   pointerVisualizer;
+        
         private IBlockRaycaster     gridBlockSelection;
         private IInputManager       inputManager;
 #endregion
@@ -95,39 +96,39 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private void AddBlockOnTop(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.up;
-            blockBuilderManager.AddBlock(_blockPrefab, _targetNodePos);
+            blockManager.AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void AddBlockLeft(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.left;
-            blockBuilderManager.AddBlock(_blockPrefab, _targetNodePos);
+            blockManager.AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void AddBlockRight(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.right;
-            blockBuilderManager.AddBlock(_blockPrefab, _targetNodePos);
+            blockManager.AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void AddBlockForward(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.forward;
-            blockBuilderManager.AddBlock(_blockPrefab, _targetNodePos);
+            blockManager.AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void AddBlockBack(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.back;
-            blockBuilderManager.AddBlock(_blockPrefab, _targetNodePos);
+            blockManager.AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void RemoveBlock(Vector3Int _nodePos)
         {
-            blockBuilderManager.RemoveBlock(_nodePos);
+            blockManager.RemoveBlock(_nodePos);
 
             //Need to refactor this do 2 things// Remove n update blocks
-            List<IBlock> _blocks = blockBuilderManager.GetIBlocks3x3Cube(_nodePos);
+            List<IBlock> _blocks = blockManager.GetIBlocks3x3Cube(_nodePos);
 
             Block[] _checkedBlocks = _blocks.Select(_block => _block as Block).Where(_block => _block != null).ToArray();
             
@@ -141,7 +142,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 }
             }
             
-            blockBuilderManager.UpdateMeshBlocks(_checkedBlocks);
+            blockManager.UpdateMeshBlocks(_checkedBlocks);
         }
     }
 }

@@ -100,16 +100,20 @@ namespace BlockBuilder.Runtime.Core
                      for (int _z = 0; _z < _columnUnit; _z++)
                      {
                          Vector3 _position = new Vector3(_x, _y, _z);
-            
-                         Block _block = Object.Instantiate(_blockPrefab, _position, Quaternion.identity).AddComponent<Block>();
-                         
+
+                         var _blockObject = Object.Instantiate(_blockPrefab, _position, Quaternion.identity);
+
                          if (_parent != null)
                          {
-                             _block.transform.position += _parent.transform.position;
-                             _block.transform.SetParent(_parent.transform);
+                             _blockObject.transform.position += _parent.transform.position;
+                             _blockObject.transform.SetParent(_parent.transform);
                          }
                      
-                         _block.Init(_block.transform.position, new Vector3Int(_x, _y, _z));
+                         /*Make sure Block script added only once per object*/
+                         if (!_blockObject.TryGetComponent<Block>(out var _block))
+                             _block = _blockObject.AddComponent<Block>();
+                         
+                         _block.Init(_blockObject.transform.position, new Vector3Int(_x, _y, _z));
                          
                          _blocks[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = _block;
                      }

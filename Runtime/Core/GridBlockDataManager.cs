@@ -35,8 +35,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public GridDataSettingSO GetGridDataSetting() => gridData;
         public BlockMeshData     GetBlockMeshData  () => meshData;
 
-        private  GridDataSettingSO gridData;
-        private  BlockMeshData     meshData;
+        [SerializeField] private GridDataSettingSO gridData;
+        [SerializeField] private BlockMeshData     meshData;
         
         private  bool GRID_DATA_INIT = false;
         private  bool GRID_SIZE_INIT = false;
@@ -59,6 +59,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             InitializeGridUnitSize(_gridData);
             InitializeGridArray();
+            
+            Debug.Log($"GridBlockDataManager Initialized.");
+
+            if (gridData == null)
+            {
+                Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
+            }
         }
 
         public void InitializeWith(GridDataSettingSO _gridDataSetting, BlockMeshData _meshDataSetting)
@@ -151,16 +158,15 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 _action?.Invoke(_block);
         }
         
-        public  void InitializeBlocksData()
+        public void InitializeBlocksData()
         {
             foreach (Block _block in GetAvailableBlocks())
             {
-                Block _checkedBlock = _block;
-
-                if (_checkedBlock != null)
+                if (_block != null)
                 {
-                    _checkedBlock.GetSurroundingIBlocksReference();
-                    _checkedBlock.SetBitMask();
+                    _block.GetSurroundingIBlocksReference();
+                    _block.SetBitMask();
+                    Debug.Log("Initializing a Block");
                 }
             }
         }

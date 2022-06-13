@@ -44,18 +44,18 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 	    private void Update()
 	    {
-		    if (inputManager.CheckLeftMouseClicked())
-		    {
-			    var _hitBlock = gridBlockSelection.GetHitObject<Block>();
-
-			    if (_hitBlock)
-			    {
-					SelectBlock(_hitBlock);
-				    return;
-			    }
-			    
-			    DeselectAllBlocks();
-		    }
+		   //  if (inputManager.CheckLeftMouseClicked())
+		   //  {
+			  //   var _hitBlock = gridBlockSelection.GetHitObject<Block>();
+		   //
+			  //   if (_hitBlock)
+			  //   {
+					// SelectBlock(_hitBlock);
+				 //    return;
+			  //   }
+			  //   
+			  //   DeselectAllBlocks();
+		   //  }
 	    }
 
 	    //Need to use Game State Pattern to toggle between Selection Mode and Edit Mode//

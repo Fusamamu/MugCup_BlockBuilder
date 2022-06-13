@@ -54,20 +54,20 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         private void Update()
         {
-            if (inputManager.CheckLeftMouseClicked())
-            {
-                Vector3Int _hitNodePos = GetHitNodePosition();
-                NormalFace _normalFace = GetHitNormalFace();
-                
-                Block      _newBlock   = AssetManager.AssetCollection.DefualtBlock;
-                AddBlock(_newBlock, _hitNodePos, _normalFace);
-            }
-
-            if (inputManager.CheckRightMouseClicked())
-            {
-                Vector3Int _hitNodePos = GetHitNodePosition();
-                RemoveBlock(_hitNodePos);
-            }
+            // if (inputManager.CheckLeftMouseClicked())
+            // {
+            //     Vector3Int _hitNodePos = GetHitNodePosition();
+            //     NormalFace _normalFace = GetHitNormalFace();
+            //     
+            //     Block      _newBlock   = AssetManager.AssetCollection.DefualtBlock;
+            //     AddBlock(_newBlock, _hitNodePos, _normalFace);
+            // }
+            //
+            // if (inputManager.CheckRightMouseClicked())
+            // {
+            //     Vector3Int _hitNodePos = GetHitNodePosition();
+            //     RemoveBlock(_hitNodePos);
+            // }
         }
 
         private NormalFace GetHitNormalFace()

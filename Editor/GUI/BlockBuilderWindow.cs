@@ -140,11 +140,19 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     _usePrimitive = true;
                 }
                 
+                GetBlockManager().Initialized();
                 GetBlockManager().GenerateGridBlocks(_unitSize, _defaultBlock, _mainMap);
                 
                 if(_usePrimitive)
                     DestroyImmediate(_defaultBlock);
             }
+            
+            if (GUILayout.Button("Initialize Blocks Data", _newStyle, GUILayout.Height(30)))
+            {
+                FindObjectOfType<GridBlockDataManager>().InitializeBlocksData();
+            }
+            
+            
 
             if (GUILayout.Button("Generate Volume Points", _newStyle, GUILayout.Height(30)))
             {

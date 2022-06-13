@@ -89,6 +89,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 		private void InitializeBlockManager()
 		{
+			//Temp
+			blockManager = FindObjectOfType<BlockManager>();
+			
 			switch (Mode)
 			{
 				case ManagerMode.Default:

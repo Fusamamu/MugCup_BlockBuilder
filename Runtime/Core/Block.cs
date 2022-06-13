@@ -11,8 +11,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
     public class Block: MonoBehaviour, INode
     {
         //Should Has Reference to the Grid and Map that this Block reside//
-        private static Block[] gridBlocks;
-        private static GridDataSettingSO  gridData;
+        private BlockManager blockManager;
+        
+        private Block[]            gridBlocks;
+        private GridDataSettingSO  gridData;
         
         private MeshFilter mesh;
         
@@ -42,10 +44,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         private void Awake()
         {
-            var _blockManger = FindObjectOfType<BlockManager>();
-            
-            gridBlocks ??= _blockManger.GetCurrentGridBlockDataManager().GetGridUnitBlocks();
-            gridData   ??= _blockManger.GetCurrentGridBlockDataManager().GetGridDataSetting();
+            InitializeDependencies();
         }
 
         public void Init(Vector3 _worldPos, Vector3Int _gridPos)
@@ -58,9 +57,18 @@ namespace MugCup_BlockBuilder.Runtime.Core
             tag  = "Block";
             name = $"Block: ({_gridPos.x}, {_gridPos.y}, {_gridPos.z})";
             
-            //gameObject.layer = LayerMask.NameToLayer("Block");
+            InitializeDependencies();
             
+            //gameObject.layer = LayerMask.NameToLayer("Block");
             //VolumePoints = VolumePointGenerator.GeneratedVolumePoints()
+        }
+
+        public void InitializeDependencies()
+        {
+            var _blockManger = FindObjectOfType<BlockManager>();
+            
+            gridBlocks ??= _blockManger.GetCurrentGridBlockDataManager().GetGridUnitBlocks();
+            gridData   ??= _blockManger.GetCurrentGridBlockDataManager().GetGridDataSetting();
         }
 
         public void SetVolumePoints(VolumePoint[] _volumePoints)

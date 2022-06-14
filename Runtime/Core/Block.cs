@@ -85,11 +85,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         public void UpdateBlockData()
         {
-            GetSurroundingIBlocksReference();
+            GetSurroundingBlocksReference();
             SetBitMask();
         }
 
-        public void GetSurroundingIBlocksReference()
+        public void GetSurroundingBlocksReference()
         {
             if(!IsGridDataInit()) return;
             

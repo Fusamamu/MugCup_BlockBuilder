@@ -184,7 +184,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             {
                 if (_block != null)
                 {
-                    _block.GetSurroundingIBlocksReference();
+                    _block.GetSurroundingBlocksReference();
                     _block.SetBitMask();
                     Debug.Log("Initializing a Block");
                 }

@@ -65,12 +65,34 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		    
 		    gridBlockDataManager.AvailableBlocksApplyAll(_block => 
 		    {
-			    _block.GetSurroundingIBlocksReference();
+			    _block.GetSurroundingBlocksReference();
 			    _block.SetBitMask();
 		    });
 		    
 		    CreateTextOverlay  ();
 		    GroupBlocksToParent();
+	    }
+
+	    /// <summary>
+	    /// Update Surrounding Blocks around 3x3 cube and Reset Bitmasks. Then Update Meshes
+	    /// (Add->Remove Based on Preset Prefab Data in MeshData)
+	    /// <param name="_nodePos"></param>
+	    public void UpdateSurroundBlocksBitMask(Vector3Int _nodePos)
+	    {
+		    List<Block> _blocks = GetBlocks3x3Cube(_nodePos);
+
+		    Block[] _checkedBlocks = _blocks.Where(_block => _block != null).ToArray();
+            
+		    foreach (var _block in _checkedBlocks)
+		    {
+			    if (_block != null)
+			    {
+				    _block.GetSurroundingBlocksReference();
+				    _block.SetBitMask();
+			    }
+		    }
+		    
+		    UpdateMeshBlocks(_checkedBlocks);
 	    }
 	    
         public void UpdateMeshBlocks(IEnumerable<Block> _blocks)
@@ -106,11 +128,16 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			AddBlockRef(_newBlock, _nodePos);
 		}
 
+		public void RemoveBlock(Block _block)
+		{
+			RemoveBlock(_block.NodePosition);
+		}
+
 		public void RemoveBlock(Vector3Int _nodePos)
 		{
 			if (!IsOccupied(_nodePos)) return;
 			
-			DestroyIBlockObject(_nodePos);
+			DestroyBlockObject(_nodePos);
 			RemoveBlockRef    (_nodePos);
 		}
 #endregion
@@ -126,10 +153,14 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			return false;
 		}
 		
-		public void DestroyIBlockObject(Vector3Int _nodePos)
+		public void DestroyBlockObject(Vector3Int _nodePos)
 		{
 			var _blockToBeRemoved = GetBlockRef(_nodePos);
-			Destroy(_blockToBeRemoved.gameObject);
+			
+			if(Application.isPlaying)
+				Destroy(_blockToBeRemoved.gameObject);
+			else
+				DestroyImmediate(_blockToBeRemoved.gameObject);
 		}
 		
 		public void AddBlockRef(Block _newBlock, Vector3Int _nodePos)

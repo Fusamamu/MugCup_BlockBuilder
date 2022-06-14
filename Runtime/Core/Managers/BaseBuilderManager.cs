@@ -32,5 +32,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             blockManager  = (BlockManager)iBlockManager;
         }
+
+        public void InjectBlockManager(BlockManager _blockManager)
+        {
+            blockManager = _blockManager;
+        }
     }
 }

@@ -123,26 +123,28 @@ namespace MugCup_BlockBuilder.Runtime.Core
             blockManager.AddBlock(_blockPrefab, _targetNodePos);
         }
         
-        private void RemoveBlock(Vector3Int _nodePos)
+        public void RemoveBlock(Vector3Int _nodePos)
         {
             blockManager.RemoveBlock(_nodePos);
 
             //Need to refactor this do 2 things// Remove n update blocks
-            List<Block> _blocks = blockManager.GetBlocks3x3Cube(_nodePos);
-
-            Block[] _checkedBlocks = _blocks.Select(_block => _block as Block).Where(_block => _block != null).ToArray();
             
-            foreach (var _block in _checkedBlocks)
-            {
-                var _checkedBlock = _block;
-                if (_checkedBlock != null)
-                {
-                    _checkedBlock.GetSurroundingIBlocksReference();
-                    _checkedBlock.SetBitMask();
-                }
-            }
+            blockManager.UpdateSurroundBlocksBitMask(_nodePos);
             
-            blockManager.UpdateMeshBlocks(_checkedBlocks);
+            // List<Block> _blocks = blockManager.GetBlocks3x3Cube(_nodePos);
+            //
+            // Block[] _checkedBlocks = _blocks.Where(_block => _block != null).ToArray();
+            //
+            // foreach (var _block in _checkedBlocks)
+            // {
+            //     if (_block != null)
+            //     {
+            //         _block.GetSurroundingBlocksReference();
+            //         _block.SetBitMask();
+            //     }
+            // }
+            
+            //blockManager.UpdateMeshBlocks(_checkedBlocks);
         }
     }
 }

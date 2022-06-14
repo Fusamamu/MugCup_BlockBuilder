@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7611072854211523856}
   - component: {fileID: 6668422764112966310}
   - component: {fileID: 957237639199737727}
+  - component: {fileID: 7342133537920494938}
   m_Layer: 0
   m_Name: '[---Block Manager---]'
   m_TagString: Untagged
@@ -76,8 +77,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridUnitBlocks: []
-  RowUnit: 0
-  ColumnUnit: 0
-  LevelUnit: 0
-  MapSize: {x: 0, y: 0, z: 0}
-  GridUnitSize: {x: 0, y: 0, z: 0}
+  RowUnit: 10
+  ColumnUnit: 10
+  LevelUnit: 10
+  MapSize: {x: 1, y: 1, z: 1}
+  GridUnitSize: {x: 10, y: 10, z: 10}
+  gridData: {fileID: 11400000, guid: e8782ab07f7c046c09146999a9ad829b, type: 2}
+  meshData: {fileID: 11400000, guid: 475bc90d6770340c0a5bc27fa938cadc, type: 2}
+--- !u!114 &7342133537920494938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611072854211523857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aacabe219f89c4a2594540bb3dff7c70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

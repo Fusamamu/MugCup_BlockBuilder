@@ -11,7 +11,7 @@ namespace MugCup_BlockBuilder.Runtime.Core.Interfaces
 		public void AddBlockRef    (Block _newBlock, Vector3Int _nodePos);
 		public void RemoveBlockRef (Vector3Int _nodePos);
 
-		public void DestroyIBlockObject(Vector3Int _nodePos);
+		public void DestroyBlockObject(Vector3Int _nodePos);
 		
 		public Block       GetBlockRef  (Vector3Int _nodePos);
 		public List<Block> GetBlocks (Vector3Int _startPos, Vector3Int _endPos);

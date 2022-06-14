@@ -18,7 +18,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
 {
     public class BlockBuilderWindow : EditorWindow
     {
-        private static BlockManager blockManager;
+        private static BlockManager       blockManager;
+        private static BlockEditorManager blockEditorManager;
         
         private static InterfaceSetting   interfaceSetting;
         private static GridDataSettingSO  gridDataSettingSo;
@@ -39,6 +40,14 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 blockManager = FindObjectOfType<BlockManager>();
 
             return blockManager;
+        }
+
+        private BlockEditorManager GetBlockEditorManager()
+        {
+            if (!blockEditorManager)
+                blockEditorManager = FindObjectOfType<BlockEditorManager>();
+
+            return blockEditorManager;
         }
 
         private void OnEnable()
@@ -240,7 +249,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
         {
             if(Application.isPlaying) return;
             
-            ProcessMouseEnterLeaveSceneview();
+            ProcessMouseEnterLeaveSceneView();
             
             Event _currentEvent = Event.current; 
             Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
@@ -286,7 +295,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             GridBlockGenerator.SelectedFace = BlockFaceUtil.GetSelectedFace(_hit);
         }
 
-        private static void UpdateBuildTools(Event _currentEvent, Ray _ray)
+        private void UpdateBuildTools(Event _currentEvent, Ray _ray)
         {
             switch (interfaceSetting.BuildToolTabSelection)
             {
@@ -316,15 +325,20 @@ namespace MugCup_BlockBuilder.Editor.GUI
                         Debug.Log($"<color=yellow>[Info]:</color> <color=orange>Left Mouse Button Clicked.</color>");
                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                         {
-                            GameObject _object = _hit.collider.gameObject;
-                            DestroyImmediate(_object);
+                            var _object = _hit.collider.gameObject;
+
+                            if (_object.TryGetComponent<Block>(out var _block))
+                            {
+                                GetBlockManager().RemoveBlock(_block);
+                                GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                            }
                         }
                     }
                     break;
             }
         }
         
-        void ProcessMouseEnterLeaveSceneview()
+        void ProcessMouseEnterLeaveSceneView()
         {
             // If mouse enters SceneView window, show visualizer
             if (Event.current.type == EventType.MouseEnterWindow)

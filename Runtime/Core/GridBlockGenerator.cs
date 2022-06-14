@@ -22,8 +22,8 @@ namespace BlockBuilder.Runtime.Core
                 for (var _z = 0; _z < _columnUnit; _z++)
                 {
                     var _targetNodePos = new Vector3Int(_x, _heightLevel, _z);
-                    
-                    T _block = Object.Instantiate(_blockPrefab, _targetNodePos, Quaternion.identity).AddComponent<T>();
+
+                    var _blockObject = Object.Instantiate(_blockPrefab, _targetNodePos, Quaternion.identity);
                     
                     /*TODO : Must Find way to get GridWorldNodePosition*/
                     // Vector3    _targetNodeWorldPos = Vector3.zero;
@@ -35,9 +35,12 @@ namespace BlockBuilder.Runtime.Core
                         
                     if (_parent != null)
                     {
-                        _block.transform.position += _parent.transform.position;
-                        _block.transform.SetParent(_parent.transform);
+                        _blockObject.transform.position += _parent.transform.position;
+                        _blockObject.transform.SetParent(_parent.transform);
                     }
+                    
+                    if (!_blockObject.TryGetComponent<T>(out var _block))
+                        _block = _blockObject.AddComponent<T>();
                     
                     _block.Init(_targetNodePos, _targetNodePos);
 

@@ -11,12 +11,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
     public class Block: MonoBehaviour, INode
     {
         //Should Has Reference to the Grid and Map that this Block reside//
-        private BlockManager blockManager;
+        [SerializeField] private BlockManager blockManager;
+   
+        [SerializeField] private Block[] gridBlocks;
         
-        private Block[]            gridBlocks;
-        private GridDataSettingSO  gridData;
+        [SerializeField] private GridDataSettingSO  gridData;
         
-        private MeshFilter mesh;
+        [SerializeField] private MeshFilter mesh;
         
 #region INode Implementation
         public INode      NodeParent   { get; set; }
@@ -42,9 +43,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public VolumePoint[] VolumePoints = new VolumePoint[8];
         public bool IsEnable;
 
+        [SerializeField] private bool isInit;
+
         private void Awake()
         {
-            InitializeDependencies();
+            //InjectDependency();
         }
 
         public void Init(Vector3 _worldPos, Vector3Int _gridPos)
@@ -57,18 +60,22 @@ namespace MugCup_BlockBuilder.Runtime.Core
             tag  = "Block";
             name = $"Block: ({_gridPos.x}, {_gridPos.y}, {_gridPos.z})";
             
-            InitializeDependencies();
+            //InjectDependency();
             
             //gameObject.layer = LayerMask.NameToLayer("Block");
             //VolumePoints = VolumePointGenerator.GeneratedVolumePoints()
         }
 
-        public void InitializeDependencies()
+        public void InjectDependency(BlockManager _blockManager)
         {
-            var _blockManger = FindObjectOfType<BlockManager>();
+            // if(isInit) return;
+            //
+            // isInit = true;
             
-            gridBlocks ??= _blockManger.GetCurrentGridBlockDataManager().GetGridUnitBlocks();
-            gridData   ??= _blockManger.GetCurrentGridBlockDataManager().GetGridDataSetting();
+            //var _blockManger = FindObjectOfType<BlockManager>();
+            
+            gridBlocks = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitBlocks();
+            gridData   = _blockManager.GetCurrentGridBlockDataManager().GetGridDataSetting();
         }
 
         public void SetVolumePoints(VolumePoint[] _volumePoints)

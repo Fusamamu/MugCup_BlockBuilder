@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BlockBuilder.Core.Scriptable;
+using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 using UnityEditor;
@@ -40,6 +41,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         private  bool GRID_DATA_INIT = false;
         private  bool GRID_SIZE_INIT = false;
+
+        public void ClearGridUnitBlocks()
+        {
+            gridUnitBlocks = null;
+        }
         
         public void InitializeMapSize(int _row, int _column, int _height)
         {
@@ -157,9 +163,23 @@ namespace MugCup_BlockBuilder.Runtime.Core
             foreach (Block _block in _blocks)
                 _action?.Invoke(_block);
         }
-        
-        public void InitializeBlocksData()
+
+        //Where to push it? BlockManager or This GridBlockDataManager.
+        public void PopulateGridBlocksByLevel()
         {
+            var _gridLevel    = 0;
+            var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
+
+            GridBlockGenerator.PopulateGridIBlocksByLevel<Block>(gridUnitBlocks, GridUnitSize, _gridLevel, _blockPrefab);
+        }
+        
+        public void InitializeBlocksData(BlockManager _blockManager)
+        {
+            foreach (Block _block in GetAvailableBlocks())
+            {
+                _block.InjectDependency(_blockManager);
+            }
+            
             foreach (Block _block in GetAvailableBlocks())
             {
                 if (_block != null)

@@ -30,41 +30,40 @@ namespace MugCup_BlockBuilder.Runtime.Core
 	    {
 		    return gridBlockDataManager;
 	    }
-
+	    
+#region Initialization [Using Preset from GridBlockDataManager or Manually pass via arg]
 	    public void Initialized()
 	    {
+		    //Block Manager is responsible for initializing Grid Block Data Manager//
 		    gridBlockDataManager = FindObjectOfType<GridBlockDataManager>();
 		    gridBlockDataManager.Initialized();
 	    }
 
 	    public void InitializeWith(GridDataSettingSO _gridDataSetting, BlockMeshData _meshDataSetting)
 	    {
+		    //Block Manager is responsible for initializing Grid Block Data Manager//
 		    gridBlockDataManager = FindObjectOfType<GridBlockDataManager>();
 		    gridBlockDataManager.InitializeWith(_gridDataSetting, _meshDataSetting);
 	    }
+#endregion
 
 	    public void GenerateGridBlocks(Vector3Int _unitSize, GameObject _defaultBlock, GameObject _mainMap)
 	    {
 		    Block[] _blocks = GridBlockGenerator.GenerateGridBlocks(_unitSize, _defaultBlock, _mainMap);
 
 		    gridBlockDataManager.LoadGridBlocksData(_blocks);
-		    gridBlockDataManager.InitializeBlocksData();
+		    gridBlockDataManager.InitializeBlocksData(this);
 	    }
 
 	    public void GenerateGridBlocks()
 	    {
-		    var _gridBlocks   = gridBlockDataManager.GetGridUnitBlocks();
-		    var _gridUnitSize = gridBlockDataManager.GridUnitSize;
-		    var _gridLevel    = 0;
-		    var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
-
-		    GridBlockGenerator.PopulateGridIBlocksByLevel<Block>(_gridBlocks, _gridUnitSize, _gridLevel, _blockPrefab);
-
-		    gridBlockDataManager.InitializeBlocksData(); //-->1 Same
+		    gridBlockDataManager.PopulateGridBlocksByLevel();
+		    
+		    gridBlockDataManager.InitializeBlocksData(this); 
 
 		    gridBlockDataManager.AvailableBlocksApplyAll(UpdateMeshBlock);
-			
-		    gridBlockDataManager.AvailableBlocksApplyAll(_block => //--2 Same
+		    
+		    gridBlockDataManager.AvailableBlocksApplyAll(_block => 
 		    {
 			    _block.GetSurroundingIBlocksReference();
 			    _block.SetBitMask();
@@ -100,9 +99,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			var _targetNodeWorldPos = gridBlockDataManager.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
 			
 			var _newBlock = Instantiate(_prefab, _targetNodeWorldPos, _prefab.transform.localRotation);
-			_newBlock.Init(_targetNodeWorldPos, _nodePos);
 			
-			AddIBlockRef(_newBlock, _nodePos);
+			_newBlock.Init(_targetNodeWorldPos, _nodePos);
+			_newBlock.InjectDependency(this);
+			
+			AddBlockRef(_newBlock, _nodePos);
 		}
 
 		public void RemoveBlock(Vector3Int _nodePos)
@@ -110,13 +111,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			if (!IsOccupied(_nodePos)) return;
 			
 			DestroyIBlockObject(_nodePos);
-			RemoveIBlockRef    (_nodePos);
+			RemoveBlockRef    (_nodePos);
 		}
 #endregion
 		
 		public bool IsOccupied(Vector3Int _nodePos)
 		{
-			if (GetIBlock(_nodePos) != null) {
+			if (GetBlockRef(_nodePos) != null) {
 				Debug.Log($"<color=red>[Warning] : </color> Grid at position {_nodePos} is occupied");
 				return true;
 			}
@@ -127,11 +128,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		
 		public void DestroyIBlockObject(Vector3Int _nodePos)
 		{
-			var _blockToBeRemoved = GetIBlock(_nodePos);
+			var _blockToBeRemoved = GetBlockRef(_nodePos);
 			Destroy(_blockToBeRemoved.gameObject);
 		}
 		
-		public void AddIBlockRef(Block _newBlock, Vector3Int _nodePos)
+		public void AddBlockRef(Block _newBlock, Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
 			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
@@ -139,7 +140,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitIBlocks);
 		}
 		
-		public void RemoveIBlockRef(Vector3Int _nodePos)
+		public void RemoveBlockRef(Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
 			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
@@ -148,16 +149,16 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		}
 
 #region Get Blocks
-		public Block GetBlock(Vector3Int _nodePos) => GetIBlock(_nodePos) as Block;
+		public Block GetBlock(Vector3Int _nodePos) => GetBlockRef(_nodePos) as Block;
 		
 		public T GetBlock<T>(Vector3Int _nodePos) where T : Block
 		{
-			return (T)GetIBlock(_nodePos);
+			return (T)GetBlockRef(_nodePos);
 		}
 #endregion
 
 #region Get IBlocks
-		public Block GetIBlock(Vector3Int _nodePos)
+		public Block GetBlockRef(Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
 			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
@@ -165,7 +166,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnitIBlocks);
 		}
 
-		public List<Block> GetIBlocks(Vector3Int _startPos, Vector3Int _endPos)
+		public List<Block> GetBlocks(Vector3Int _startPos, Vector3Int _endPos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
 			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
@@ -173,7 +174,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnitIBlocks);
 		}
 
-		public List<Block> GetIBlocks3x3Cube(Vector3Int _nodePos)
+		public List<Block> GetBlocks3x3Cube(Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
 			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
@@ -181,7 +182,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
 		}
 #endregion
-	    
+	    //Generate/Populat Block Related Function
 	    private void GroupBlocksToParent()
 	    {
 		    var _blockParent = new GameObject(BlockParentName);

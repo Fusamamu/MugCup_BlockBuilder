@@ -66,10 +66,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		
 		private void Initialized()
 		{
-			AddRequiredComponents();
+			//AddRequiredComponents();
 			
 			InitializeBlockManager();
-			InitializeManagers    ();
+			//InitializeManagers    ();
 			
 			blockManager.GenerateGridBlocks();
 		}

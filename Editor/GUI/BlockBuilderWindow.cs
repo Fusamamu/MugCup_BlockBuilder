@@ -31,6 +31,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
         [MenuItem("Tools/Block Builder/Open Block Builder Window", false, 16)]
         public static void ShowWindow() => GetWindow(typeof(GUI.BlockBuilderWindow), false, "Block Builder").Show();
 
+        private static GameObject mainMap;
+
         private BlockManager GetBlockManager()
         {
             if (!blockManager)
@@ -129,7 +131,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 Vector3Int _mapSize  = gridDataSettingSo.MapSize;
                 Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
                 
-                GameObject _mainMap = new GameObject("Main Map");
+                mainMap = new GameObject("Main Map");
 
                 bool _usePrimitive = false;
                 
@@ -141,16 +143,16 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 }
                 
                 GetBlockManager().Initialized();
-                GetBlockManager().GenerateGridBlocks(_unitSize, _defaultBlock, _mainMap);
+                GetBlockManager().GenerateGridBlocks(_unitSize, _defaultBlock, mainMap);
                 
                 if(_usePrimitive)
                     DestroyImmediate(_defaultBlock);
             }
             
-            if (GUILayout.Button("Initialize Blocks Data", _newStyle, GUILayout.Height(30)))
-            {
-                FindObjectOfType<GridBlockDataManager>().InitializeBlocksData();
-            }
+            // if (GUILayout.Button("Initialize Blocks Data", _newStyle, GUILayout.Height(30)))
+            // {
+            //     FindObjectOfType<GridBlockDataManager>().InitializeBlocksData(GetBlockManager());
+            // }
             
             
 
@@ -183,8 +185,13 @@ namespace MugCup_BlockBuilder.Editor.GUI
             if(GUILayout.Button("Delete Blocks", _newStyle, GUILayout.Height(30)))
             {
                 var _blocks = GameObject.FindGameObjectsWithTag("Block");
+                
                 foreach(GameObject _block in _blocks)
                     DestroyImmediate(_block);
+                
+                DestroyImmediate(mainMap);
+
+                GetBlockManager().GetCurrentGridBlockDataManager().ClearGridUnitBlocks();
             }
 
             string[] _buildingToolTabs = {"Add Block", "Subtract Block"};

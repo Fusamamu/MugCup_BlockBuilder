@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61253bb4c8654435483b131cedced749, type: 3}
   m_Name: DefaultBlockMeshData
   m_EditorClassIdentifier: 
-  IsolatedBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
-  TopSurfaceBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  IsolatedBlock: {fileID: 3291406715260299996, guid: 629332f009fab4b9aba9a0f726b49518, type: 3}
+  TopSurfaceBlock: {fileID: 19585839252214235, guid: 1bd4f2fe05c914b2a9029f3c0399049e, type: 3}
+  Side: {fileID: 4595515642699763593, guid: 7fe20600611a84b56aa0fbf94c92546e, type: 3}
+  Corner: {fileID: 2568543951732047865, guid: afd46a6d6a3174fcdbe72ea0991badde, type: 3}
+  IShape: {fileID: 831692481008372174, guid: 69f20d680b50e4793a821b2bf40187e9, type: 3}
+  ConnectOneSide: {fileID: 6884174225953403492, guid: 3c77775e57e214f67986fa62f2242fb7, type: 3}
   SideW: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
   SideN: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
   SideE: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}

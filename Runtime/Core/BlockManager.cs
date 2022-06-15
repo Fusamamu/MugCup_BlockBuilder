@@ -105,9 +105,16 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		{
 			Vector3Int _targetNodePos = _block.NodePosition;
 				
-			Block _blockPrefab = gridBlockDataManager.GetBlockMeshData().GetBlockPrefab(_block.BitMask);
-				
-			if(_blockPrefab == null) return;
+			//Block _blockPrefab = gridBlockDataManager.GetBlockMeshData().GetBlockPrefab(_block.BitMask);
+			
+			BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_block.GetBitMaskMiddleSection());
+
+			Block _blockPrefab = _blockMeshInfo.Prefab;
+			
+			if (_blockPrefab == null)
+			{
+				_blockPrefab = gridBlockDataManager.GetBlockMeshData().GetDefaultBlock();
+			}
 				
 			RemoveBlock(_targetNodePos);
 			AddBlock   (_blockPrefab, _targetNodePos);

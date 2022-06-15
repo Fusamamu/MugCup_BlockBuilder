@@ -7,11 +7,30 @@ using MugCup_BlockBuilder.Runtime.Core;
 
 namespace BlockBuilder.Core.Scriptable
 {
+    public struct BlockMeshInfo
+    {
+        public Block Prefab;
+        public Quaternion Rotation;
+    }
+    
     [CreateAssetMenu(fileName = "BlockMeshData", menuName = "ScriptableObjects/BlockMeshDataObject", order = 6)]
     public class BlockMeshData : ScriptableObject
     {
+        [Header("Isolated")]
         public Block IsolatedBlock;
+        
+        [Header("Top Surface")]
         public Block TopSurfaceBlock;
+
+        [Header("Side")]
+        public Block Side;
+        [Header("Corner")]
+        public Block Corner;
+        [Header("I Shape")]
+        public Block IShape;
+        [Header("Connect One Side")]
+        public Block ConnectOneSide;
+        
 
         [Header("Sides")]
         public Block SideW;
@@ -43,6 +62,138 @@ namespace BlockBuilder.Core.Scriptable
         public Block LShape_NE;
         public Block LShape_SE;
         public Block LShape_SW;
+
+        public Block GetDefaultBlock()
+        {
+            return IsolatedBlock;
+        }
+
+        public BlockMeshInfo GetBlockPrefabMiddleSection(int _bitMask)
+        {
+            BlockMeshInfo _blockMeshInfo = new BlockMeshInfo();
+            
+            switch (_bitMask)
+            {
+                case 0b_111_111_111:
+
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                    
+                case 0b_000_011_000:
+                    
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                // case 0b_010_010_000:
+                //     return ConnectOneSide;
+                // case 0b_010_011_000:
+                //     return Corner;
+                // case 0b_011_011_000:
+                //     return Corner;
+                // case 0b_000_010_010:
+                //     return ConnectOneSide;
+                // case 0b_000_011_010:
+                //     return Corner;
+                // case 0b_000_011_011:
+                //     return Corner;
+                // case 0b_010_010_010:
+                //     return IShape;
+                // case 0b_010_011_010:
+                //     return Side;
+                // case 0b_011_011_010:
+                //     return Side;
+                // case 0b_010_011_011:
+                //     return Side;
+                // case 0b_011_011_011:
+                //     return Side;
+                // case 0b_000_110_000:
+                //     return ConnectOneSide;
+                // case 0b_000_111_000:
+                //     return null;
+                // case 0b_010_110_000:
+                //     return null;
+                // case 0b_010_111_000:
+                //     return null;
+                // case 0b_011_111_000:
+                //     return null;
+                // case 0b_000_110_010:
+                //     return null;
+                // case 0b_000_111_010:
+                //     return null;
+                // case 0b_000_111_011:
+                //     return null;
+                // case 0b_010_110_010:
+                //     return null;
+                // case 0b_010_111_010:
+                //     return null;
+                // case 0b_011_111_110:
+                //     return null;
+                // case 0b_010_111_011:
+                //     return null;
+                // case 0b_011_111_011:
+                //     return null;
+                // case 0b_110_110_000:
+                //     return null;
+                // case 0b_110_111_000:
+                //     return null;
+                // case 0b_111_111_000:
+                //     return null;
+                // case 0b_110_110_010:
+                //     return null;
+                // case 0b_110_111_011:
+                //     return null;
+                // case 0b_111_111_010:
+                //     return null;
+                // // case 0b_111_111_11:
+                // //     return 32;
+                // case 0b_111_111_011:
+                //     return null;
+                // case 0b_000_110_110:
+                //     return null;
+                // case 0b_000_111_110:
+                //     return null;
+                // case 0b_000_111_111:
+                //     return null;
+                // case 0b_010_110_110:
+                //     return null;
+                // case 0b_010_111_110:
+                //     return null;
+                // // case 0b_011_111_110:
+                // //     return 39;
+                // case 0b_010_111_111:
+                //     return null;
+                // case 0b_011_111_111:
+                //     return null;
+                // case 0b_110_110_110:
+                //     return null;
+                // case 0b_110_111_110:
+                //     return null;
+                // case 0b_111_111_110:
+                //     return null;
+                // case 0b_110_111_111:
+                //     return null;
+                // // case 0b_111_111_111:
+                // //     return 46;
+                // case 0b_000_010_000:
+                //     return null;
+                default:
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+            }
+
+            return _blockMeshInfo;
+        }
 
         public Block GetBlockPrefab(int _bitMask)
         {

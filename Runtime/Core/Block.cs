@@ -35,6 +35,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public int GridPosZ => NodePosition.z;
 
         public int BitMask = 0b_000000000_000000000_000000000;
+        
+        public int BitMaskMiddleSection = 0b_000000000_000000000_000000000;
 
         public Block[] TopIBlocks    = new Block[9];
         public Block[] MiddleIBlocks = new Block[9];
@@ -101,6 +103,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public void SetMesh(Mesh _mesh)
         {
             mesh.mesh = _mesh;
+        }
+
+        public int GetBitMaskMiddleSection()
+        {
+            BitMaskMiddleSection = (BitMask >> 9) & 0b_000000000_000000000_111111111;
+
+            return BitMaskMiddleSection;
         }
 
         public void SetBitMask()

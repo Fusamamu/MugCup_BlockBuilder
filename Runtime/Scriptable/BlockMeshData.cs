@@ -91,98 +91,548 @@ namespace BlockBuilder.Core.Scriptable
                         Rotation = Quaternion.identity
                     };
                     break;
-                // case 0b_010_010_000:
-                //     return ConnectOneSide;
-                // case 0b_010_011_000:
-                //     return Corner;
-                // case 0b_011_011_000:
-                //     return Corner;
-                // case 0b_000_010_010:
-                //     return ConnectOneSide;
-                // case 0b_000_011_010:
-                //     return Corner;
-                // case 0b_000_011_011:
-                //     return Corner;
-                // case 0b_010_010_010:
-                //     return IShape;
-                // case 0b_010_011_010:
-                //     return Side;
-                // case 0b_011_011_010:
-                //     return Side;
-                // case 0b_010_011_011:
-                //     return Side;
-                // case 0b_011_011_011:
-                //     return Side;
-                // case 0b_000_110_000:
-                //     return ConnectOneSide;
-                // case 0b_000_111_000:
-                //     return null;
-                // case 0b_010_110_000:
-                //     return null;
-                // case 0b_010_111_000:
-                //     return null;
-                // case 0b_011_111_000:
-                //     return null;
-                // case 0b_000_110_010:
-                //     return null;
-                // case 0b_000_111_010:
-                //     return null;
-                // case 0b_000_111_011:
-                //     return null;
-                // case 0b_010_110_010:
-                //     return null;
-                // case 0b_010_111_010:
-                //     return null;
+                
+                case 0b_010_010_000:
+                    
+                    /*
+                     * 0  0  0
+                     * 1  1  0
+                     * 0  0  0
+                     */
+                    
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = ConnectOneSide,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                
+                case 0b_010_011_000:
+                    
+                    /*
+                     * 0  1  0
+                     * 1  1  0
+                     * 0  0  0
+                     */
+                    
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Corner,
+                        Rotation = Quaternion.Euler(0, 90, 0)
+                    };
+                    break;
+                
+                case 0b_011_011_000:
+                    /*
+                    * 1  1  0
+                    * 1  1  0
+                    * 0  0  0
+                    */
+                    
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Corner,
+                        Rotation = Quaternion.Euler(0, 90, 0)
+                    };
+                    break;
+                 
+                case 0b_000_010_010: 
+                    /*
+                    * 0  0  0
+                    * 0  1  1
+                    * 0  0  0
+                    */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = ConnectOneSide,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                
+                 
+                case 0b_000_011_010:
+                     /*
+                     * 0  1  0
+                     * 0  1  1
+                     * 0  0  0
+                     */
+                     _blockMeshInfo = new BlockMeshInfo
+                     {
+                         Prefab   = Corner,
+                         Rotation = Quaternion.Euler(0, 180, 0)
+                     };
+                     break;
+                
+                case 0b_000_011_011:
+                    /*
+                     * 0  1  1
+                     * 0  1  1
+                     * 0  0  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Corner,
+                        Rotation = Quaternion.Euler(0, 180, 0)
+                    };
+                    break;
+                
+                case 0b_010_010_010:
+                    
+                    /*
+                     * 0  0  0
+                     * 1  1  1
+                     * 0  0  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = IShape,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                
+                
+                case 0b_010_011_010:
+
+                    /*
+                     * 0  1  0
+                     * 1  1  1
+                     * 0  0  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 90, 0)
+                    };
+                    break;
+                
+                case 0b_011_011_010:
+                    
+                    /*
+                     * 1  1  0
+                     * 1  1  1
+                     * 0  0  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 90, 0)
+                    };
+                    break;
+                
+                case 0b_010_011_011:
+                    /*
+                     * 0  1  1
+                     * 1  1  1
+                     * 0  0  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 90, 0)
+                    };
+                    break;
+                
+                case 0b_011_011_011:
+                    /*
+                     * 1  1  1
+                     * 1  1  1
+                     * 0  0  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 90, 0)
+                    };
+                    break;
+                
+                case 0b_000_110_000:
+                    /*
+                     * 0  0  0
+                     * 0  1  0
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = ConnectOneSide,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_000_111_000:
+                    /*
+                     * 0  1  0
+                     * 0  1  0
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = IShape,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_010_110_000:
+                    /*
+                     * 0  0  0
+                     * 1  1  0
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Corner,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_010_111_000:
+                    /*
+                     * 0  1  0
+                     * 1  1  0
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_011_111_000:
+                    /*
+                     * 1  1  0
+                     * 1  1  0
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_000_110_010:
+                    /*
+                     * 0  0  0
+                     * 0  1  1
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Corner,
+                        Rotation = Quaternion.Euler(0, 270, 0)
+                    };
+                    break;
+                case 0b_000_111_010:
+                    /*
+                     * 0  1  0
+                     * 0  1  1
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 180, 0)
+                    };
+                    break;
+                case 0b_000_111_011:
+                    /*
+                     * 0  1  1
+                     * 0  1  1
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 180, 0)
+                    };
+                    break;
+                case 0b_010_110_010:
+                    /*
+                     * 0  0  0
+                     * 1  1  1
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 270, 0)
+                    };
+                    break;
+                case 0b_010_111_010:
+                    /*
+                     * 0  1  0
+                     * 1  1  1
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_011_111_110:
+                    /*
+                     * 1  1  0
+                     * 1  1  1
+                     * 0  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_010_111_011:
+                    /*
+                     * 0  1  1
+                     * 1  1  1
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_011_111_011:
+                    /*
+                     * 1  1  1
+                     * 1  1  1
+                     * 0  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_110_110_000:
+                    /*
+                     * 0  0  0
+                     * 1  1  0
+                     * 1  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Corner,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_110_111_000:
+                    /*
+                     * 0  1  0
+                     * 1  1  0
+                     * 1  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_111_111_000:
+                    /*
+                     * 1  1  0
+                     * 1  1  0
+                     * 1  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_110_110_010:
+                    /*
+                     * 0  0  0
+                     * 1  1  1
+                     * 1  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 270, 0)
+                    };
+                    break;
+                case 0b_110_111_011:
+                    /*
+                     * 0  1  1
+                     * 1  1  1
+                     * 1  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_111_111_010:
+                    /*
+                     * 1  1  0
+                     * 1  1  1
+                     * 1  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                // case 0b_111_111_11:
+                case 0b_111_111_011:
+                    /*
+                     * 1  1  1
+                     * 1  1  1
+                     * 1  1  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_000_110_110:
+                    /*
+                     * 0  0  0
+                     * 0  1  1
+                     * 0  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Corner,
+                        Rotation = Quaternion.Euler(0, 270, 0)
+                    };
+                    break;
+                case 0b_000_111_110:
+                    /*
+                     * 0  1  0
+                     * 0  1  1
+                     * 0  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 180, 0)
+                    };
+                    break;
+                case 0b_000_111_111:
+                    /*
+                     * 0  1  1
+                     * 0  1  1
+                     * 0  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 180, 0)
+                    };
+                    break;
+                case 0b_010_110_110:
+                    /*
+                     * 0  0  0
+                     * 1  1  1
+                     * 0  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 270, 0)
+                    };
+                    break;
+                case 0b_010_111_110:
+                    /*
+                     * 0  1  0
+                     * 1  1  1
+                     * 0  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
                 // case 0b_011_111_110:
-                //     return null;
-                // case 0b_010_111_011:
-                //     return null;
-                // case 0b_011_111_011:
-                //     return null;
-                // case 0b_110_110_000:
-                //     return null;
-                // case 0b_110_111_000:
-                //     return null;
-                // case 0b_111_111_000:
-                //     return null;
-                // case 0b_110_110_010:
-                //     return null;
-                // case 0b_110_111_011:
-                //     return null;
-                // case 0b_111_111_010:
-                //     return null;
-                // // case 0b_111_111_11:
-                // //     return 32;
-                // case 0b_111_111_011:
-                //     return null;
-                // case 0b_000_110_110:
-                //     return null;
-                // case 0b_000_111_110:
-                //     return null;
-                // case 0b_000_111_111:
-                //     return null;
-                // case 0b_010_110_110:
-                //     return null;
-                // case 0b_010_111_110:
-                //     return null;
-                // // case 0b_011_111_110:
-                // //     return 39;
-                // case 0b_010_111_111:
-                //     return null;
-                // case 0b_011_111_111:
-                //     return null;
-                // case 0b_110_110_110:
-                //     return null;
-                // case 0b_110_111_110:
-                //     return null;
-                // case 0b_111_111_110:
-                //     return null;
-                // case 0b_110_111_111:
-                //     return null;
-                // // case 0b_111_111_111:
-                // //     return 46;
-                // case 0b_000_010_000:
-                //     return null;
+                case 0b_010_111_111:
+                    /*
+                     * 0  1  1
+                     * 1  1  1
+                     * 0  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_011_111_111:
+                    /*
+                     * 1  1  1
+                     * 1  1  1
+                     * 0  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_110_110_110:
+                    /*
+                     * 0  0  0
+                     * 1  1  1
+                     * 1  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = Side,
+                        Rotation = Quaternion.Euler(0, 270, 0)
+                    };
+                    break;
+                case 0b_110_111_110:
+                    /*
+                     * 0  1  0
+                     * 1  1  1
+                     * 1  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_111_111_110:
+                    /*
+                     * 1  1  0
+                     * 1  1  1
+                     * 1  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                case 0b_110_111_111:
+                    /*
+                     * 0  1  1
+                     * 1  1  1
+                     * 1  1  1
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = TopSurfaceBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                // case 0b_111_111_111:
+                case 0b_000_010_000:
+                    /*
+                     * 0  0  0
+                     * 0  1  0
+                     * 0  0  0
+                     */
+                    _blockMeshInfo = new BlockMeshInfo
+                    {
+                        Prefab   = IsolatedBlock,
+                        Rotation = Quaternion.identity
+                    };
+                    break;
+                
                 default:
                     _blockMeshInfo = new BlockMeshInfo
                     {

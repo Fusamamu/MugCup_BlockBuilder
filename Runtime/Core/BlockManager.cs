@@ -109,7 +109,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			
 			BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_block.GetBitMaskMiddleSection());
 
-			Block _blockPrefab = _blockMeshInfo.Prefab;
+			Block _blockPrefab   = _blockMeshInfo.Prefab;
+			Quaternion _rotation = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
 			
 			if (_blockPrefab == null)
 			{
@@ -117,17 +118,22 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			}
 				
 			RemoveBlock(_targetNodePos);
-			AddBlock   (_blockPrefab, _targetNodePos);
+			AddBlock   (_blockPrefab, _targetNodePos, _rotation);
 		}
 
 #region Add/Remove Block by Node Position
-		public void AddBlock(Block _prefab, Vector3Int _nodePos)
+	    public void AddBlock(Block _prefab, Vector3Int _nodePos)
+	    {
+		    AddBlock(_prefab, _nodePos, _prefab.transform.localRotation);
+	    }
+	    
+		public void AddBlock(Block _prefab, Vector3Int _nodePos, Quaternion _rotation)
 		{
 			if (IsOccupied(_nodePos)) return;
 			
 			var _targetNodeWorldPos = gridBlockDataManager.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
 			
-			var _newBlock = Instantiate(_prefab, _targetNodeWorldPos, _prefab.transform.localRotation);
+			var _newBlock = Instantiate(_prefab, _targetNodeWorldPos, _rotation);
 			
 			_newBlock.Init(_targetNodeWorldPos, _nodePos);
 			_newBlock.InjectDependency(this);

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4093212658361445332}
   - component: {fileID: 1108405219203163249}
   - component: {fileID: 2919792596024545467}
+  - component: {fileID: 8732155316119612895}
   - component: {fileID: 2568543951732047865}
   m_Layer: 0
   m_Name: block_corner
@@ -82,6 +83,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8732155316119612895
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3712606105838580078}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.019999996, z: 0.019999996}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2568543951732047865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,6 +114,7 @@ MonoBehaviour:
   mesh: {fileID: 0}
   WorldPosition: {x: 0, y: 0, z: 0}
   BitMask: 0
+  BitMaskMiddleSection: 0
   TopIBlocks:
   - {fileID: 0}
   - {fileID: 0}

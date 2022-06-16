@@ -72,6 +72,33 @@ namespace BlockBuilder.Core.Scriptable
         {
             BlockMeshInfo _blockMeshInfo = new BlockMeshInfo();
             
+            //Filter BitMask
+
+            int _westBit  = (_bitMask >> 7) & 0b_000_000_001;
+            int _southBit = (_bitMask >> 5) & 0b_000_000_001;
+            int _northBit = (_bitMask >> 3) & 0b_000_000_001;
+            int _eastBit  = (_bitMask >> 1) & 0b_000_000_001;
+
+            if (_westBit == 0 || _southBit == 0)
+            {
+                _bitMask &= 0b_011_111_111; //Remove SW Bit
+            }
+
+            if (_westBit == 0 || _northBit == 0)
+            {
+                _bitMask &= 0b_110_111_111;  //Remove NW Bit
+            }
+            
+            if (_eastBit == 0 || _northBit == 0)
+            {
+                _bitMask &= 0b_111_111_110;  //Remove NE Bit
+            }
+            
+            if (_eastBit == 0 || _southBit == 0)
+            {
+                _bitMask &= 0b_111_111_011;  //Remove SE Bit
+            }
+            
             switch (_bitMask)
             {
                 case 0b_111_111_111:
@@ -82,13 +109,17 @@ namespace BlockBuilder.Core.Scriptable
                         Rotation = Quaternion.identity
                     };
                     break;
-                    
+                
                 case 0b_000_011_000:
-                    
+                    /*
+                    * 0  1  0
+                    * 0  1  0
+                    * 0  0  0
+                    */
                     _blockMeshInfo = new BlockMeshInfo
                     {
-                        Prefab   = TopSurfaceBlock,
-                        Rotation = Quaternion.identity
+                        Prefab   = ConnectOneSide,
+                        Rotation = Quaternion.Euler(0, 90, 0)
                     };
                     break;
                 
@@ -145,7 +176,7 @@ namespace BlockBuilder.Core.Scriptable
                     _blockMeshInfo = new BlockMeshInfo
                     {
                         Prefab   = ConnectOneSide,
-                        Rotation = Quaternion.identity
+                        Rotation = Quaternion.Euler(0, 180, 0)
                     };
                     break;
                 
@@ -186,7 +217,7 @@ namespace BlockBuilder.Core.Scriptable
                     _blockMeshInfo = new BlockMeshInfo
                     {
                         Prefab   = IShape,
-                        Rotation = Quaternion.identity
+                        Rotation = Quaternion.Euler(0, 90, 0)
                     };
                     break;
                 
@@ -254,7 +285,7 @@ namespace BlockBuilder.Core.Scriptable
                     _blockMeshInfo = new BlockMeshInfo
                     {
                         Prefab   = ConnectOneSide,
-                        Rotation = Quaternion.identity
+                        Rotation = Quaternion.Euler(0, 270, 0)
                     };
                     break;
                 case 0b_000_111_000:
@@ -632,6 +663,19 @@ namespace BlockBuilder.Core.Scriptable
                         Rotation = Quaternion.identity
                     };
                     break;
+                
+                // case 0b_000_011_000:
+                //     /*
+                //     * 0  1  0
+                //     * 0  1  0
+                //     * 0  0  0
+                //     */
+                //     _blockMeshInfo = new BlockMeshInfo
+                //     {
+                //         Prefab   = ConnectOneSide,
+                //         Rotation = Quaternion.Euler(0, 270, 0)
+                //     };
+                //     break;
                 
                 default:
                     _blockMeshInfo = new BlockMeshInfo

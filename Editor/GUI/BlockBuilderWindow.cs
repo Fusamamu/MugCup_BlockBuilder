@@ -152,7 +152,9 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 }
                 
                 GetBlockManager().Initialized();
-                GetBlockManager().GenerateGridBlocks(_unitSize, _defaultBlock, mainMap);
+                //GetBlockManager().GenerateGridBlocks(_unitSize, _defaultBlock, mainMap);
+                
+                GetBlockManager().GenerateGridBlocks();
                 
                 if(_usePrimitive)
                     DestroyImmediate(_defaultBlock);
@@ -252,6 +254,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             ProcessMouseEnterLeaveSceneView();
             
             Event _currentEvent = Event.current; 
+            
             Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
 
             int _controlID = GUIUtility.GetControlID(FocusType.Passive);
@@ -304,17 +307,22 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     {
                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                         {
-                            Vector3 _targetPos = new Vector3();
+                            Vector3 _targetPos = _hit.collider.transform.position;
                             
-                            switch (GridBlockGenerator.SelectedFace)
-                            {
-                                case NormalFace.PosY:
-                                    _targetPos = _hit.collider.transform.position + Vector3.up;
-                                    break;
-                            }
+                            // switch (GridBlockGenerator.SelectedFace)
+                            // {
+                            //     case NormalFace.PosY:
+                            //         _targetPos = _hit.collider.transform.position + Vector3.up;
+                            //         break;
+                            // }
                             
                             GameObject _block = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            GridBlockGenerator.AddBlock(_targetPos, _hit.collider.gameObject.transform.parent, _block);
+                            //GridBlockGenerator.AddBlock(_targetPos, _hit.collider.gameObject.transform.parent, _block);
+
+                            Vector3Int _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                            
+                            GetBlockEditorManager().AddBlock(_block.AddComponent<Block>(), _pos, GridBlockGenerator.SelectedFace );
+                            
                             DestroyImmediate(_block);
                         }
                     }

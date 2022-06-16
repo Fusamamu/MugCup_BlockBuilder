@@ -87,7 +87,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             return _hitBlock.NodePosition;
         }
             
-        private void AddBlock(Block _blockPrefab, Vector3Int _nodePos, NormalFace _normalFace)
+        public void AddBlock(Block _blockPrefab, Vector3Int _nodePos, NormalFace _normalFace)
         {
             if(addTable.ContainsKey(_normalFace))
                 addTable[_normalFace].Invoke(_blockPrefab, _nodePos);

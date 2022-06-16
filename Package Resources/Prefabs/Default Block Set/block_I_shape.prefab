@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3026200122635826553}
   - component: {fileID: 2184495885809662684}
   - component: {fileID: 4157970512849161750}
+  - component: {fileID: 4603565416881818761}
   - component: {fileID: 831692481008372174}
   m_Layer: 0
   m_Name: block_I_shape
@@ -82,6 +83,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &4603565416881818761
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2500879153361055683}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.019999996, z: 0.019999996}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &831692481008372174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,6 +114,7 @@ MonoBehaviour:
   mesh: {fileID: 0}
   WorldPosition: {x: 0, y: 0, z: 0}
   BitMask: 0
+  BitMaskMiddleSection: 0
   TopIBlocks:
   - {fileID: 0}
   - {fileID: 0}

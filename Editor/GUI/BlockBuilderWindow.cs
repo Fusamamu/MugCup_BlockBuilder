@@ -197,12 +197,20 @@ namespace MugCup_BlockBuilder.Editor.GUI
             {
                 var _blocks = GameObject.FindGameObjectsWithTag("Block");
                 
-                foreach(GameObject _block in _blocks)
+                foreach(var _block in _blocks)
                     DestroyImmediate(_block);
                 
                 DestroyImmediate(mainMap);
 
                 GetBlockManager().GetCurrentGridBlockDataManager().ClearGridUnitBlocks();
+
+                var _textParent   = GameObject.Find("[-------Grid Position Text-------]");
+                var _blocksParent = GameObject.Find("[-------------Blocks-------------]");
+                
+                if(_textParent)
+                    DestroyImmediate(_textParent);
+                if(_blocksParent)
+                    DestroyImmediate(_blocksParent);
             }
 
             string[] _buildingToolTabs = {"Add Block", "Subtract Block"};

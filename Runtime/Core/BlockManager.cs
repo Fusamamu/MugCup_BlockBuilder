@@ -23,8 +23,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
 	    /// </summary>
 	    [SerializeField] private GridBlockDataManager gridBlockDataManager;
 	    
-	    private const string TextParentName  = "[-------Grid Position Text-------]";
-	    private const string BlockParentName = "[-------------Blocks-------------]";
+	    public const string TextParentName  = "[-------Grid Position Text-------]";
+	    public const string BlockParentName = "[-------------Blocks-------------]";
 
 	    public GridBlockDataManager GetCurrentGridBlockDataManager()
 	    {

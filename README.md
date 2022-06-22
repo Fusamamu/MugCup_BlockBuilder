@@ -2,6 +2,9 @@
 
 #### Created by Sukum Duangpattra [MUGCUP], using Unity [version 2020.3.22.f1]
 
+## Bugs
+- [ ] Some node positions are occupied without Mesh presents. Expect occurs after update meshes function called.
+
 ## Introduction
 
 <p>
@@ -11,6 +14,7 @@ Block Builder project is an attempt to create a flexible tile block editor tool 
 ## Features
 <ul>
     <li>Generate grid blocks and edit blocks.</li>
+    <li>Able to edit blocks during both "Gameplay" and "Unity Editor"</li>
 </ul>
 
 

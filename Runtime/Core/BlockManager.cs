@@ -104,8 +104,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		public void UpdateMeshBlock(Block _block)
 		{
 			Vector3Int _targetNodePos = _block.NodePosition;
-				
-			//Block _blockPrefab = gridBlockDataManager.GetBlockMeshData().GetBlockPrefab(_block.BitMask);
 			
 			BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_block.GetBitMaskMiddleSection());
 

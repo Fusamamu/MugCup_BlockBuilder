@@ -316,14 +316,25 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             //         break;
                             // }
                             
-                            GameObject _block = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            
                             //GridBlockGenerator.AddBlock(_targetPos, _hit.collider.gameObject.transform.parent, _block);
 
-                            Vector3Int _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                            var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+
+                            var _block = _blockPrefab.AddComponent<Block>();
                             
-                            GetBlockEditorManager().AddBlock(_block.AddComponent<Block>(), _pos, GridBlockGenerator.SelectedFace );
+                            _block.InjectDependency(GetBlockManager());
+                            _block.Init(_targetPos, _pos);
+                            _block.UpdateBlockData();
                             
-                            DestroyImmediate(_block);
+                            
+                            GetBlockEditorManager().InitializeAddTable();
+                            GetBlockEditorManager().AddBlock(_block, _pos, GridBlockGenerator.SelectedFace );
+                            
+                            GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                            
+                            DestroyImmediate(_blockPrefab);
                         }
                     }
                     break;
@@ -331,6 +342,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
                     {
                         Debug.Log($"<color=yellow>[Info]:</color> <color=orange>Left Mouse Button Clicked.</color>");
+                        
                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                         {
                             var _object = _hit.collider.gameObject;

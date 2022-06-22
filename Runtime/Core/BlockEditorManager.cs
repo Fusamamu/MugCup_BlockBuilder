@@ -18,7 +18,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private IInputManager       inputManager;
 #endregion
         
-        private readonly Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
+        private static readonly Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
         
         public override void Init()
         {
@@ -45,11 +45,19 @@ namespace MugCup_BlockBuilder.Runtime.Core
         {
             AssetManager.LoadAssets();
             
-            addTable.Add(NormalFace.PosY, AddBlockOnTop  );
-            addTable.Add(NormalFace.PosX, AddBlockRight  );
-            addTable.Add(NormalFace.NegX, AddBlockLeft   );
-            addTable.Add(NormalFace.PosZ, AddBlockForward);
-            addTable.Add(NormalFace.NegZ, AddBlockBack   );
+            InitializeAddTable();
+        }
+
+        public void InitializeAddTable()
+        {
+            if (addTable == null || addTable.Count == 0)
+            {
+                addTable.Add(NormalFace.PosY, AddBlockOnTop  );
+                addTable.Add(NormalFace.PosX, AddBlockRight  );
+                addTable.Add(NormalFace.NegX, AddBlockLeft   );
+                addTable.Add(NormalFace.PosZ, AddBlockForward);
+                addTable.Add(NormalFace.NegZ, AddBlockBack   );
+            }
         }
 
         private void Update()
@@ -96,40 +104,40 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private void AddBlockOnTop(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.up;
-            blockManager.AddBlock(_blockPrefab, _targetNodePos);
+            GetBlockManager().AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void AddBlockLeft(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.left;
-            blockManager.AddBlock(_blockPrefab, _targetNodePos);
+            GetBlockManager().AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void AddBlockRight(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.right;
-            blockManager.AddBlock(_blockPrefab, _targetNodePos);
+            GetBlockManager().AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void AddBlockForward(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.forward;
-            blockManager.AddBlock(_blockPrefab, _targetNodePos);
+            GetBlockManager().AddBlock(_blockPrefab, _targetNodePos);
         }
         
         private void AddBlockBack(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.back;
-            blockManager.AddBlock(_blockPrefab, _targetNodePos);
+            GetBlockManager().AddBlock(_blockPrefab, _targetNodePos);
         }
         
         public void RemoveBlock(Vector3Int _nodePos)
         {
-            blockManager.RemoveBlock(_nodePos);
+            GetBlockManager().RemoveBlock(_nodePos);
 
             //Need to refactor this do 2 things// Remove n update blocks
             
-            blockManager.UpdateSurroundBlocksBitMask(_nodePos);
+            GetBlockManager().UpdateSurroundBlocksBitMask(_nodePos);
             
             // List<Block> _blocks = blockManager.GetBlocks3x3Cube(_nodePos);
             //

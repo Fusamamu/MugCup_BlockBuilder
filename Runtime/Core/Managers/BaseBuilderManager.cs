@@ -12,9 +12,14 @@ namespace MugCup_BlockBuilder.Runtime.Core
     /// </summary>
     public abstract class BaseBuilderManager : MonoBehaviour
     {
-        protected IBlockManager iBlockManager;
+        private IBlockManager iBlockManager;
+        
+        private BlockManager blockManager;
 
-        protected BlockManager blockManager;
+        /// <summary>
+        /// For cache BlockManager during editing in Unity Editor
+        /// </summary>
+        private static BlockManager blockManagerInstance;
 
         public virtual void EnableManager()
         {
@@ -36,6 +41,20 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public void InjectBlockManager(BlockManager _blockManager)
         {
             blockManager = _blockManager;
+        }
+
+        protected BlockManager GetBlockManager()
+        {
+            if (Application.isPlaying)
+                return blockManager;
+
+            if (!blockManagerInstance)
+                blockManagerInstance = FindObjectOfType<BlockManager>();
+            
+            if(!blockManagerInstance)
+                Debug.LogWarning($"Cannot find BlockManager.");
+            
+            return blockManagerInstance;
         }
     }
 }

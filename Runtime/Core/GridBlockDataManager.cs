@@ -57,7 +57,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public void Initialized()
         {
             var _gridDataSetting = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>(DataPath.GridDataSettingPath     );
-            var _meshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
+            
+            //var _meshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
+
+            var _meshDataSetting = meshData;
             
             CacheData(ref _gridDataSetting, ref _meshDataSetting);
             

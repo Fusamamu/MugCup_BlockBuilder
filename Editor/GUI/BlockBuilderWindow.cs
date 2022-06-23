@@ -318,6 +318,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
         private static void GetSelectedFace(RaycastHit _hit)
         {
             GridBlockGenerator.SelectedFace = BlockFaceUtil.GetSelectedFace(_hit);
+            Debug.Log(GridBlockGenerator.SelectedFace);
         }
 
         private void UpdateBlockBuildTools(Event _currentEvent, Ray _ray)
@@ -342,7 +343,15 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             _block.UpdateBlockData();
                             
                             GetBlockEditorManager().InitializeAddTable();
+                            
+                            
+                            Debug.Log($"Try to add block at {_pos}");
+                            Debug.Log($"Selected Face : {GridBlockGenerator.SelectedFace}");
+                            
+                            
                             GetBlockEditorManager().AddBlock(_block, _pos, GridBlockGenerator.SelectedFace );
+                            
+                            
                             
                             GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
                             

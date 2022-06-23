@@ -3,7 +3,7 @@
 #### Created by Sukum Duangpattra [MUGCUP], using Unity [version 2020.3.22.f1]
 
 ## Bugs
-- [ ] Some node positions are occupied without Mesh presents. Expect occurs after update meshes function called.
+- [ ] Hit normal not detect properly against FBX objects. Need to find other ways to deal with face checking.
 
 ## Introduction
 

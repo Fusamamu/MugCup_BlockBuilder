@@ -38,9 +38,9 @@ namespace MugCup_BlockBuilder.Runtime
         public int BitMask              = 0b_000000000_000000000_000000000;
         public int BitMaskMiddleSection = 0b_000000000_000000000_000000000;
 
-        public Block[] TopIBlocks    = new Block[9];
-        public Block[] MiddleIBlocks = new Block[9];
-        public Block[] BottomIBlocks = new Block[9];
+        public Block[] TopBlocks    = new Block[9];
+        public Block[] MiddleBlocks = new Block[9];
+        public Block[] BottomBlocks = new Block[9];
         
         public VolumePoint[] VolumePoints = new VolumePoint[8];
         
@@ -52,7 +52,7 @@ namespace MugCup_BlockBuilder.Runtime
         {
         }
 
-        public void Init(Vector3 _worldPos, Vector3Int _gridPos)
+        public virtual void Init(Vector3 _worldPos, Vector3Int _gridPos)
         {
             mesh = transform.GetComponent<MeshFilter>();
             
@@ -63,13 +63,13 @@ namespace MugCup_BlockBuilder.Runtime
             name = $"Block: ({_gridPos.x}, {_gridPos.y}, {_gridPos.z})";
         }
 
-        public void InjectDependency(BlockManager _blockManager)
+        public virtual void InjectDependency(BlockManager _blockManager)
         {
             gridBlocks = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitBlocks();
             gridData   = _blockManager.GetCurrentGridBlockDataManager().GetGridDataSetting();
         }
 
-        public void UpdateBlockData()
+        public virtual void UpdateBlockData()
         {
             GetSurroundingBlocksReference();
             SetBitMask();
@@ -79,11 +79,50 @@ namespace MugCup_BlockBuilder.Runtime
         {
             if(!IsGridDataInit()) return;
             
-            TopIBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
-            MiddleIBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
-            BottomIBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
+            TopBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
+            MiddleBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
+            BottomBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
         }
 
+        public virtual void SetBitMask()
+        {
+            BitMask = 0b_000000000_000000000_000000000;
+            
+            int _startBit = 0b_100000000_000000000_000000000;
+
+            foreach (var _block in TopBlocks)
+            {
+                if (_block != null)
+                    BitMask |= _startBit;
+                
+                _startBit >>= 1;
+            }
+            
+            foreach (var _block in MiddleBlocks)
+            {
+                if (_block != null)
+                    BitMask |= _startBit;
+                
+                _startBit >>= 1;
+            }
+            
+            foreach (var _block in BottomBlocks)
+            {
+                if (_block != null)
+                    BitMask |= _startBit;
+                
+                _startBit >>= 1;
+            }
+        }
+        
+        public int GetBitMaskMiddleSection()
+        {
+            BitMaskMiddleSection = (BitMask >> 9) & 0b_000000000_000000000_111111111;
+
+            return BitMaskMiddleSection;
+        }
+
+#region For Future WFC Function
         /// <summary>
         /// For Marching Points [Not using right now]
         /// </summary>
@@ -96,44 +135,6 @@ namespace MugCup_BlockBuilder.Runtime
         public void SetMesh(Mesh _mesh)
         {
             mesh.mesh = _mesh;
-        }
-
-        public int GetBitMaskMiddleSection()
-        {
-            BitMaskMiddleSection = (BitMask >> 9) & 0b_000000000_000000000_111111111;
-
-            return BitMaskMiddleSection;
-        }
-
-        public void SetBitMask()
-        {
-            BitMask = 0b_000000000_000000000_000000000;
-            
-            int _startBit = 0b_100000000_000000000_000000000;
-
-            foreach (var _block in TopIBlocks)
-            {
-                if (_block != null)
-                    BitMask |= _startBit;
-                
-                _startBit >>= 1;
-            }
-            
-            foreach (var _block in MiddleIBlocks)
-            {
-                if (_block != null)
-                    BitMask |= _startBit;
-                
-                _startBit >>= 1;
-            }
-            
-            foreach (var _block in BottomIBlocks)
-            {
-                if (_block != null)
-                    BitMask |= _startBit;
-                
-                _startBit >>= 1;
-            }
         }
         
         public void Enable()
@@ -156,6 +157,7 @@ namespace MugCup_BlockBuilder.Runtime
                 _point.SetCornerMesh();
             }
         }
+#endregion
         
         protected bool IsGridDataInit()
         {

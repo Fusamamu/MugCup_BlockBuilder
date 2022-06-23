@@ -16,6 +16,15 @@ namespace MugCup_BlockBuilder
         private static GameObject pointer;
 
         private const string PointerName = "Pointer";
+        
+        public enum PointerType { Block, Path }
+
+        private static PointerType selectedPointerType = PointerType.Block;
+
+        public static GameObject GetPointerReference(PointerType _type)
+        {
+            return null;
+        }
 
         public static GameObject GetPointerReference()
         {

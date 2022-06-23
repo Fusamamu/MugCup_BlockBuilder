@@ -129,6 +129,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             var _newStyle = new GUIStyle(UnityEngine.GUI.skin.button);
 
             Undo.RecordObject(gridDataSettingSo,"Undo");
+            
             if (GUILayout.Button("Generate Map", _newStyle, GUILayout.Height(30)))
             {
                 Vector3Int _mapSize  = gridDataSettingSo.MapSize;
@@ -153,20 +154,11 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 }
                 
                 GetBlockManager().Initialized();
-                //GetBlockManager().GenerateGridBlocks(_unitSize, _defaultBlock, mainMap);
-                
                 GetBlockManager().GenerateGridBlocks();
                 
                 if(_usePrimitive)
                     DestroyImmediate(_defaultBlock);
             }
-            
-            // if (GUILayout.Button("Initialize Blocks Data", _newStyle, GUILayout.Height(30)))
-            // {
-            //     FindObjectOfType<GridBlockDataManager>().InitializeBlocksData(GetBlockManager());
-            // }
-            
-            
 
             if (GUILayout.Button("Generate Volume Points", _newStyle, GUILayout.Height(30)))
             {
@@ -213,9 +205,18 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 if(_blocksParent)
                     DestroyImmediate(_blocksParent);
             }
+            
+            EditorGUILayout.HelpBox("Select desired edit mode. Use add and remove tab below to start edit blocks", MessageType.Info);
+            
+            interfaceSetting.CurrentEditMode = (InterfaceSetting.EditMode)EditorGUILayout.EnumPopup("Edit mode selection:", interfaceSetting.CurrentEditMode);
 
+            EditorGUILayout.LabelField("Edit Blocks");
             string[] _buildingToolTabs = {"Add Block", "Subtract Block"};
             interfaceSetting.BuildToolTabSelection = GUILayout.Toolbar(interfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
+            
+            EditorGUILayout.LabelField("Edit Road Path Blocks");
+            string[] _pathBuildingToolTabs = {"Add Road Path", "Remove Road Path"};
+            interfaceSetting.RoadBuildToolTabSelection = GUILayout.Toolbar(interfaceSetting.RoadBuildToolTabSelection, _pathBuildingToolTabs, GUILayout.Height(30));
             
             
             DisplayBuilderModeSelectionInApplication();
@@ -272,11 +273,23 @@ namespace MugCup_BlockBuilder.Editor.GUI
             {
                 case 0: /*Build Mode*/
 
+                    if(interfaceSetting.CurrentEditMode == InterfaceSetting.EditMode.None) return;
+                    
                     if (!Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity)) return;
                     
-                    GetSelectedFace(_hit);
+                    GetSelectedFace       (_hit);
                     UpdateVisualizePointer(_hit);
-                    UpdateBuildTools(_currentEvent, _ray);
+                    
+                    switch (interfaceSetting.CurrentEditMode)
+                    {
+                        case InterfaceSetting.EditMode.EditBlocks:
+                            UpdateBlockBuildTools(_currentEvent, _ray);
+                            break;
+                        case InterfaceSetting.EditMode.EditRoads:
+                            //UpdateRoadBuildTools (_currentEvent, _ray);
+                            break;
+                    }
+                    
                     break;
                 case 1:
                     Visualizer.ClearPointer();
@@ -291,7 +304,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
         }
         private static void UpdateVisualizePointer(RaycastHit _hit)
         {
-            Vector3    _centerPos  = _hit.collider.gameObject.transform.position;
+            Vector3 _centerPos  = _hit.collider.gameObject.transform.position;
 
             Visualizer.GetPointerReference().transform.position = _centerPos;
 
@@ -307,7 +320,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             GridBlockGenerator.SelectedFace = BlockFaceUtil.GetSelectedFace(_hit);
         }
 
-        private void UpdateBuildTools(Event _currentEvent, Ray _ray)
+        private void UpdateBlockBuildTools(Event _currentEvent, Ray _ray)
         {
             switch (interfaceSetting.BuildToolTabSelection)
             {
@@ -318,16 +331,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
                         {
                             Vector3 _targetPos = _hit.collider.transform.position;
                             
-                            // switch (GridBlockGenerator.SelectedFace)
-                            // {
-                            //     case NormalFace.PosY:
-                            //         _targetPos = _hit.collider.transform.position + Vector3.up;
-                            //         break;
-                            // }
-                            
                             GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            
-                            //GridBlockGenerator.AddBlock(_targetPos, _hit.collider.gameObject.transform.parent, _block);
 
                             var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
 
@@ -336,7 +340,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             _block.InjectDependency(GetBlockManager());
                             _block.Init(_targetPos, _pos);
                             _block.UpdateBlockData();
-                            
                             
                             GetBlockEditorManager().InitializeAddTable();
                             GetBlockEditorManager().AddBlock(_block, _pos, GridBlockGenerator.SelectedFace );
@@ -363,6 +366,59 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             }
                         }
                     }
+                    break;
+            }
+        }
+        
+         private void UpdateRoadBuildTools(Event _currentEvent, Ray _ray)
+        {
+            switch (interfaceSetting.RoadBuildToolTabSelection)
+            {
+                case 0: /*Add Road Block Path*/
+                    if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
+                    {
+                        if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                        {
+                            Vector3 _targetPos = _hit.collider.transform.position;
+                            
+                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            
+                            //GridBlockGenerator.AddBlock(_targetPos, _hit.collider.gameObject.transform.parent, _block);
+
+                            var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+
+                            var _block = _blockPrefab.AddComponent<Block>();
+                            
+                            _block.InjectDependency(GetBlockManager());
+                            _block.Init(_targetPos, _pos);
+                            _block.UpdateBlockData();
+                            
+                            
+                            GetBlockEditorManager().InitializeAddTable();
+                            GetBlockEditorManager().AddBlock(_block, _pos, GridBlockGenerator.SelectedFace );
+                            
+                            GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                            
+                            DestroyImmediate(_blockPrefab);
+                        }
+                    }
+                    break;
+                case 1: /*Remove Road Block Path*/
+                    // if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
+                    // {
+                    //     Debug.Log($"<color=yellow>[Info]:</color> <color=orange>Left Mouse Button Clicked.</color>");
+                    //     
+                    //     if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                    //     {
+                    //         var _object = _hit.collider.gameObject;
+                    //
+                    //         if (_object.TryGetComponent<Block>(out var _block))
+                    //         {
+                    //             GetBlockManager().RemoveBlock(_block);
+                    //             GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                    //         }
+                    //     }
+                    // }
                     break;
             }
         }

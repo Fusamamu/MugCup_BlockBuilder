@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6667775173777920243}
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 7.6657004, y: 3.569991, z: -2.557178}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 0}
@@ -115,7 +115,7 @@ MonoBehaviour:
   WorldPosition: {x: 0, y: 0, z: 0}
   BitMask: 0
   BitMaskMiddleSection: 0
-  TopIBlocks:
+  TopBlocks:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -125,7 +125,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  MiddleIBlocks:
+  MiddleBlocks:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -135,7 +135,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  BottomIBlocks:
+  BottomBlocks:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -156,3 +156,34 @@ MonoBehaviour:
   - {fileID: 0}
   IsEnable: 0
   isInit: 0
+  castBlocks: []
+  TopCastBlocks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  MiddleCastBlocks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  BottomCastBlocks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

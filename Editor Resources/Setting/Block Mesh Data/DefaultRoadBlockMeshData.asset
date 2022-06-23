@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61253bb4c8654435483b131cedced749, type: 3}
+  m_Name: DefaultRoadBlockMeshData
+  m_EditorClassIdentifier: 
+  IsolatedBlock: {fileID: 8756957302518672273, guid: 2eb945927f39047e09bf31b4eaec1266, type: 3}
+  TopSurfaceBlock: {fileID: 2558040892358849406, guid: 6a3f691bbe6404208b2f2ce6caef8866, type: 3}
+  Side: {fileID: 2558040892358849406, guid: 6a3f691bbe6404208b2f2ce6caef8866, type: 3}
+  Corner: {fileID: 7070672437995764452, guid: adc76a6dd2fb84995b38bc624be80892, type: 3}
+  IShape: {fileID: 2558040892358849406, guid: 6a3f691bbe6404208b2f2ce6caef8866, type: 3}
+  ConnectOneSide: {fileID: 7946871885246910206, guid: cc763713bc0c7456185d12c6d2be179c, type: 3}
+  SideW: {fileID: 0}
+  SideN: {fileID: 0}
+  SideE: {fileID: 0}
+  SideS: {fileID: 0}
+  CornerNW: {fileID: 0}
+  CornerNE: {fileID: 0}
+  CornerSW: {fileID: 0}
+  CornerSE: {fileID: 0}
+  Side_1_W: {fileID: 0}
+  Side_1_N: {fileID: 0}
+  Side_1_S: {fileID: 0}
+  Side_1_E: {fileID: 0}
+  Side_4_PlusShape: {fileID: 0}
+  IShape_WtoE: {fileID: 0}
+  IShape_StoN: {fileID: 0}
+  LShape_NW: {fileID: 0}
+  LShape_NE: {fileID: 0}
+  LShape_SE: {fileID: 0}
+  LShape_SW: {fileID: 0}

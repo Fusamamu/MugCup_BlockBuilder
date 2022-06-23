@@ -2,22 +2,23 @@ using System.Linq;
 using UnityEngine;
 using BlockBuilder.Scriptable;
 using BlockBuilder.Runtime.Core;
+using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_PathFinder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 
-namespace MugCup_BlockBuilder.Runtime.Core
+namespace MugCup_BlockBuilder.Runtime
 {
     [System.Serializable]
     public class Block: MonoBehaviour, INode
     {
         //Should Has Reference to the Grid and Map that this Block reside//
-        [SerializeField] private BlockManager blockManager;
+        [SerializeField] protected BlockManager blockManager;
    
-        [SerializeField] private Block[] gridBlocks;
+        [SerializeField] protected Block[] gridBlocks;
         
-        [SerializeField] private GridDataSettingSO  gridData;
+        [SerializeField] protected GridDataSettingSO  gridData;
         
-        [SerializeField] private MeshFilter mesh;
+        [SerializeField] protected MeshFilter mesh;
         
 #region INode Implementation
         public INode      NodeParent   { get; set; }
@@ -34,8 +35,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public int GridPosY => NodePosition.y;
         public int GridPosZ => NodePosition.z;
 
-        public int BitMask = 0b_000000000_000000000_000000000;
-        
+        public int BitMask              = 0b_000000000_000000000_000000000;
         public int BitMaskMiddleSection = 0b_000000000_000000000_000000000;
 
         public Block[] TopIBlocks    = new Block[9];
@@ -43,13 +43,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public Block[] BottomIBlocks = new Block[9];
         
         public VolumePoint[] VolumePoints = new VolumePoint[8];
+        
         public bool IsEnable;
 
         [SerializeField] private bool isInit;
 
         private void Awake()
         {
-            //InjectDependency();
         }
 
         public void Init(Vector3 _worldPos, Vector3Int _gridPos)
@@ -61,37 +61,21 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             tag  = "Block";
             name = $"Block: ({_gridPos.x}, {_gridPos.y}, {_gridPos.z})";
-            
-            //InjectDependency();
-            
-            //gameObject.layer = LayerMask.NameToLayer("Block");
-            //VolumePoints = VolumePointGenerator.GeneratedVolumePoints()
         }
 
         public void InjectDependency(BlockManager _blockManager)
         {
-            // if(isInit) return;
-            //
-            // isInit = true;
-            
-            //var _blockManger = FindObjectOfType<BlockManager>();
-            
             gridBlocks = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitBlocks();
             gridData   = _blockManager.GetCurrentGridBlockDataManager().GetGridDataSetting();
         }
 
-        public void SetVolumePoints(VolumePoint[] _volumePoints)
-        {
-            VolumePoints = _volumePoints;
-        }
-        
         public void UpdateBlockData()
         {
             GetSurroundingBlocksReference();
             SetBitMask();
         }
 
-        public void GetSurroundingBlocksReference()
+        public virtual void GetSurroundingBlocksReference()
         {
             if(!IsGridDataInit()) return;
             
@@ -100,6 +84,15 @@ namespace MugCup_BlockBuilder.Runtime.Core
             BottomIBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
         }
 
+        /// <summary>
+        /// For Marching Points [Not using right now]
+        /// </summary>
+        /// <param name="_volumePoints"></param>
+        public void SetVolumePoints(VolumePoint[] _volumePoints)
+        {
+            VolumePoints = _volumePoints;
+        }
+        
         public void SetMesh(Mesh _mesh)
         {
             mesh.mesh = _mesh;
@@ -164,7 +157,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             }
         }
         
-        private bool IsGridDataInit()
+        protected bool IsGridDataInit()
         {
             if (gridData == null)
             {

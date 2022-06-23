@@ -4,12 +4,13 @@ using System.Linq;
 using BlockBuilder.Core.Scriptable;
 using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
+using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 using MugCup_PathFinder.Runtime;
 using MugCup_Utilities.Runtime;
 using UnityEngine;
 
-namespace MugCup_BlockBuilder.Runtime.Core
+namespace MugCup_BlockBuilder.Runtime
 {
 	/// <summary>
 	/// Class to keep track of blocks when blocks get added, removed and updated.

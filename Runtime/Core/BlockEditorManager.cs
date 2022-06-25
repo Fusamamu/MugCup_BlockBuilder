@@ -57,6 +57,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 addTable.Add(NormalFace.NegX, AddBlockLeft   );
                 addTable.Add(NormalFace.PosZ, AddBlockForward);
                 addTable.Add(NormalFace.NegZ, AddBlockBack   );
+                addTable.Add(NormalFace.None, AddBlockCenter );
             }
         }
 
@@ -100,6 +101,17 @@ namespace MugCup_BlockBuilder.Runtime.Core
             if(addTable.ContainsKey(_normalFace))
                 addTable[_normalFace].Invoke(_blockPrefab, _nodePos);
         }
+
+        /// <summary>
+        /// Add Block at node center. Called when Normal Face is none.
+        /// </summary>
+        /// <param name="_blockPrefab"></param>
+        /// <param name="_nodePos"></param>
+        private void AddBlockCenter(Block _blockPrefab, Vector3Int _nodePos)
+        {
+            Vector3Int _targetNodePos = _nodePos;
+            GetBlockManager().AddBlock(_blockPrefab, _targetNodePos);
+        }
         
         private void AddBlockOnTop(Block _blockPrefab, Vector3Int _nodePos)
         {
@@ -137,7 +149,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             //Need to refactor this do 2 things// Remove n update blocks
             
-            GetBlockManager().UpdateSurroundBlocksBitMask(_nodePos);
+            //GetBlockManager().UpdateSurroundBlocksBitMask(_nodePos);
             
             // List<Block> _blocks = blockManager.GetBlocks3x3Cube(_nodePos);
             //

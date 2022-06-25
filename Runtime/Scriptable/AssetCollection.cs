@@ -11,6 +11,7 @@ namespace BlockBuilder.Runtime.Scriptable
 	public class AssetCollection : ScriptableObject
 	{
 		public Block DefualtBlock;
+		public GameObject PathPointerVisualizer;
 	}
 	
 }

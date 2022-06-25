@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: DefaultAssetCollection
   m_EditorClassIdentifier: 
   DefualtBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  PathPointerVisualizer: {fileID: 6811948437484128512, guid: fcefea49bfc4b4dfc806838eca85de33, type: 3}

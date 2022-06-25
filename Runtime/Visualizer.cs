@@ -23,30 +23,62 @@ namespace MugCup_BlockBuilder
 
         public static GameObject GetPointerReference(PointerType _type)
         {
-            return null;
-        }
+            switch (_type)
+            {
+                case PointerType.Block:
+                    
+                    if (pointer == null)
+                        pointer = CreateBlockTypePointer();
+                    
+                    break;
+                
+                case PointerType.Path:
 
-        public static GameObject GetPointerReference()
-        {
-            if (pointer == null)
-                pointer = CreatePointer();
+                    if (pointer == null)
+                        pointer = CreatePathTypePointer();
+                    
+                    break;
+            }
             
             return pointer;
         }
 
-        public static GameObject CreatePointer()
+        //may remove
+        // public static GameObject GetPointerReference()
+        // {
+        //     if (pointer == null)
+        //         pointer = CreateBlockTypePointer();
+        //     
+        //     return pointer;
+        // }
+
+        public static GameObject CreateBlockTypePointer()
         {
             AssetManager.LoadAssets();
                 
             GameObject _block = GameObject.CreatePrimitive(PrimitiveType.Cube);
             
             var _pointer  = Object.Instantiate(_block, Vector3.zero, Quaternion.identity);
+            
             _pointer.name = PointerName;
             _pointer.GetComponent<Renderer>().material = AssetManager.MaterialData.VisualizerPointerMaterial;
             _pointer.GetComponent<Collider>().enabled = false;
             _pointer.transform.localScale *= 1.2f;
             
             Object.DestroyImmediate(_block);
+
+            return _pointer;
+        }
+
+        public static GameObject CreatePathTypePointer()
+        {
+            AssetManager.LoadAssets();
+
+            GameObject _pathPointerPrefab = AssetManager.AssetCollection.PathPointerVisualizer;
+            
+            var _pointer  = Object.Instantiate(_pathPointerPrefab, Vector3.zero, _pathPointerPrefab.transform.localRotation);
+            
+            _pointer.name = PointerName;
 
             return _pointer;
         }

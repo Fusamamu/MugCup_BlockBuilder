@@ -19,21 +19,39 @@ namespace MugCup_BlockBuilder.Editor.GUI
 {
     public class BlockBuilderWindow : EditorWindow
     {
-        private static BlockManager       blockManager;
-        private static BlockEditorManager blockEditorManager;
+        private static BlockBuilderManager blockBuilderManager;
+        private static BlockManager        blockManager;
+        private static BlockEditorManager  blockEditorManager;
         
         private static InterfaceSetting   interfaceSetting;
         private static GridDataSettingSO  gridDataSettingSo;
 
-        //private static Block[]       blocks;
         private static VolumePoint[] volumePoints;
 
         private static AnimBool displayBuilderMode;
+
+        private static bool isBlockBuilderManagerInit = false;
         
         [MenuItem("Tools/Block Builder/Open Block Builder Window", false, 16)]
         public static void ShowWindow() => GetWindow(typeof(GUI.BlockBuilderWindow), false, "Block Builder").Show();
 
         private static GameObject mainMap;
+
+        private BlockBuilderManager GetBlockBuilderManager()
+        {
+            if (!blockBuilderManager)
+                blockBuilderManager = FindObjectOfType<BlockBuilderManager>();
+
+            if (!isBlockBuilderManagerInit)
+            {
+                blockBuilderManager.Initialized();
+                isBlockBuilderManagerInit = true;
+                
+                Debug.Log($"[Block Builder Manager Initialized]");
+            }
+
+            return blockBuilderManager;
+        }
 
         private BlockManager GetBlockManager()
         {
@@ -53,16 +71,17 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
         private void OnEnable()
         {
-            blockManager = FindObjectOfType<BlockManager>();
+            //Use "Block Builder Manager" to initialize first//
+            GetBlockBuilderManager();
             
             interfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset");
+            
+            //Might need to call from BlockBuilderManager
             gridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
             
             AssetManager.LoadAssets();
             
             SceneView.duringSceneGui += OnScene;
-
-            //blocks = Array.Empty<Block>();
 
             displayBuilderMode = new AnimBool();
             displayBuilderMode.valueChanged.AddListener(Repaint);
@@ -153,7 +172,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     _usePrimitive = true;
                 }
                 
-                GetBlockManager().Initialized();
+                //GetBlockManager().Initialized();
+                
                 GetBlockManager().GenerateGridBlocks();
                 
                 if(_usePrimitive)
@@ -169,7 +189,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
                 var _blocks = blockManager.GetCurrentGridBlockDataManager().GetAvailableBlocks().ToArray();
 
-                if (_blocks != null && _blocks.Length > 0)
+                if (_blocks.Length > 0)
                 {
                     foreach (var _block in _blocks)
                     {
@@ -252,6 +272,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
         private static void DisplaySettingPanel()
         {
             gridDataSettingSo = (GridDataSettingSO)EditorGUILayout.ObjectField("Grid Data Setting", gridDataSettingSo, typeof(GridDataSettingSO), true);
+            
             var _meshData     = (BlockMeshData)EditorGUILayout.ObjectField("Block Mesh Data Setting", null, typeof(BlockMeshData), true);
 
             var _material     = (Material)EditorGUILayout.ObjectField("Default Block Material", null, typeof(Material), true);
@@ -278,15 +299,18 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     if (!Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity)) return;
                     
                     GetSelectedFace       (_hit);
-                    UpdateVisualizePointer(_hit);
+                    //UpdateVisualizePointer(_hit);
                     
                     switch (interfaceSetting.CurrentEditMode)
                     {
                         case InterfaceSetting.EditMode.EditBlocks:
+                            UpdateVisualizePointer(_hit, Visualizer.PointerType.Block);
                             UpdateBlockBuildTools(_currentEvent, _ray);
                             break;
+                        
                         case InterfaceSetting.EditMode.EditRoads:
-                            //UpdateRoadBuildTools (_currentEvent, _ray);
+                            UpdateVisualizePointer(_hit, Visualizer.PointerType.Path);
+                            UpdateRoadBuildTools (_currentEvent, _ray);
                             break;
                     }
                     
@@ -302,11 +326,17 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     break;
             }
         }
-        private static void UpdateVisualizePointer(RaycastHit _hit)
+        
+        private static void GetSelectedFace(RaycastHit _hit)
+        {
+            GridBlockGenerator.SelectedFace = BlockFaceUtil.GetSelectedFace(_hit);
+        }
+        
+        private static void UpdateVisualizePointer(RaycastHit _hit, Visualizer.PointerType _pointerType)
         {
             Vector3 _centerPos  = _hit.collider.gameObject.transform.position;
 
-            Visualizer.GetPointerReference().transform.position = _centerPos;
+            Visualizer.GetPointerReference(_pointerType).transform.position = _centerPos;
 
             Vector3 _faceCenterPos   = _centerPos     + _hit.normal / 2; //Should be propotion to Cube Size;
             Vector3 _extendedLinePos = _faceCenterPos + _hit.normal * 2f;
@@ -315,17 +345,12 @@ namespace MugCup_BlockBuilder.Editor.GUI
             Handles.DrawWireDisc(_faceCenterPos, _hit.normal, 0.3f, 2f);
         }
 
-        private static void GetSelectedFace(RaycastHit _hit)
-        {
-            GridBlockGenerator.SelectedFace = BlockFaceUtil.GetSelectedFace(_hit);
-            Debug.Log(GridBlockGenerator.SelectedFace);
-        }
-
         private void UpdateBlockBuildTools(Event _currentEvent, Ray _ray)
         {
             switch (interfaceSetting.BuildToolTabSelection)
             {
                 case 0: /*Add Block*/
+                    
                     if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
                     {
                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
@@ -343,22 +368,16 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             _block.UpdateBlockData();
                             
                             GetBlockEditorManager().InitializeAddTable();
-                            
-                            
-                            Debug.Log($"Try to add block at {_pos}");
-                            Debug.Log($"Selected Face : {GridBlockGenerator.SelectedFace}");
-                            
-                            
-                            GetBlockEditorManager().AddBlock(_block, _pos, GridBlockGenerator.SelectedFace );
-                            
-                            
+                            GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
                             
                             GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
                             
                             DestroyImmediate(_blockPrefab);
                         }
                     }
+                    
                     break;
+                
                 case 1: /*Subtract Block*/
                     if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
                     {
@@ -379,20 +398,25 @@ namespace MugCup_BlockBuilder.Editor.GUI
             }
         }
         
-         private void UpdateRoadBuildTools(Event _currentEvent, Ray _ray)
+         
+        private void UpdateRoadBuildTools(Event _currentEvent, Ray _ray)
         {
             switch (interfaceSetting.RoadBuildToolTabSelection)
             {
                 case 0: /*Add Road Block Path*/
+                    
                     if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
                     {
                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                         {
                             Vector3 _targetPos = _hit.collider.transform.position;
                             
-                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
                             
-                            //GridBlockGenerator.AddBlock(_targetPos, _hit.collider.gameObject.transform.parent, _block);
+                            
+                            
+                            
+                            
+                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
                             var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
 
@@ -404,14 +428,19 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             
                             
                             GetBlockEditorManager().InitializeAddTable();
-                            GetBlockEditorManager().AddBlock(_block, _pos, GridBlockGenerator.SelectedFace );
                             
-                            GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                            GetBlockEditorManager().RemoveBlock(_pos);
+                            
+                            GetBlockEditorManager().AddBlock   (_block, _pos, NormalFace.None);
+                            
+                            //GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
                             
                             DestroyImmediate(_blockPrefab);
                         }
                     }
+                    
                     break;
+                
                 case 1: /*Remove Road Block Path*/
                     // if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
                     // {

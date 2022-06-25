@@ -33,11 +33,11 @@ namespace MugCup_BlockBuilder.Runtime
 	    }
 	    
 #region Initialization [Using Preset from GridBlockDataManager or Manually pass via arg]
-	    public void Initialized()
+	    public void Initialized(BlockDataSetting _blockDataSetting)
 	    {
 		    //Block Manager is responsible for initializing Grid Block Data Manager//
 		    gridBlockDataManager = FindObjectOfType<GridBlockDataManager>();
-		    gridBlockDataManager.Initialized();
+		    gridBlockDataManager.Initialized(_blockDataSetting);
 	    }
 
 	    public void InitializeWith(GridDataSettingSO _gridDataSetting, BlockMeshData _meshDataSetting)
@@ -105,8 +105,10 @@ namespace MugCup_BlockBuilder.Runtime
 		public void UpdateMeshBlock(Block _block)
 		{
 			Vector3Int _targetNodePos = _block.NodePosition;
+
+			int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();
 			
-			BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_block.GetBitMaskMiddleSection());
+			BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
 
 			Block _blockPrefab   = _blockMeshInfo.Prefab;
 			Quaternion _rotation = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;

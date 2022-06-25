@@ -9,6 +9,12 @@ using MugCup_BlockBuilder.Runtime.Core.Managers;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
+	public struct BlockDataSetting
+	{
+		public GridDataSettingSO GridDataSetting;
+		public BlockMeshData     BlockMeshDataSetting;
+	}
+	
 	public class BlockBuilderManager : Singleton<BlockBuilderManager>
 	{
 		public enum ManagerMode
@@ -23,6 +29,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 		
 		[SerializeField] private BlockManager blockManager;
+		
 
 #region Managers 
 		private readonly Dictionary<Type, BaseBuilderManager> managerCollections = new Dictionary<Type, BaseBuilderManager>();
@@ -64,14 +71,14 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			Initialized();
 		}
 		
-		private void Initialized()
+		public void Initialized()
 		{
 			//AddRequiredComponents();
 			
 			InitializeBlockManager();
 			//InitializeManagers    ();
 			
-			blockManager.GenerateGridBlocks();
+			//blockManager.GenerateGridBlocks();
 		}
 		
 		private void AddRequiredComponents()
@@ -91,11 +98,19 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		{
 			//Temp
 			blockManager = FindObjectOfType<BlockManager>();
+
+			BlockDataSetting _blockDataSetting = new BlockDataSetting
+			{
+				GridDataSetting      = CustomGridDataSetting,
+				BlockMeshDataSetting = CustomBlockMeshData
+			};
 			
 			switch (Mode)
 			{
 				case ManagerMode.Default:
-					blockManager.Initialized();
+					
+					//blockManager.Initialized();
+					
 					break;
 				case ManagerMode.Custom:
 					blockManager.InitializeWith(CustomGridDataSetting, CustomBlockMeshData);

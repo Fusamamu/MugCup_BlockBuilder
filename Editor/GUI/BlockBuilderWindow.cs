@@ -75,8 +75,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
             GetBlockBuilderManager();
             
             interfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset");
-            
-            //Might need to call from BlockBuilderManager
             gridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
             
             AssetManager.LoadAssets();
@@ -172,7 +170,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     _usePrimitive = true;
                 }
                 
-                //GetBlockManager().Initialized();
+                //Need to Find a way to make initialization persistent
+                GetBlockBuilderManager().Initialized();
                 
                 GetBlockManager().GenerateGridBlocks();
                 

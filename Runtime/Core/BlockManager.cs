@@ -33,18 +33,18 @@ namespace MugCup_BlockBuilder.Runtime
 	    }
 	    
 #region Initialization [Using Preset from GridBlockDataManager or Manually pass via arg]
-	    public void Initialized(BlockDataSetting _blockDataSetting)
+	    public void DefaultInitialized()
 	    {
 		    //Block Manager is responsible for initializing Grid Block Data Manager//
 		    gridBlockDataManager = FindObjectOfType<GridBlockDataManager>();
-		    gridBlockDataManager.Initialized(_blockDataSetting);
+		    gridBlockDataManager.DefaultInitialized();
 	    }
 
-	    public void InitializeWith(GridDataSettingSO _gridDataSetting, BlockMeshData _meshDataSetting)
+	    public void InitializeWith(BlockDataSetting _blockDataSetting)
 	    {
 		    //Block Manager is responsible for initializing Grid Block Data Manager//
 		    gridBlockDataManager = FindObjectOfType<GridBlockDataManager>();
-		    gridBlockDataManager.InitializeWith(_gridDataSetting, _meshDataSetting);
+		    gridBlockDataManager.InitializedWith(_blockDataSetting);
 	    }
 #endregion
 

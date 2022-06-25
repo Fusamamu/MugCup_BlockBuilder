@@ -27,9 +27,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		public GridDataSettingSO CustomGridDataSetting;
 		public BlockMeshData     CustomBlockMeshData;
 
-		
 		[SerializeField] private BlockManager blockManager;
-		
 
 #region Managers 
 		private readonly Dictionary<Type, BaseBuilderManager> managerCollections = new Dictionary<Type, BaseBuilderManager>();
@@ -73,12 +71,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		
 		public void Initialized()
 		{
-			//AddRequiredComponents();
-			
 			InitializeBlockManager();
-			//InitializeManagers    ();
-			
-			//blockManager.GenerateGridBlocks();
 		}
 		
 		private void AddRequiredComponents()
@@ -108,12 +101,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			switch (Mode)
 			{
 				case ManagerMode.Default:
-					
-					//blockManager.Initialized();
-					
+					blockManager.DefaultInitialized();
 					break;
 				case ManagerMode.Custom:
-					blockManager.InitializeWith(CustomGridDataSetting, CustomBlockMeshData);
+					blockManager.InitializeWith(_blockDataSetting);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

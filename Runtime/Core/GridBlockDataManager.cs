@@ -51,22 +51,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
         }
 
 #region Initialize GridUnitSize Overloads
-        public void Initialized(BlockDataSetting _blockDataSetting)
+        public void DefaultInitialized()
         {
-            //Right now there are 3 ways to get grid n mesh Data
-            //1 from AssetDatabase
-            //2 from ref serialized field in this class
-            //3 from BlockBuilder Manager
+            GridDataSettingSO _gridDataSetting = null;
+            BlockMeshData     _meshDataSetting = null;
 
-            GridDataSettingSO _gridDataSetting = _blockDataSetting.GridDataSetting;
-            BlockMeshData     _meshDataSetting = _blockDataSetting.BlockMeshDataSetting;
-            
-
-            if (_gridDataSetting == null || _meshDataSetting == null)
-            {
-                _gridDataSetting = gridData;
-                _meshDataSetting = meshData;
-            }
+            _gridDataSetting = gridData;
+            _meshDataSetting = meshData;
             
             #if UNITY_EDITOR
             if (_gridDataSetting == null || _meshDataSetting == null)
@@ -74,6 +65,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 //These can be used for fallback. If cannot find anything
                 _gridDataSetting = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>(DataPath.GridDataSettingPath);
                 _meshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
+                
+                Debug.Log($"Cannot find any data. Fallback tos default setting in AssetDatabase.");
             }
             #endif
             
@@ -91,15 +84,49 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
             }
         }
-
-        public void InitializeWith(GridDataSettingSO _gridDataSetting, BlockMeshData _meshDataSetting)
+        
+        public void InitializedWith(BlockDataSetting _blockDataSetting)
         {
+            //Right now there are 3 ways to get grid n mesh Data
+            //1 from AssetDatabase
+            //2 from ref serialized field in this class
+            //3 from BlockBuilder Manager
+
+            GridDataSettingSO _gridDataSetting = _blockDataSetting.GridDataSetting;
+            BlockMeshData     _meshDataSetting = _blockDataSetting.BlockMeshDataSetting;
+
+            if (_gridDataSetting == null || _meshDataSetting == null)
+            {
+                _gridDataSetting = gridData;
+                _meshDataSetting = meshData;
+                
+                Debug.Log($"Cannot find data from Block Builder Manager. Fallback to data in GridBlockDataManager.");
+            }
+            
+            #if UNITY_EDITOR
+            if (_gridDataSetting == null || _meshDataSetting == null)
+            {
+                //These can be used for fallback. If cannot find anything
+                _gridDataSetting = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>(DataPath.GridDataSettingPath);
+                _meshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
+                
+                Debug.Log($"Cannot find any data. Fallback tos default setting in AssetDatabase.");
+            }
+            #endif
+            
             CacheData(ref _gridDataSetting, ref _meshDataSetting);
             
             if(!TryGetGridDataSetting(out var _gridData)) return;
             
             InitializeGridUnitSize(_gridData);
             InitializeGridArray();
+            
+            Debug.Log($"GridBlockDataManager Initialized.");
+
+            if (gridData == null)
+            {
+                Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
+            }
         }
         
         public void CacheData(ref GridDataSettingSO _gridData, ref BlockMeshData _meshData)

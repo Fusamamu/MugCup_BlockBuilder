@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: InterfaceSetting
   m_EditorClassIdentifier: 
   CurrentMode: 0
-  CurrentEditMode: 0
+  CurrentEditMode: 1
   CurrentMainTapSelection: 0
   BuildToolTabSelection: 1
-  RoadBuildToolTabSelection: 1
+  RoadBuildToolTabSelection: 0
   MapSettingFoldout: 1
   BuilderMode: 0

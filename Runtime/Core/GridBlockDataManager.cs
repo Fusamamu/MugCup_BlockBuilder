@@ -17,9 +17,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
         [SerializeField] private Block[][] map;
         [SerializeField] private Block[]   gridUnitBlocks;
         
-        public int RowUnit;
+        public int RowUnit   ;
         public int ColumnUnit;
-        public int LevelUnit;
+        public int LevelUnit ;
         
         public Vector3Int MapSize;
         public Vector3Int GridUnitSize;
@@ -29,13 +29,15 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public IEnumerable<Block> GetAvailableBlocks() => gridUnitBlocks.Where(_iBlock => _iBlock != null);
 
         public GridDataSettingSO GetGridDataSetting() => gridData;
-        public BlockMeshData     GetBlockMeshData  () => meshData;
+        public BlockMeshData     GetBlockMeshData  () => blockMeshData;
+        public BlockMeshData     GetPathMeshData   () => pathMeshData;
 
         //These can be used as fallback. In case, data cannot be found from BuildBuilderManager//
         //Or User use to use this class directly.
         [SerializeField] private GridDataSettingSO gridData;
-        [SerializeField] private BlockMeshData     meshData;
-        
+        [SerializeField] private BlockMeshData     blockMeshData;
+        [SerializeField] private BlockMeshData     pathMeshData;
+         
         private bool GRID_DATA_INIT = false;
         private bool GRID_SIZE_INIT = false;
 
@@ -57,7 +59,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             BlockMeshData     _meshDataSetting = null;
 
             _gridDataSetting = gridData;
-            _meshDataSetting = meshData;
+            _meshDataSetting = blockMeshData;
             
             #if UNITY_EDITOR
             if (_gridDataSetting == null || _meshDataSetting == null)
@@ -94,11 +96,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             GridDataSettingSO _gridDataSetting = _blockDataSetting.GridDataSetting;
             BlockMeshData     _meshDataSetting = _blockDataSetting.BlockMeshDataSetting;
+            BlockMeshData _pathMeshDataSetting = _blockDataSetting.PathBlockMeshDataSetting;
 
             if (_gridDataSetting == null || _meshDataSetting == null)
             {
-                _gridDataSetting = gridData;
-                _meshDataSetting = meshData;
+                _blockDataSetting.GridDataSetting          = gridData;
+                _blockDataSetting.BlockMeshDataSetting     = blockMeshData;
+                _blockDataSetting.PathBlockMeshDataSetting = pathMeshData;
                 
                 Debug.Log($"Cannot find data from Block Builder Manager. Fallback to data in GridBlockDataManager.");
             }
@@ -107,14 +111,15 @@ namespace MugCup_BlockBuilder.Runtime.Core
             if (_gridDataSetting == null || _meshDataSetting == null)
             {
                 //These can be used for fallback. If cannot find anything
-                _gridDataSetting = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>(DataPath.GridDataSettingPath);
-                _meshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
+                _blockDataSetting.GridDataSetting          = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>(DataPath.GridDataSettingPath);
+                _blockDataSetting.BlockMeshDataSetting     = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
+                //_blockDataSetting.PathBlockMeshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
                 
                 Debug.Log($"Cannot find any data. Fallback tos default setting in AssetDatabase.");
             }
             #endif
             
-            CacheData(ref _gridDataSetting, ref _meshDataSetting);
+            CacheData(_blockDataSetting);
             
             if(!TryGetGridDataSetting(out var _gridData)) return;
             
@@ -128,16 +133,23 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
             }
         }
+
+        private void CacheData(BlockDataSetting _blockDataSetting)
+        {
+            gridData      = _blockDataSetting.GridDataSetting;
+            
+            blockMeshData = _blockDataSetting.BlockMeshDataSetting;
+            pathMeshData  = _blockDataSetting.PathBlockMeshDataSetting;
+        }
         
-        public void CacheData(ref GridDataSettingSO _gridData, ref BlockMeshData _meshData)
+        private void CacheData(ref GridDataSettingSO _gridData, ref BlockMeshData _meshData)
         {
             LoadGridDataSetting(ref _gridData);
             LoadMeshBlocksData (ref _meshData);
         }
         
-        public void LoadMeshBlocksData (ref BlockMeshData     _meshData) => meshData = _meshData;
-        
-        public void LoadGridDataSetting(ref GridDataSettingSO _gridData) => gridData = _gridData;
+        private void LoadMeshBlocksData (ref BlockMeshData     _meshData) => blockMeshData = _meshData;
+        private void LoadGridDataSetting(ref GridDataSettingSO _gridData) => gridData = _gridData;
         
         public void LoadGridBlocksData(Block[] _blockData) => gridUnitBlocks = _blockData;
         
@@ -211,6 +223,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public void AvailableBlocksApplyAll(Action<Block> _action)
         {
             Block[] _blocks = GetAvailableBlocks().ToArray();
+            
             foreach (Block _block in _blocks)
                 _action?.Invoke(_block);
         }

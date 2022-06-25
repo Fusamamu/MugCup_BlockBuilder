@@ -73,7 +73,55 @@ namespace MugCup_BlockBuilder.Runtime
 		    CreateTextOverlay  ();
 		    GroupBlocksToParent();
 	    }
+#region Update Surrounding Blocks
+	    public void UpdateSurroundingBlocksData<T>(Vector3Int _nodePos) where T: Block
+	    {
+		    List<Block> _blocks = GetBlocks3x3Cube(_nodePos);
 
+		    var _castBlocks = new List<T>();
+		    
+		    foreach (var _block in _blocks)
+		    {
+			    var _castBlock = _block as T;
+			    _castBlocks.Add(_castBlock);
+		    }
+
+		    foreach (var _block in _castBlocks)
+		    {
+			    if(_block == null) continue;
+			    
+			    _block.GetSurroundingBlocksReference();
+			    _block.SetBitMask();
+		    }
+	    }
+	    
+	    public void UpdateMeshBlocks<T>(IEnumerable<T> _blocks) where T : Block
+	    {
+		    foreach (var _block in _blocks)
+			    UpdateMeshBlock(_block);
+	    }
+	    
+	    public void UpdateMeshBlock<T>(T _block) where T : Block
+	    {
+		    Vector3Int _targetNodePos = _block.NodePosition;
+
+		    int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();
+			
+		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
+
+		    Block _blockPrefab   = _blockMeshInfo.Prefab;
+		    Quaternion _rotation = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
+			
+		    if (_blockPrefab == null)
+		    {
+			    _blockPrefab = gridBlockDataManager.GetBlockMeshData().GetDefaultBlock();
+		    }
+				
+		    RemoveBlock(_targetNodePos);
+		    AddBlock   (_blockPrefab, _targetNodePos, _rotation);
+	    }
+	    
+	    
 	    /// <summary>
 	    /// Update Surrounding Blocks around 3x3 cube and Reset Bitmasks. Then Update Meshes
 	    /// (Add->Remove Based on Preset Prefab Data in MeshData)
@@ -121,6 +169,7 @@ namespace MugCup_BlockBuilder.Runtime
 			RemoveBlock(_targetNodePos);
 			AddBlock   (_blockPrefab, _targetNodePos, _rotation);
 		}
+#endregion
 
 #region Add/Remove Block by Node Position
 	    public void AddBlock(Block _prefab, Vector3Int _nodePos)

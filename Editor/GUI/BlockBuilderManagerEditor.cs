@@ -21,6 +21,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
         private SerializedProperty gridDataSetting;
         private SerializedProperty meshBlockDataSetting;
+        private SerializedProperty pathBlcokDataSetting;
 
         private AnimBool displayCustomDataFields;
         
@@ -36,6 +37,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             mode                 = serializedObject.FindProperty("Mode");
             gridDataSetting      = serializedObject.FindProperty("CustomGridDataSetting");
             meshBlockDataSetting = serializedObject.FindProperty("CustomBlockMeshData");
+            pathBlcokDataSetting = serializedObject.FindProperty("CustomPathBlockMeshData");
 
             displayCustomDataFields = new AnimBool();
             displayCustomDataFields.valueChanged.AddListener(Repaint);
@@ -83,6 +85,9 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
                 blockBuilderManager.CustomBlockMeshData   = (BlockMeshData)    EditorGUILayout
                     .ObjectField(blockBuilderManager.CustomBlockMeshData,    typeof(BlockMeshData),    true);
+                
+                blockBuilderManager.CustomPathBlockMeshData = (BlockMeshData)    EditorGUILayout
+                    .ObjectField(blockBuilderManager.CustomPathBlockMeshData, typeof(BlockMeshData),    true);
                 
                 EditorGUILayout.Space();
                 if (blockBuilderManager.CustomGridDataSetting == null)

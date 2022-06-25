@@ -12,7 +12,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 	public struct BlockDataSetting
 	{
 		public GridDataSettingSO GridDataSetting;
+		
 		public BlockMeshData     BlockMeshDataSetting;
+		public BlockMeshData     PathBlockMeshDataSetting;
 	}
 	
 	public class BlockBuilderManager : Singleton<BlockBuilderManager>
@@ -24,8 +26,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 		public ManagerMode Mode = ManagerMode.Default;
 
-		public GridDataSettingSO CustomGridDataSetting;
-		public BlockMeshData     CustomBlockMeshData;
+		public GridDataSettingSO CustomGridDataSetting  ;
+		public BlockMeshData     CustomBlockMeshData    ;
+		public BlockMeshData     CustomPathBlockMeshData;
 
 		[SerializeField] private BlockManager blockManager;
 
@@ -94,8 +97,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 			BlockDataSetting _blockDataSetting = new BlockDataSetting
 			{
-				GridDataSetting      = CustomGridDataSetting,
-				BlockMeshDataSetting = CustomBlockMeshData
+				GridDataSetting          = CustomGridDataSetting,
+				BlockMeshDataSetting     = CustomBlockMeshData,
+				PathBlockMeshDataSetting = CustomPathBlockMeshData
 			};
 			
 			switch (Mode)

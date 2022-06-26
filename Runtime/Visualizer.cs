@@ -15,6 +15,8 @@ namespace MugCup_BlockBuilder
     {
         private static GameObject pointer;
 
+        private static List<GameObject> pathPoints = new List<GameObject>();
+
         private const string PointerName = "Pointer";
         
         public enum PointerType { Block, Path }
@@ -69,6 +71,7 @@ namespace MugCup_BlockBuilder
 
             return _pointer;
         }
+        
 
         public static GameObject CreatePathTypePointer()
         {
@@ -81,6 +84,32 @@ namespace MugCup_BlockBuilder
             _pointer.name = PointerName;
 
             return _pointer;
+        }
+
+        public static void ClearPathVisualizer()
+        {
+            foreach (var _point in pathPoints)
+            {
+                Object.DestroyImmediate(_point);
+            }
+            
+            pathPoints.Clear();
+        }
+
+        public static void CreatePathPointsVisualizer(List<Vector3Int> _path)
+        {
+            AssetManager.LoadAssets();
+            
+            foreach (var _point in _path)
+            {
+                GameObject _pathPointerPrefab = AssetManager.AssetCollection.PathPointerVisualizer;
+            
+                var _pathPointVisual  = Object.Instantiate(_pathPointerPrefab, _point, _pathPointerPrefab.transform.localRotation);
+            
+                _pathPointVisual.name = PointerName;
+                
+                pathPoints.Add(_pathPointVisual);
+            }
         }
 
         public static void DrawLine(Vector3 _pointA, Vector3 _pointB, Color _color, float _datSize)

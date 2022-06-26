@@ -5,8 +5,6 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 using BlockBuilder.Core.Scriptable;
-using BlockBuilder.Runtime.Scriptable;
-using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 using UnityEditor.AnimatedValues;
 #endif
 using BlockBuilder.Core;
@@ -159,8 +157,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
             {
                 Vector3Int _mapSize  = gridDataSettingSo.MapSize;
                 Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
-                
-                mainMap = new GameObject("Main Map");
 
                 bool _usePrimitive = false;
                 
@@ -301,16 +297,21 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     GetSelectedFace       (_hit);
                     //UpdateVisualizePointer(_hit);
                     
+                    HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+                    
                     switch (interfaceSetting.CurrentEditMode)
                     {
                         case InterfaceSetting.EditMode.EditBlocks:
+                            
+                            //HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+                            
                             UpdateVisualizePointer(_hit, Visualizer.PointerType.Block);
                             UpdateBlockBuildTools(_currentEvent, _ray);
                             break;
                         
                         case InterfaceSetting.EditMode.EditRoads:
                             
-                            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+                            //HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
                             
                             UpdateVisualizePointer(_hit, Visualizer.PointerType.Path);
                             UpdateRoadBuildTools (_currentEvent, _ray);
@@ -428,7 +429,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             
                             if(isPressed) return;
 
-                            
                             //if(EditorEventManager.LeftMouseDown) return;
                             
                             if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
@@ -469,21 +469,13 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
                         case EventType.MouseDrag:
                             
-                            Debug.Log("Mouse Moving");
-                            
                             if(!isPressed) return;
                             
                             //if(!EditorEventManager.LeftMouseDown) return;
 
                             if (_currentEvent.button == 0)
                             {
-                                Debug.Log("Mouse Moving");
-
-                                foreach (var _object in tempPath)
-                                {
-                                    DestroyImmediate(_object);
-                                }
-                                tempPath.Clear();
+                                Visualizer.ClearPathVisualizer();
 
                                 if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                                 {
@@ -493,29 +485,32 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
                                     if (_path.Count > 0)
                                     {
-                                        foreach (var _point in _path)
-                                        {
-                                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-                                            _blockPrefab.transform.position = _point;
-
-                                            //var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
-
-                                            var _block = _blockPrefab.AddComponent<Block>();
-
-                                            _block.InjectDependency(GetBlockManager());
-                                            _block.Init(_targetPos, _point);
-                                            _block.UpdateBlockData();
-
-                                            tempPath.Add(_block.gameObject);
-
-                                            // GetBlockEditorManager().InitializeAddTable();
-                                            // GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
-                                            //
-                                            // GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
-
-                                            //DestroyImmediate(_blockPrefab);
-                                        }
+                                        
+                                        Visualizer.CreatePathPointsVisualizer(_path);
+                                        
+                                        // foreach (var _point in _path)
+                                        // {
+                                        //     GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                        //
+                                        //     _blockPrefab.transform.position = _point;
+                                        //
+                                        //     //var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                                        //
+                                        //     var _block = _blockPrefab.AddComponent<Block>();
+                                        //
+                                        //     _block.InjectDependency(GetBlockManager());
+                                        //     _block.Init(_targetPos, _point);
+                                        //     _block.UpdateBlockData();
+                                        //
+                                        //     tempPath.Add(_block.gameObject);
+                                        //
+                                        //      GetBlockEditorManager().InitializeAddTable();
+                                        //      GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
+                                        //     
+                                        //      GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                        //
+                                        //     DestroyImmediate(_blockPrefab);
+                                        // }
                                     }
 
                                 }
@@ -525,6 +520,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
                         case EventType.MouseUp:
 
                             isPressed = false;
+                            
+                            Visualizer.ClearPathVisualizer();
                             
                             break;
 

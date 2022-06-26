@@ -70,7 +70,9 @@ namespace MugCup_BlockBuilder.Runtime
 			    _block.SetBitMask();
 		    });
 		    
-		    CreateTextOverlay  ();
+		    //Need to add option whether to create text overlay
+		    //CreateTextOverlay  ();
+		    
 		    GroupBlocksToParent();
 	    }
 #region Update Surrounding Blocks

@@ -16,27 +16,43 @@ namespace MugCup_BlockBuilder.Runtime
         public T[] MiddleCastBlocks = new T[9];
         public T[] BottomCastBlocks = new T[9];
         
-        public override void UpdateBlockData()
-        {
-            base.UpdateBlockData();
-        }
+        // public override void UpdateBlockData()
+        // {
+        //     base.UpdateBlockData();
+        //     
+        //     GetSurroundingBlocksReference();
+        //     SetBitMask();
+        // }
 
         public override void GetSurroundingBlocksReference()
         {
             //May not needed
             base.GetSurroundingBlocksReference();
             
-            // if(!IsGridDataInit()) return;
-            //
-            // var _castBlocks = Array.ConvertAll(gridBlocks, _block => (T)_block);
-            //
-            // TopCastBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
-            // MiddleCastBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
-            // BottomCastBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
+            if(!IsGridDataInit()) return;
+            
+            //var _castBlocks = Array.ConvertAll(gridBlocks, _block => (T)_block);
+
+            List<T> _castBlocks = new List<T>();
+
+            foreach (var _block in gridBlocks)
+            {
+                var _castBlock = _block as T;
+                
+                _castBlocks.Add(_castBlock);
+            }
+            
+            
+            
+            TopCastBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
+            MiddleCastBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
+            BottomCastBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
         }
         
         public override void SetBitMask()
         {
+            base.SetBitMask();
+            
             BitMask = 0b_000000000_000000000_000000000;
             
             int _startBit = 0b_100000000_000000000_000000000;

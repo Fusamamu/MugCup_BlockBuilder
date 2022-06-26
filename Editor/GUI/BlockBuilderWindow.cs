@@ -410,6 +410,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             
         //May Need to Create Utility for Mouse Event
         private bool isPressed = false;
+        private bool isDragged = false;
         
         private Vector3Int originPos = Vector3Int.zero;
 
@@ -471,6 +472,10 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             
                             if(!isPressed) return;
                             
+                            Debug.Log("IS Dragging ");
+
+                            isDragged = true;
+                            
                             //if(!EditorEventManager.LeftMouseDown) return;
 
                             if (_currentEvent.button == 0)
@@ -522,6 +527,29 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             isPressed = false;
                             
                             Visualizer.ClearPathVisualizer();
+                            
+                           // if(isDragged) return;
+                            
+                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            
+                            var _block = _blockPrefab.AddComponent<PathBlock>();
+                            
+                            _block.InjectDependency(GetBlockManager());
+                            _block.Init(originPos, originPos);
+                            _block.UpdateBlockData();
+                            
+                            
+                            GetBlockEditorManager().InitializeAddTable();
+                            
+                            GetBlockEditorManager().RemoveBlock(originPos);
+                            
+                            GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
+                            
+                            //GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                            
+                            DestroyImmediate(_blockPrefab);
+
+                            isDragged = false;
                             
                             break;
 

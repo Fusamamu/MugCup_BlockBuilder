@@ -26,13 +26,13 @@ namespace MugCup_BlockBuilder.Runtime
             //May not needed
             base.GetSurroundingBlocksReference();
             
-            if(!IsGridDataInit()) return;
-            
-            var _castBlocks = Array.ConvertAll(gridBlocks, _block => (T)_block);
-
-            TopCastBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
-            MiddleCastBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
-            BottomCastBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
+            // if(!IsGridDataInit()) return;
+            //
+            // var _castBlocks = Array.ConvertAll(gridBlocks, _block => (T)_block);
+            //
+            // TopCastBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
+            // MiddleCastBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
+            // BottomCastBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks).ToArray();
         }
         
         public override void SetBitMask()

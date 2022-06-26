@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -308,6 +309,9 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             break;
                         
                         case InterfaceSetting.EditMode.EditRoads:
+                            
+                            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+                            
                             UpdateVisualizePointer(_hit, Visualizer.PointerType.Path);
                             UpdateRoadBuildTools (_currentEvent, _ray);
                             break;
@@ -349,32 +353,38 @@ namespace MugCup_BlockBuilder.Editor.GUI
             switch (interfaceSetting.BuildToolTabSelection)
             {
                 case 0: /*Add Block*/
-                    
-                    if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
+                    switch (_currentEvent.type)
                     {
-                        if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
-                        {
-                            Vector3 _targetPos = _hit.collider.transform.position;
+                        case EventType.MouseDown:
+                            if (_currentEvent.button == 0)
+                            {
+                                if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                                {
+                                    Vector3 _targetPos = _hit.collider.transform.position;
                             
-                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                    GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-                            var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                                    var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
 
-                            var _block = _blockPrefab.AddComponent<Block>();
+                                    var _block = _blockPrefab.AddComponent<Block>();
                             
-                            _block.InjectDependency(GetBlockManager());
-                            _block.Init(_targetPos, _pos);
-                            _block.UpdateBlockData();
+                                    _block.InjectDependency(GetBlockManager());
+                                    _block.Init(_targetPos, _pos);
+                                    _block.UpdateBlockData();
                             
-                            GetBlockEditorManager().InitializeAddTable();
-                            GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
+                                    GetBlockEditorManager().InitializeAddTable();
+                                    GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
                             
-                            GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                    GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
                             
-                            DestroyImmediate(_blockPrefab);
-                        }
+                                    DestroyImmediate(_blockPrefab);
+                                }
+                            }
+                            break;
+                        
+                        case EventType.MouseMove:
+                            break;
                     }
-                    
                     break;
                 
                 case 1: /*Subtract Block*/
@@ -397,67 +407,175 @@ namespace MugCup_BlockBuilder.Editor.GUI
             }
         }
         
+            bool _isPressed = false;
          
         private void UpdateRoadBuildTools(Event _currentEvent, Ray _ray)
         {
+            Vector3Int _originPos = Vector3Int.zero;
+            
             switch (interfaceSetting.RoadBuildToolTabSelection)
             {
                 case 0: /*Add Road Block Path*/
-                    
-                    if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
+
+                    switch (_currentEvent.type)
                     {
-                        if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
-                        {
-                            Vector3 _targetPos = _hit.collider.transform.position;
+                        case EventType.MouseDown:
                             
+                            if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
+                            {
+                                if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                                {
+                                    Vector3 _targetPos = _hit.collider.transform.position;
+                                    
+                                    
+                                    _originPos = CastVec3ToVec3Int(_targetPos);
+                                    _isPressed = true;
+                                    
+                                    
+                                    
+                                    GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
                             
+                                    var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
                             
-                            
-                            
-                            
-                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                    var _block = _blockPrefab.AddComponent<PathBlock>();
+                                    
+                                    _block.InjectDependency(GetBlockManager());
+                                    _block.Init(_targetPos, _pos);
+                                    _block.UpdateBlockData();
+                                    
+                                    
+                                    GetBlockEditorManager().InitializeAddTable();
+                                    
+                                    GetBlockEditorManager().RemoveBlock(_pos);
+                                    
+                                    GetBlockEditorManager().AddBlock   (_block, _pos, NormalFace.None);
+                                    
+                                    //GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                    
+                                    DestroyImmediate(_blockPrefab);
+                                }
+                            }
 
-                            var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                            break;
 
-                            var _block = _blockPrefab.AddComponent<Block>();
+                        case EventType.MouseMove:
                             
-                            _block.InjectDependency(GetBlockManager());
-                            _block.Init(_targetPos, _pos);
-                            _block.UpdateBlockData();
+                            Debug.Log("Mouse Moving");
                             
+                            if(!_isPressed) return;
+
+                            if (_currentEvent.button == 0)
+                            {
+                                Debug.Log("Mouse Moving");
+
+                                if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                                {
+                                    Vector3Int _targetPos = CastVec3ToVec3Int(_hit.collider.transform.position);
+
+                                    var _path = new List<Vector3Int>();
+
+                                    if (_targetPos.x > _originPos.x)
+                                    {
+                                        var _dif = _targetPos.x - _originPos.x;
+
+                                        for (var _i = 0; _i < _dif; _i++)
+                                        {
+                                            var _pathPos = _originPos;
+
+                                            _pathPos += new Vector3Int(_i, _pathPos.y, _pathPos.z);
+
+                                            _path.Add(_pathPos);
+                                        }
+                                    }
+
+                                    if (_targetPos.x < _originPos.x)
+                                    {
+                                        var _dif = _originPos.x - _targetPos.x;
+
+                                        for (var _i = 0; _i < _dif; _i++)
+                                        {
+                                            var _pathPos = _originPos;
+
+                                            _pathPos -= new Vector3Int(_i, _pathPos.y, _pathPos.z);
+
+                                            _path.Add(_pathPos);
+                                        }
+                                    }
+
+                                    // if (_targetPos.z > _originPos.z)
+                                    // {
+                                    //     var _dif = _targetPos.z - _originPos.z;
+                                    //
+                                    //     for (var _j = 0; _j < _dif; _j++)
+                                    //     {
+                                    //         var _pathPos = _path.Last();
+                                    //
+                                    //         _pathPos += new Vector3Int(_pathPos.x, _pathPos.y, _j);
+                                    //
+                                    //         _path.Add(_pathPos);
+                                    //     }
+                                    // }
+                                    //
+                                    // if (_targetPos.z < _originPos.z)
+                                    // {
+                                    //     var _dif = _originPos.z - _targetPos.z;
+                                    //
+                                    //     for (var _j = 0; _j < _dif; _j++)
+                                    //     {
+                                    //         var _pathPos = _path.Last();
+                                    //
+                                    //         _pathPos -= new Vector3Int(_pathPos.x, _pathPos.y, _j);
+                                    //
+                                    //         _path.Add(_pathPos);
+                                    //     }
+                                    // }
+
+                                    if (_path.Count > 0)
+                                    {
+                                        foreach (var _point in _path)
+                                        {
+                                            GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+                                            _blockPrefab.transform.position = _point;
+
+                                            //var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+
+                                            var _block = _blockPrefab.AddComponent<Block>();
+
+                                            _block.InjectDependency(GetBlockManager());
+                                            _block.Init(_targetPos, _point);
+                                            _block.UpdateBlockData();
+
+                                            // GetBlockEditorManager().InitializeAddTable();
+                                            // GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
+                                            //
+                                            // GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+
+                                            //DestroyImmediate(_blockPrefab);
+                                        }
+                                    }
+
+                                }
+                            }
+                            break;
+                        case EventType.MouseUp:
+
+                            _isPressed = false;
                             
-                            GetBlockEditorManager().InitializeAddTable();
-                            
-                            GetBlockEditorManager().RemoveBlock(_pos);
-                            
-                            GetBlockEditorManager().AddBlock   (_block, _pos, NormalFace.None);
-                            
-                            //GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
-                            
-                            DestroyImmediate(_blockPrefab);
-                        }
+                            break;
+
                     }
-                    
                     break;
                 
                 case 1: /*Remove Road Block Path*/
-                    // if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
-                    // {
-                    //     Debug.Log($"<color=yellow>[Info]:</color> <color=orange>Left Mouse Button Clicked.</color>");
-                    //     
-                    //     if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
-                    //     {
-                    //         var _object = _hit.collider.gameObject;
-                    //
-                    //         if (_object.TryGetComponent<Block>(out var _block))
-                    //         {
-                    //             GetBlockManager().RemoveBlock(_block);
-                    //             GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
-                    //         }
-                    //     }
-                    // }
+                  
                     break;
             }
+        }
+
+        private Vector3Int CastVec3ToVec3Int(Vector3 _pos)
+        {
+            return new Vector3Int((int)_pos.x, (int)_pos.y, (int)_pos.z);
         }
         
         void ProcessMouseEnterLeaveSceneView()

@@ -406,12 +406,17 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     break;
             }
         }
+            
+        //May Need to Create Utility for Mouse Event
+        private bool isPressed = false;
         
-            bool _isPressed = false;
+        private Vector3Int originPos = Vector3Int.zero;
+
+        private List<GameObject> tempPath = new List<GameObject>();
          
         private void UpdateRoadBuildTools(Event _currentEvent, Ray _ray)
         {
-            Vector3Int _originPos = Vector3Int.zero;
+            //EditorEventManager.PollEvents();
             
             switch (interfaceSetting.RoadBuildToolTabSelection)
             {
@@ -421,114 +426,70 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     {
                         case EventType.MouseDown:
                             
+                            if(isPressed) return;
+
+                            
+                            //if(EditorEventManager.LeftMouseDown) return;
+                            
                             if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
                             {
                                 if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                                 {
                                     Vector3 _targetPos = _hit.collider.transform.position;
                                     
-                                    
-                                    _originPos = CastVec3ToVec3Int(_targetPos);
-                                    _isPressed = true;
+                                    originPos = CastVec3ToVec3Int(_targetPos);
                                     
                                     
+                                    isPressed = true;
                                     
-                                    GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            
-                                    var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
-                            
-                                    var _block = _blockPrefab.AddComponent<PathBlock>();
-                                    
-                                    _block.InjectDependency(GetBlockManager());
-                                    _block.Init(_targetPos, _pos);
-                                    _block.UpdateBlockData();
-                                    
-                                    
-                                    GetBlockEditorManager().InitializeAddTable();
-                                    
-                                    GetBlockEditorManager().RemoveBlock(_pos);
-                                    
-                                    GetBlockEditorManager().AddBlock   (_block, _pos, NormalFace.None);
-                                    
-                                    //GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
-                                    
-                                    DestroyImmediate(_blockPrefab);
+                                    // GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                    //
+                                    // var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                                    //
+                                    // var _block = _blockPrefab.AddComponent<PathBlock>();
+                                    //
+                                    // _block.InjectDependency(GetBlockManager());
+                                    // _block.Init(_targetPos, _pos);
+                                    // _block.UpdateBlockData();
+                                    //
+                                    //
+                                    // GetBlockEditorManager().InitializeAddTable();
+                                    //
+                                    // GetBlockEditorManager().RemoveBlock(_pos);
+                                    //
+                                    // GetBlockEditorManager().AddBlock   (_block, _pos, NormalFace.None);
+                                    //
+                                    // //GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                    //
+                                    // DestroyImmediate(_blockPrefab);
                                 }
                             }
 
                             break;
 
-                        case EventType.MouseMove:
+                        case EventType.MouseDrag:
                             
                             Debug.Log("Mouse Moving");
                             
-                            if(!_isPressed) return;
+                            if(!isPressed) return;
+                            
+                            //if(!EditorEventManager.LeftMouseDown) return;
 
                             if (_currentEvent.button == 0)
                             {
                                 Debug.Log("Mouse Moving");
 
+                                foreach (var _object in tempPath)
+                                {
+                                    DestroyImmediate(_object);
+                                }
+                                tempPath.Clear();
+
                                 if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                                 {
                                     Vector3Int _targetPos = CastVec3ToVec3Int(_hit.collider.transform.position);
 
-                                    var _path = new List<Vector3Int>();
-
-                                    if (_targetPos.x > _originPos.x)
-                                    {
-                                        var _dif = _targetPos.x - _originPos.x;
-
-                                        for (var _i = 0; _i < _dif; _i++)
-                                        {
-                                            var _pathPos = _originPos;
-
-                                            _pathPos += new Vector3Int(_i, _pathPos.y, _pathPos.z);
-
-                                            _path.Add(_pathPos);
-                                        }
-                                    }
-
-                                    if (_targetPos.x < _originPos.x)
-                                    {
-                                        var _dif = _originPos.x - _targetPos.x;
-
-                                        for (var _i = 0; _i < _dif; _i++)
-                                        {
-                                            var _pathPos = _originPos;
-
-                                            _pathPos -= new Vector3Int(_i, _pathPos.y, _pathPos.z);
-
-                                            _path.Add(_pathPos);
-                                        }
-                                    }
-
-                                    // if (_targetPos.z > _originPos.z)
-                                    // {
-                                    //     var _dif = _targetPos.z - _originPos.z;
-                                    //
-                                    //     for (var _j = 0; _j < _dif; _j++)
-                                    //     {
-                                    //         var _pathPos = _path.Last();
-                                    //
-                                    //         _pathPos += new Vector3Int(_pathPos.x, _pathPos.y, _j);
-                                    //
-                                    //         _path.Add(_pathPos);
-                                    //     }
-                                    // }
-                                    //
-                                    // if (_targetPos.z < _originPos.z)
-                                    // {
-                                    //     var _dif = _originPos.z - _targetPos.z;
-                                    //
-                                    //     for (var _j = 0; _j < _dif; _j++)
-                                    //     {
-                                    //         var _pathPos = _path.Last();
-                                    //
-                                    //         _pathPos -= new Vector3Int(_pathPos.x, _pathPos.y, _j);
-                                    //
-                                    //         _path.Add(_pathPos);
-                                    //     }
-                                    // }
+                                    var _path = GetLShapePath(originPos, _targetPos);
 
                                     if (_path.Count > 0)
                                     {
@@ -546,6 +507,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
                                             _block.Init(_targetPos, _point);
                                             _block.UpdateBlockData();
 
+                                            tempPath.Add(_block.gameObject);
+
                                             // GetBlockEditorManager().InitializeAddTable();
                                             // GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
                                             //
@@ -558,9 +521,10 @@ namespace MugCup_BlockBuilder.Editor.GUI
                                 }
                             }
                             break;
+                        
                         case EventType.MouseUp:
 
-                            _isPressed = false;
+                            isPressed = false;
                             
                             break;
 
@@ -571,6 +535,63 @@ namespace MugCup_BlockBuilder.Editor.GUI
                   
                     break;
             }
+        }
+
+        //Might need to add to Path Finder Util//
+        private List<Vector3Int> GetLShapePath(Vector3Int _originPos, Vector3Int _targetPos)
+        {
+            var _pathResult = new List<Vector3Int>();
+            
+            if (_targetPos.x > _originPos.x)
+            {
+                var _dif = _targetPos.x - _originPos.x;
+                for (var _i = 0; _i < _dif; _i++)
+                {
+                    var _pathPos = _originPos;
+                    _pathPos += new Vector3Int(_i, 0, 0);
+                    _pathResult.Add(_pathPos);
+                }
+            }
+            
+            if (_targetPos.x < _originPos.x)
+            {
+                var _dif = _originPos.x - _targetPos.x;
+                for (var _i = 0; _i < _dif; _i++)
+                {
+                    var _pathPos = _originPos;
+                    _pathPos -= new Vector3Int(_i, 0, 0);
+                    _pathResult.Add(_pathPos);
+                }
+            }
+            
+            if (_targetPos.z > _originPos.z)
+            {
+                var _dif = _targetPos.z - _originPos.z;
+                for (var _j = 0; _j < _dif; _j++)
+                {
+                    var _pathPos = new Vector3Int(_targetPos.x, _originPos.y, _originPos.z);
+   
+                    _pathPos += new Vector3Int(0, 0, _j);
+   
+                    _pathResult.Add(_pathPos);
+                }
+            }
+   
+            if (_targetPos.z < _originPos.z)
+            {
+                var _dif = _originPos.z - _targetPos.z;
+ 
+                for (var _j = 0; _j < _dif; _j++)
+                {
+                    var _pathPos = new Vector3Int(_targetPos.x, _originPos.y, _originPos.z);
+                    
+                    _pathPos -= new Vector3Int(0, 0, _j);
+   
+                    _pathResult.Add(_pathPos);
+                }
+            }
+            
+            return _pathResult;
         }
 
         private Vector3Int CastVec3ToVec3Int(Vector3 _pos)

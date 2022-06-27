@@ -32,6 +32,40 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public BlockMeshData     GetBlockMeshData  () => blockMeshData;
         public BlockMeshData     GetPathMeshData   () => pathMeshData;
 
+        private static Dictionary<Type, BlockMeshData> blockMeshDataTable = new Dictionary<Type, BlockMeshData>();
+
+        public BlockMeshData GetBlockMeshData<T>() where T : Block
+        {
+            var _blockMeshDataTable = GetBlockMeshDataTable();
+
+            if (_blockMeshDataTable != null)
+            {
+                if (_blockMeshDataTable.TryGetValue(typeof(T), out var _meshData))
+                {
+                    return _meshData;
+                }
+            }
+            
+            return null;
+        }
+
+        private Dictionary<Type, BlockMeshData> GetBlockMeshDataTable()
+        {
+            //if(blockMeshDataTable.Count == 0)
+                InitializeBlockMeshDataTable();
+
+            return blockMeshDataTable;
+        }
+
+        private void InitializeBlockMeshDataTable()
+        {
+            blockMeshDataTable = new Dictionary<Type, BlockMeshData>()
+            {
+                { typeof(Block)    , blockMeshData },
+                { typeof(PathBlock), pathMeshData  }
+            };
+        }
+
         //These can be used as fallback. In case, data cannot be found from BuildBuilderManager//
         //Or User use to use this class directly.
         [SerializeField] private GridDataSettingSO gridData;

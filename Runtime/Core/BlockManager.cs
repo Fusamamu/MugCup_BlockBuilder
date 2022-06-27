@@ -95,12 +95,18 @@ namespace MugCup_BlockBuilder.Runtime
 			    _block.GetSurroundingBlocksReference();
 			    _block.SetBitMask();
 		    }
+		    
+		    UpdateMeshBlocks(_castBlocks);
 	    }
 	    
 	    public void UpdateMeshBlocks<T>(IEnumerable<T> _blocks) where T : Block
 	    {
 		    foreach (var _block in _blocks)
+		    {
+			    if(_block == null) continue;
+			    
 			    UpdateMeshBlock(_block);
+		    }
 	    }
 	    
 	    public void UpdateMeshBlock<T>(T _block) where T : Block
@@ -108,8 +114,15 @@ namespace MugCup_BlockBuilder.Runtime
 		    Vector3Int _targetNodePos = _block.NodePosition;
 
 		    int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();
+		    
+		    
 			
-		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
+		    //BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
+
+
+		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData<PathBlock>().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
+		    
+		    
 
 		    Block _blockPrefab   = _blockMeshInfo.Prefab;
 		    Quaternion _rotation = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;

@@ -545,7 +545,10 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             
                             GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
                             
-                            //GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                            
+                            GetBlockManager().UpdateSurroundingBlocksData<PathBlock>(_block.NodePosition);
+                            
+                            //GetBlockManager().UpdateMeshBlocks<PathBlock>();
                             
                             DestroyImmediate(_blockPrefab);
 

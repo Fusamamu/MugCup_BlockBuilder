@@ -144,25 +144,32 @@ namespace MugCup_BlockBuilder.Runtime
 	    public void UpdateSurroundBlocksBitMask(Vector3Int _nodePos)
 	    {
 		    List<Block> _blocks = GetBlocks3x3Cube(_nodePos);
-
-		    Block[] _checkedBlocks = _blocks.Where(_block => _block != null).ToArray();
             
-		    foreach (var _block in _checkedBlocks)
+		    foreach (var _block in _blocks)
 		    {
-			    if (_block != null)
-			    {
-				    _block.GetSurroundingBlocksReference();
-				    _block.SetBitMask();
-			    }
+			    if(_block == null) continue;
+				    
+			    _block.GetSurroundingBlocksReference();
+			    _block.SetBitMask();
 		    }
+
+		    //Need to clean this section to be able to selection which block section should be updated
 		    
-		    UpdateMeshBlocks(_checkedBlocks);
+		    var _middleSectionBlocks = GetBlocksTopSection(_nodePos);
+		    
+		    UpdateMeshBlocks(_middleSectionBlocks);
+		    
+		    //UpdateMeshBlocks(_blocks);
 	    }
 	    
         public void UpdateMeshBlocks(IEnumerable<Block> _blocks)
 		{
 			foreach (var _block in _blocks)
+			{
+				if(_block == null) continue;
+				
 				UpdateMeshBlock(_block);
+			}
 		}
 		
 		public void UpdateMeshBlock(Block _block)
@@ -289,6 +296,22 @@ namespace MugCup_BlockBuilder.Runtime
 			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
 			
 			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
+		}
+
+		public List<Block> GetBlocksTopSection(Vector3Int _nodePos)
+		{
+			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			
+			return GridUtility.GetTopSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
+		}
+
+		public List<Block> GetBlocksMiddleSection(Vector3Int _nodePos)
+		{
+			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			
+			return GridUtility.GetMiddleSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
 		}
 #endregion
 	    //Generate/Populat Block Related Function

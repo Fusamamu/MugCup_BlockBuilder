@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 8723904593869010723, guid: 03080be9dae5d4c0db3d328531bb878f, type: 3}
+  - {fileID: 2100000, guid: f16cbad6aa0914986b419a2df088bffc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115,7 +115,7 @@ MonoBehaviour:
   WorldPosition: {x: 0, y: 0, z: 0}
   BitMask: 0
   BitMaskMiddleSection: 0
-  TopIBlocks:
+  TopBlocks:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -125,7 +125,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  MiddleIBlocks:
+  MiddleBlocks:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -135,7 +135,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  BottomIBlocks:
+  BottomBlocks:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -156,3 +156,34 @@ MonoBehaviour:
   - {fileID: 0}
   IsEnable: 0
   isInit: 0
+  castBlocks: []
+  TopCastBlocks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  MiddleCastBlocks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  BottomCastBlocks:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

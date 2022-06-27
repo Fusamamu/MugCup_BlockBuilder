@@ -12,6 +12,7 @@ using UnityEngine;
 namespace MugCup_BlockBuilder.Runtime.Core
 {
     //Per stage / Per Scene / Save/Load Scene?
+    [Serializable]
     public class GridBlockDataManager : MonoBehaviour
     {
         [SerializeField] private Block[][] map;

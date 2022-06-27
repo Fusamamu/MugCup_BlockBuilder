@@ -12,6 +12,7 @@ using BlockBuilder.Scriptable;
 using BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core;
+using UnityEditor.SceneManagement;
 
 #if UNITY_EDITOR
 namespace MugCup_BlockBuilder.Editor.GUI
@@ -155,6 +156,9 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
             if (GUILayout.Button("Generate Grid", _newStyle, GUILayout.Height(30)))
             {
+                var _gridBlockDataManager = GetBlockManager().GetCurrentGridBlockDataManager();
+                Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
+                
                 Vector3Int _mapSize  = gridDataSettingSo.MapSize;
                 Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
 
@@ -174,6 +178,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 
                 if(_usePrimitive)
                     DestroyImmediate(_defaultBlock);
+              
+                PrefabUtility.RecordPrefabInstancePropertyModifications(_gridBlockDataManager);
             }
 
             if (GUILayout.Button("Generate Volume Points", _newStyle, GUILayout.Height(30)))
@@ -377,6 +383,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
                                     GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
                             
                                     GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                    
                             
                                     DestroyImmediate(_blockPrefab);
                                 }

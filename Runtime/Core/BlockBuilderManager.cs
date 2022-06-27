@@ -17,6 +17,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		public BlockMeshData     PathBlockMeshDataSetting;
 	}
 	
+	[Serializable]
 	public class BlockBuilderManager : Singleton<BlockBuilderManager>
 	{
 		public enum ManagerMode

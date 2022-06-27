@@ -8,6 +8,7 @@ using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
 using MugCup_BlockBuilder.Runtime.Core;
 using UnityEditor.AnimatedValues;
+using UnityEditor.SceneManagement;
 
 namespace MugCup_BlockBuilder.Editor.GUI
 {
@@ -100,6 +101,12 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 }
             }
             EditorGUILayout.EndFadeGroup();
+
+            if (UnityEngine.GUI.changed)
+            {
+                EditorUtility.SetDirty(blockBuilderManager);
+                EditorSceneManager.MarkSceneDirty(blockBuilderManager.gameObject.scene);
+            }
             
             
             EditorGUILayout.Space();

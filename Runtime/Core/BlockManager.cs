@@ -12,6 +12,12 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder.Runtime
 {
+	public static class BlockBuilderPathName
+	{
+		public static string TextParentName  = "[-------Grid Position Text-------]";
+		public static string BlockParentName = "[-------------Blocks-------------]";
+	}
+	
 	/// <summary>
 	/// Class to keep track of blocks when blocks get added, removed and updated.
 	/// This class modify blocks data [Block Array] via GridBlockDataManager.
@@ -24,9 +30,9 @@ namespace MugCup_BlockBuilder.Runtime
 	    /// </summary>
 	    [SerializeField] private GridBlockDataManager gridBlockDataManager;
 	    
-	    public const string TextParentName  = "[-------Grid Position Text-------]";
-	    public const string BlockParentName = "[-------------Blocks-------------]";
-
+	    // public const string TextParentName  = "[-------Grid Position Text-------]";
+	    // public const string BlockParentName = "[-------------Blocks-------------]";
+	    
 	    public GridBlockDataManager GetCurrentGridBlockDataManager()
 	    {
 		    return gridBlockDataManager;
@@ -204,8 +210,15 @@ namespace MugCup_BlockBuilder.Runtime
 			if (IsOccupied(_nodePos)) return;
 			
 			var _targetNodeWorldPos = gridBlockDataManager.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
+
+			Block _newBlock;
 			
-			var _newBlock = Instantiate(_prefab, _targetNodeWorldPos, _rotation);
+			var _blockParent = GameObject.Find(BlockBuilderPathName.BlockParentName);
+			
+			if(_blockParent)
+				_newBlock = Instantiate(_prefab, _targetNodeWorldPos, _rotation, _blockParent.transform);
+			else
+				_newBlock = Instantiate(_prefab, _targetNodeWorldPos, _rotation);
 			
 			_newBlock.Init(_targetNodeWorldPos, _nodePos);
 			_newBlock.InjectDependency(this);
@@ -314,10 +327,10 @@ namespace MugCup_BlockBuilder.Runtime
 			return GridUtility.GetMiddleSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
 		}
 #endregion
-	    //Generate/Populat Block Related Function
+	    //Generate/Populate Block Related Function
 	    private void GroupBlocksToParent()
 	    {
-		    var _blockParent = new GameObject(BlockParentName);
+		    var _blockParent = new GameObject(BlockBuilderPathName.BlockParentName);
 
 		    gridBlockDataManager.AvailableBlocksApplyAll(_block =>
 		    {
@@ -327,7 +340,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 	    private void CreateTextOverlay()
 	    {
-		    var _textParent = new GameObject(TextParentName);
+		    var _textParent = new GameObject(BlockBuilderPathName.TextParentName);
 
 		    gridBlockDataManager.AvailableBlocksApplyAll(_block =>
 		    {

@@ -78,7 +78,7 @@ namespace MugCup_BlockBuilder.Editor
                      isPressed = false;
                             
                      Visualizer.ClearPathVisualizer();
-                            
+                     
                      GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
                             
                      var _block = _blockPrefab.AddComponent<PathBlock>();

@@ -60,6 +60,20 @@ namespace MugCup_BlockBuilder.Editor
 
             return blockEditorManager;
         }
-      
+
+        public static GameObject GetBlockParent()
+        {
+            return GameObject.Find(BlockBuilderPathName.BlockParentName);
+        }
+
+        public static bool TryGetBlockParent(out GameObject _parent)
+        {
+            _parent = GetBlockParent();
+            
+            if (!_parent)
+                return false;
+
+            return true;
+        }
     }
 }

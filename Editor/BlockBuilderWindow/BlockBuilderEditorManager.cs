@@ -18,17 +18,13 @@ namespace MugCup_BlockBuilder.Editor
         private static BlockManager        blockManager;
         private static BlockEditorManager  blockEditorManager;
 
-        // private static VolumePoint[] volumePoints;
-        //
-        // private static AnimBool displayBuilderMode;
-
         private static bool isBlockBuilderManagerInit = false;
 
         public static void Initialize()
         {
             GetBlockBuilderManager();
             
-            InterfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset");
+            InterfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset"       );
             GridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
         }
         

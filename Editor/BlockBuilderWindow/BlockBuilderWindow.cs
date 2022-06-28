@@ -25,8 +25,6 @@ namespace MugCup_BlockBuilder.Editor
         [MenuItem("Tools/Block Builder/Open Block Builder Window", false, 16)]
         public static void ShowWindow() => GetWindow(typeof(BlockBuilderWindow), false, "Block Builder").Show();
 
-        private static GameObject mainMap;
-
         private void OnEnable()
         {
             BlockBuilderEditorManager.Initialize();
@@ -171,8 +169,6 @@ namespace MugCup_BlockBuilder.Editor
                 
                 foreach(var _block in _blocks)
                     DestroyImmediate(_block);
-                
-                DestroyImmediate(mainMap);
 
                 BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager().ClearGridUnitBlocks();
 
@@ -196,7 +192,6 @@ namespace MugCup_BlockBuilder.Editor
             EditorGUILayout.LabelField("Edit Road Path Blocks");
             string[] _pathBuildingToolTabs = {"Add Road Path", "Remove Road Path"};
             BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection, _pathBuildingToolTabs, GUILayout.Height(30));
-            
             
             DisplayBuilderModeSelectionInApplication();
         }
@@ -247,8 +242,6 @@ namespace MugCup_BlockBuilder.Editor
             
             Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
 
-            int _controlID = GUIUtility.GetControlID(FocusType.Passive);
-
             switch (BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection)
             {
                 case 0: /*Build Mode*/
@@ -257,8 +250,7 @@ namespace MugCup_BlockBuilder.Editor
                     
                     if (!Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity)) return;
                     
-                    GetSelectedFace       (_hit);
-                    //UpdateVisualizePointer(_hit);
+                    GetSelectedFace (_hit);
                     
                     HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
                     
@@ -266,24 +258,16 @@ namespace MugCup_BlockBuilder.Editor
                     {
                         case InterfaceSetting.EditMode.EditBlocks:
                             
-                            //HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-                            
                             UpdateVisualizePointer(_hit, Visualizer.PointerType.Block);
-                            
                             BlockEditorTools.UpdateBlockBuildTools(_currentEvent, _ray);
                             break;
                         
                         case InterfaceSetting.EditMode.EditRoads:
                             
-                            //HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-                            
                             UpdateVisualizePointer(_hit, Visualizer.PointerType.Path);
-                            
                             PathEditorTools.UpdateRoadBuildTools(_currentEvent, _ray);
-                            //UpdateRoadBuildTools (_currentEvent, _ray);
                             break;
                     }
-                    
                     break;
                 case 1:
                     Visualizer.ClearPointer();
@@ -314,73 +298,12 @@ namespace MugCup_BlockBuilder.Editor
             Visualizer.DrawLine(_faceCenterPos, _extendedLinePos, Color.yellow, 2f);
             Handles.DrawWireDisc(_faceCenterPos, _hit.normal, 0.3f, 2f);
         }
-
-        // private void UpdateBlockBuildTools(Event _currentEvent, Ray _ray)
-        // {
-        //     switch (BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection)
-        //     {
-        //         case 0: /*Add Block*/
-        //             switch (_currentEvent.type)
-        //             {
-        //                 case EventType.MouseDown:
-        //                     if (_currentEvent.button == 0)
-        //                     {
-        //                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
-        //                         {
-        //                             Vector3 _targetPos = _hit.collider.transform.position;
-        //                     
-        //                             GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        //
-        //                             var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
-        //
-        //                             var _block = _blockPrefab.AddComponent<Block>();
-        //                     
-        //                             _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
-        //                             _block.Init(_targetPos, _pos);
-        //                             _block.UpdateBlockData();
-        //                     
-        //                             BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
-        //                             BlockBuilderEditorManager.GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
-        //                     
-        //                             BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
-        //                             
-        //                     
-        //                             DestroyImmediate(_blockPrefab);
-        //                         }
-        //                     }
-        //                     break;
-        //                 
-        //                 case EventType.MouseMove:
-        //                     break;
-        //             }
-        //             break;
-        //         
-        //         case 1: /*Subtract Block*/
-        //             if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
-        //             {
-        //                 Debug.Log($"<color=yellow>[Info]:</color> <color=orange>Left Mouse Button Clicked.</color>");
-        //                 
-        //                 if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
-        //                 {
-        //                     var _object = _hit.collider.gameObject;
-        //
-        //                     if (_object.TryGetComponent<Block>(out var _block))
-        //                     {
-        //                         BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
-        //                         BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
-        //                     }
-        //                 }
-        //             }
-        //             break;
-        //     }
-        // }
         
         void ProcessMouseEnterLeaveSceneView()
         {
             // If mouse enters SceneView window, show visualizer
             if (Event.current.type == EventType.MouseEnterWindow)
             {
-                
                
             }
                 

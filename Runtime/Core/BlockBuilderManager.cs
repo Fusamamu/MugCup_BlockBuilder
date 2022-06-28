@@ -9,6 +9,14 @@ using MugCup_BlockBuilder.Runtime.Core.Managers;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
+	//TODO
+	//-> Block be able to change Material scheme
+	//-> Block variety when added or edit
+	//-> Barricade
+	//-> Flag
+	
+	
+	
 	public struct BlockDataSetting
 	{
 		public GridDataSettingSO GridDataSetting;
@@ -70,7 +78,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		/// </summary>
 		protected override void Awake()
 		{
-			Initialized();
+			//Initialized();
 		}
 		
 		public void Initialized()

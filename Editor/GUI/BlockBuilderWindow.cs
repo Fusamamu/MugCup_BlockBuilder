@@ -19,63 +19,66 @@ namespace MugCup_BlockBuilder.Editor.GUI
 {
     public class BlockBuilderWindow : EditorWindow
     {
-        private static BlockBuilderManager blockBuilderManager;
-        private static BlockManager        blockManager;
-        private static BlockEditorManager  blockEditorManager;
-        
-        private static InterfaceSetting   interfaceSetting;
-        private static GridDataSettingSO  gridDataSettingSo;
-
+        // private static BlockBuilderManager blockBuilderManager;
+        // private static BlockManager        blockManager;
+        // private static BlockEditorManager  blockEditorManager;
+        //
+        // private static InterfaceSetting   interfaceSetting;
+        // private static GridDataSettingSO  gridDataSettingSo;
+        //
         private static VolumePoint[] volumePoints;
-
+        //
+        
         private static AnimBool displayBuilderMode;
-
-        private static bool isBlockBuilderManagerInit = false;
+        //
+        // private static bool isBlockBuilderManagerInit = false;
         
         [MenuItem("Tools/Block Builder/Open Block Builder Window", false, 16)]
         public static void ShowWindow() => GetWindow(typeof(GUI.BlockBuilderWindow), false, "Block Builder").Show();
 
         private static GameObject mainMap;
 
-        private BlockBuilderManager GetBlockBuilderManager()
-        {
-            if (!blockBuilderManager)
-                blockBuilderManager = FindObjectOfType<BlockBuilderManager>();
-
-            if (!isBlockBuilderManagerInit)
-            {
-                blockBuilderManager.Initialized();
-                isBlockBuilderManagerInit = true;
-                
-                Debug.Log($"[Block Builder Manager Initialized]");
-            }
-
-            return blockBuilderManager;
-        }
-
-        private BlockManager GetBlockManager()
-        {
-            if (!blockManager)
-                blockManager = FindObjectOfType<BlockManager>();
-
-            return blockManager;
-        }
-
-        private BlockEditorManager GetBlockEditorManager()
-        {
-            if (!blockEditorManager)
-                blockEditorManager = FindObjectOfType<BlockEditorManager>();
-
-            return blockEditorManager;
-        }
+        // private BlockBuilderManager GetBlockBuilderManager()
+        // {
+        //     if (!blockBuilderManager)
+        //         blockBuilderManager = FindObjectOfType<BlockBuilderManager>();
+        //
+        //     if (!isBlockBuilderManagerInit)
+        //     {
+        //         blockBuilderManager.Initialized();
+        //         isBlockBuilderManagerInit = true;
+        //         
+        //         Debug.Log($"[Block Builder Manager Initialized]");
+        //     }
+        //
+        //     return blockBuilderManager;
+        // }
+        //
+        // private BlockManager GetBlockManager()
+        // {
+        //     if (!blockManager)
+        //         blockManager = FindObjectOfType<BlockManager>();
+        //
+        //     return blockManager;
+        // }
+        //
+        // private BlockEditorManager GetBlockEditorManager()
+        // {
+        //     if (!blockEditorManager)
+        //         blockEditorManager = FindObjectOfType<BlockEditorManager>();
+        //
+        //     return blockEditorManager;
+        // }
 
         private void OnEnable()
         {
             //Use "Block Builder Manager" to initialize first//
-            GetBlockBuilderManager();
+            // GetBlockBuilderManager();
+            //
+            // interfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset");
+            // gridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
             
-            interfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset");
-            gridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
+            BlockBuilderEditorManager.Initialize();
             
             AssetManager.LoadAssets();
             
@@ -94,10 +97,12 @@ namespace MugCup_BlockBuilder.Editor.GUI
             
             string[] _tabCaptions = {"Build", "Paint", "Setting", "Tools"};
             
-            interfaceSetting.CurrentMainTapSelection = GUILayout.Toolbar(interfaceSetting.CurrentMainTapSelection, _tabCaptions, GUILayout.Height(50), GUILayout.ExpandWidth(true));
+            BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection 
+                = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection, _tabCaptions, GUILayout.Height(50), GUILayout.ExpandWidth(true));
+            
             GUILayout.Space(10);
            
-            switch (interfaceSetting.CurrentMainTapSelection)
+            switch (BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection)
             {
                 case 0:
                     DisplayBuildPanel();
@@ -116,9 +121,10 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
         private void DisplayBuildPanel()
         {
-            interfaceSetting.MapSettingFoldout = EditorGUILayout.Foldout(interfaceSetting.MapSettingFoldout, "Map Data Setting");
+            BlockBuilderEditorManager.InterfaceSetting.MapSettingFoldout 
+                = EditorGUILayout.Foldout(BlockBuilderEditorManager.InterfaceSetting.MapSettingFoldout, "Map Data Setting");
             
-            if (interfaceSetting.MapSettingFoldout)
+            if (BlockBuilderEditorManager.InterfaceSetting.MapSettingFoldout)
             {
                 GUILayout.BeginVertical("HelpBox");
                 
@@ -126,16 +132,16 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     
                     GUILayout.BeginVertical("GroupBox");
                     
-                    gridDataSettingSo.MapSize      = EditorGUILayout.Vector3IntField("Map Size",      gridDataSettingSo.MapSize);
-                    gridDataSettingSo.GridUnitSize = EditorGUILayout.Vector3IntField("Map Unit Size", gridDataSettingSo.GridUnitSize);
+                    BlockBuilderEditorManager.GridDataSettingSo.MapSize      = EditorGUILayout.Vector3IntField("Map Size",      BlockBuilderEditorManager.GridDataSettingSo.MapSize);
+                    BlockBuilderEditorManager.GridDataSettingSo.GridUnitSize = EditorGUILayout.Vector3IntField("Map Unit Size", BlockBuilderEditorManager.GridDataSettingSo.GridUnitSize);
                     
                     GUILayout.BeginHorizontal();
 
-                    int _newRow    = gridDataSettingSo.MapSize.x;
-                    int _newColumn = gridDataSettingSo.MapSize.z;
-                    int _newHeight = gridDataSettingSo.MapSize.y;
+                    int _newRow    = BlockBuilderEditorManager.GridDataSettingSo.MapSize.x;
+                    int _newColumn = BlockBuilderEditorManager.GridDataSettingSo.MapSize.z;
+                    int _newHeight = BlockBuilderEditorManager.GridDataSettingSo.MapSize.y;
 
-                    gridDataSettingSo.MapSize = new Vector3Int(_newRow, _newHeight, _newColumn);
+                    BlockBuilderEditorManager.GridDataSettingSo.MapSize = new Vector3Int(_newRow, _newHeight, _newColumn);
                     
                     GUILayout.EndHorizontal();
                     GUILayout.EndVertical();
@@ -145,22 +151,22 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
             var _newStyle = new GUIStyle(UnityEngine.GUI.skin.button);
 
-            Undo.RecordObject(gridDataSettingSo,"Undo");
+            Undo.RecordObject(BlockBuilderEditorManager.GridDataSettingSo,"Undo");
             
             if (GUILayout.Button("Generate Map", _newStyle, GUILayout.Height(30)))
             {
-                Vector3Int _mapSize  = gridDataSettingSo.MapSize;
-                Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
+                Vector3Int _mapSize  = BlockBuilderEditorManager.GridDataSettingSo.MapSize;
+                Vector3Int _unitSize = BlockBuilderEditorManager.GridDataSettingSo.GridUnitSize;
                 GridBlockGenerator.GenerateMap(_mapSize, _unitSize);
             }
 
             if (GUILayout.Button("Generate Grid", _newStyle, GUILayout.Height(30)))
             {
-                var _gridBlockDataManager = GetBlockManager().GetCurrentGridBlockDataManager();
+                var _gridBlockDataManager = BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager();
                 Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
                 
-                Vector3Int _mapSize  = gridDataSettingSo.MapSize;
-                Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
+                Vector3Int _mapSize  = BlockBuilderEditorManager.GridDataSettingSo.MapSize;
+                Vector3Int _unitSize = BlockBuilderEditorManager.GridDataSettingSo.GridUnitSize;
 
                 bool _usePrimitive = false;
                 
@@ -172,9 +178,9 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 }
                 
                 //Need to Find a way to make initialization persistent
-                GetBlockBuilderManager().Initialized();
+                BlockBuilderEditorManager.GetBlockBuilderManager().Initialized();
                 
-                GetBlockManager().GenerateGridBlocks();
+                BlockBuilderEditorManager.GetBlockManager().GenerateGridBlocks();
                 
                 if(_usePrimitive)
                     DestroyImmediate(_defaultBlock);
@@ -184,12 +190,12 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
             if (GUILayout.Button("Generate Volume Points", _newStyle, GUILayout.Height(30)))
             {
-                Vector3Int _gridUnitSize  = gridDataSettingSo.GridUnitSize;
+                Vector3Int _gridUnitSize  = BlockBuilderEditorManager.GridDataSettingSo.GridUnitSize;
                 GameObject _volumePoints  = new GameObject("[Volume Points]");
                 
                 volumePoints = VolumePointGenerator.GeneratedVolumePoints(_gridUnitSize, 0.1f, _volumePoints);
 
-                var _blocks = blockManager.GetCurrentGridBlockDataManager().GetAvailableBlocks().ToArray();
+                var _blocks = BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager().GetAvailableBlocks().ToArray();
 
                 if (_blocks.Length > 0)
                 {
@@ -217,7 +223,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 
                 DestroyImmediate(mainMap);
 
-                GetBlockManager().GetCurrentGridBlockDataManager().ClearGridUnitBlocks();
+                BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager().ClearGridUnitBlocks();
 
                 var _textParent   = GameObject.Find("[-------Grid Position Text-------]");
                 var _blocksParent = GameObject.Find("[-------------Blocks-------------]");
@@ -230,15 +236,15 @@ namespace MugCup_BlockBuilder.Editor.GUI
             
             EditorGUILayout.HelpBox("Select desired edit mode. Use add and remove tab below to start edit blocks", MessageType.Info);
             
-            interfaceSetting.CurrentEditMode = (InterfaceSetting.EditMode)EditorGUILayout.EnumPopup("Edit mode selection:", interfaceSetting.CurrentEditMode);
+            BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode = (InterfaceSetting.EditMode)EditorGUILayout.EnumPopup("Edit mode selection:", BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode);
 
             EditorGUILayout.LabelField("Edit Blocks");
             string[] _buildingToolTabs = {"Add Block", "Subtract Block"};
-            interfaceSetting.BuildToolTabSelection = GUILayout.Toolbar(interfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
+            BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
             
             EditorGUILayout.LabelField("Edit Road Path Blocks");
             string[] _pathBuildingToolTabs = {"Add Road Path", "Remove Road Path"};
-            interfaceSetting.RoadBuildToolTabSelection = GUILayout.Toolbar(interfaceSetting.RoadBuildToolTabSelection, _pathBuildingToolTabs, GUILayout.Height(30));
+            BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection, _pathBuildingToolTabs, GUILayout.Height(30));
             
             
             DisplayBuilderModeSelectionInApplication();
@@ -273,7 +279,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
         private static void DisplaySettingPanel()
         {
-            gridDataSettingSo = (GridDataSettingSO)EditorGUILayout.ObjectField("Grid Data Setting", gridDataSettingSo, typeof(GridDataSettingSO), true);
+            BlockBuilderEditorManager.GridDataSettingSo = (GridDataSettingSO)EditorGUILayout.ObjectField("Grid Data Setting", BlockBuilderEditorManager.GridDataSettingSo, typeof(GridDataSettingSO), true);
             
             var _meshData     = (BlockMeshData)EditorGUILayout.ObjectField("Block Mesh Data Setting", null, typeof(BlockMeshData), true);
 
@@ -292,11 +298,11 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
             int _controlID = GUIUtility.GetControlID(FocusType.Passive);
 
-            switch (interfaceSetting.CurrentMainTapSelection)
+            switch (BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection)
             {
                 case 0: /*Build Mode*/
 
-                    if(interfaceSetting.CurrentEditMode == InterfaceSetting.EditMode.None) return;
+                    if(BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode == InterfaceSetting.EditMode.None) return;
                     
                     if (!Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity)) return;
                     
@@ -305,7 +311,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     
                     HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
                     
-                    switch (interfaceSetting.CurrentEditMode)
+                    switch (BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode)
                     {
                         case InterfaceSetting.EditMode.EditBlocks:
                             
@@ -357,7 +363,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
         private void UpdateBlockBuildTools(Event _currentEvent, Ray _ray)
         {
-            switch (interfaceSetting.BuildToolTabSelection)
+            switch (BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection)
             {
                 case 0: /*Add Block*/
                     switch (_currentEvent.type)
@@ -375,14 +381,14 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
                                     var _block = _blockPrefab.AddComponent<Block>();
                             
-                                    _block.InjectDependency(GetBlockManager());
+                                    _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
                                     _block.Init(_targetPos, _pos);
                                     _block.UpdateBlockData();
                             
-                                    GetBlockEditorManager().InitializeAddTable();
-                                    GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
+                                    BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
+                                    BlockBuilderEditorManager.GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
                             
-                                    GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                    BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
                                     
                             
                                     DestroyImmediate(_blockPrefab);
@@ -406,8 +412,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
                             if (_object.TryGetComponent<Block>(out var _block))
                             {
-                                GetBlockManager().RemoveBlock(_block);
-                                GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
+                                BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
                             }
                         }
                     }
@@ -427,7 +433,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
         {
             //EditorEventManager.PollEvents();
             
-            switch (interfaceSetting.RoadBuildToolTabSelection)
+            switch (BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection)
             {
                 case 0: /*Add Road Block Path*/
 
@@ -541,19 +547,19 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             
                             var _block = _blockPrefab.AddComponent<PathBlock>();
                             
-                            _block.InjectDependency(GetBlockManager());
+                            _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
                             _block.Init(originPos, originPos);
                             _block.UpdateBlockData();
                             
                             
-                            GetBlockEditorManager().InitializeAddTable();
+                            BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
                             
-                            GetBlockEditorManager().RemoveBlock(originPos);
+                            BlockBuilderEditorManager.GetBlockEditorManager().RemoveBlock(originPos);
                             
-                            GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
+                            BlockBuilderEditorManager.GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
                             
                             
-                            GetBlockManager().UpdateSurroundingBlocksData<PathBlock>(_block.NodePosition);
+                            BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<PathBlock>(_block.NodePosition);
                             
                             //GetBlockManager().UpdateMeshBlocks<PathBlock>();
                             
@@ -652,7 +658,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
         private void OnDisable()
         {
-            EditorUtility.SetDirty(interfaceSetting);
+            EditorUtility.SetDirty(BlockBuilderEditorManager.InterfaceSetting);
         }
     }
 }

@@ -53,7 +53,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private Dictionary<Type, BlockMeshData> GetBlockMeshDataTable()
         {
             //if(blockMeshDataTable.Count == 0)
-                InitializeBlockMeshDataTable();
+                
+            InitializeBlockMeshDataTable();
 
             return blockMeshDataTable;
         }

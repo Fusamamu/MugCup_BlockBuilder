@@ -9,60 +9,6 @@ using MugCup_BlockBuilder.Runtime.Core.Managers;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
-	//IN PROCESS
-	//-> Water Fall
-	//-> Fire
- 	//-> Projectile
-		//-> Curve Visualizer
-	
-	//TODO
-	
-	//Modeling
-	//-> Block Varieties
-		//-->Block with Grass
-	//-> Barricade
-	//-> Trebuchet
-	//-> Pin hole
-	//-> Enemy Units (Vehicles)
-	
-	
-	//New Function
-	//-> Block be able to change Material scheme
-	//-> Block variety when added or edit
-	
-	//Skill tree
-	//Type of tower
-	//-> Arrow
-	//-> Bombath
-	//-> Trebuchet
-	
-	//New Block Type
-	//->Grass
-	//->Water
-	//->Stair
-	//->Bridge
-	//->Rail way
-	
-	//Effect
-	//-> Sword smear trailing
-	
-	//Particle n Shader
-	//->Breaking stuff
-	
-	//-> Flag
-		//-Indicate Wind Direction
-	//-> Chimney smoke
-	//-> New Bomb Effect
-	//-> Shock Wave
-	//-> Vehicle Trailing 
-	
-	//Animation
-	//-> Enemy Vehicle Movement Animation (Feel)
-	//-> Bow Arrow animation
-	
-	//->UI
-
-
 	public struct BlockDataSetting
 	{
 		public GridDataSettingSO GridDataSetting;

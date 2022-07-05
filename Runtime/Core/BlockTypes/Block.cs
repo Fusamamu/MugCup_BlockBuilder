@@ -1,15 +1,12 @@
 using System.Linq;
 using UnityEngine;
 using BlockBuilder.Scriptable;
-using BlockBuilder.Runtime.Core;
-using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_PathFinder.Runtime;
-using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 
 namespace MugCup_BlockBuilder.Runtime
 {
     [System.Serializable]
-    public class Block: MonoBehaviour, INode
+    public class Block: NodeBase
     {
         //Should Has Reference to the Grid and Map that this Block reside//
         [SerializeField] protected BlockManager blockManager;
@@ -19,15 +16,6 @@ namespace MugCup_BlockBuilder.Runtime
         [SerializeField] protected GridDataSettingSO  gridData;
         
         [SerializeField] protected MeshFilter mesh;
-        
-#region INode Implementation
-        public INode      NodeParent   { get; set; }
-        public Vector3Int NodePosition { get; set; }
-        
-        public int G_Cost { get; set; }
-        public int H_Cost { get; set; }
-        public int F_Cost => G_Cost + H_Cost; 
-#endregion
         
         public Vector3 WorldPosition;
         

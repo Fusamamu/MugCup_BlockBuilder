@@ -17,7 +17,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
     {
         [SerializeField] private Block[][] map;
         [SerializeField] private Block[]   gridUnitBlocks;
-        
+
+        private Dictionary<int, Block[]> gridBlocksLevelTable = new Dictionary<int, Block[]>();
+
         public int RowUnit   ;
         public int ColumnUnit;
         public int LevelUnit ;
@@ -112,8 +114,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             if(!TryGetGridDataSetting(out var _gridData)) return;
             
-            InitializeGridUnitSize(_gridData);
-            InitializeGridArray();
+            InitializeGridUnitSize(_gridData); 
+            //InitializeGridArray();
             
             Debug.Log($"GridBlockDataManager Initialized.");
 
@@ -160,14 +162,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
             if(!TryGetGridDataSetting(out var _gridData)) return;
             
             InitializeGridUnitSize(_gridData);
-            InitializeGridArray();
             
             Debug.Log($"GridBlockDataManager Initialized.");
 
             if (gridData == null)
-            {
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
-            }
         }
 
         private void CacheData(BlockDataSetting _blockDataSetting)
@@ -265,12 +264,32 @@ namespace MugCup_BlockBuilder.Runtime.Core
         }
 
         //Where to push it? BlockManager or This GridBlockDataManager.
-        public void PopulateGridBlocksByLevel()
+        public void PopulateGridBlocksByLevel(int _gridLevel)
         {
-            var _gridLevel    = 0;
             var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
-
+            
             GridBlockGenerator.PopulateGridIBlocksByLevel<Block>(gridUnitBlocks, GridUnitSize, _gridLevel, _blockPrefab);
+
+            var _selectedBlockLevel = GetAllBlocksAtLevel(_gridLevel);
+
+            if(!gridBlocksLevelTable.ContainsKey(_gridLevel))
+                gridBlocksLevelTable.Add(_gridLevel, _selectedBlockLevel);
+            else
+                gridBlocksLevelTable[_gridLevel] = _selectedBlockLevel;
+        }
+
+        public Block[] GetAllBlocksAtLevel(int _gridLevel)
+        {
+            int _rowUnit    = GridUnitSize.x;
+            int _columnUnit = GridUnitSize.z;
+            
+            var _selectedBlockLevel = new Block[_rowUnit * _columnUnit];
+            
+            for (var _x = 0; _x < _rowUnit; _x++)
+                for (var _z = 0; _z < _columnUnit; _z++)
+                    _selectedBlockLevel[_z + GridUnitSize.x * _x] = gridUnitBlocks[_z + GridUnitSize.x * (_x + GridUnitSize.y * _gridLevel)];
+
+            return _selectedBlockLevel;
         }
         
         public void InitializeBlocksData(BlockManager _blockManager)

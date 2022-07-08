@@ -25,7 +25,6 @@ namespace MugCup_BlockBuilder.Editor
             GridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
         }
         
-        
         public static BlockBuilderManager GetBlockBuilderManager()
         {
             if (!blockBuilderManager)

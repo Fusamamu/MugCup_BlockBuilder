@@ -43,6 +43,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			managerCollections.Keys.ToList().ForEach(_t => Debug.LogWarning($"{_t}"));
 		}
 
+		public BlockManager GetBlockManager()
+		{
+			return blockManager != null ? blockManager : null;
+		}
+
 		public T GetManager<T>() where T : BaseBuilderManager
 		{
 			if (managerCollections.ContainsKey(typeof(T)))
@@ -93,8 +98,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 		private void InitializeBlockManager()
 		{
-			//Temp
-			blockManager = FindObjectOfType<BlockManager>();
+			if (!gameObject.TryGetComponent(out blockManager))
+				blockManager = FindObjectOfType<BlockManager>();
 
 			BlockDataSetting _blockDataSetting = new BlockDataSetting
 			{

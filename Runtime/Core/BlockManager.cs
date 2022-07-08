@@ -64,7 +64,9 @@ namespace MugCup_BlockBuilder.Runtime
 
 	    public void GenerateGridBlocks()
 	    {
-		    gridBlockDataManager.PopulateGridBlocksByLevel();
+		    gridBlockDataManager.InitializeGridArray();
+		    
+		    gridBlockDataManager.PopulateGridBlocksByLevel(0);
 		    
 		    gridBlockDataManager.InitializeBlocksData(this); 
 
@@ -80,6 +82,8 @@ namespace MugCup_BlockBuilder.Runtime
 		    //CreateTextOverlay  ();
 		    
 		    GroupBlocksToParent();
+		    
+		    //GroupBlocksToOwnLevel();
 	    }
 #region Update Surrounding Blocks
 	    public void UpdateSurroundingBlocksData<T>(Vector3Int _nodePos) where T: Block
@@ -336,6 +340,25 @@ namespace MugCup_BlockBuilder.Runtime
 		    {
 			    _block.transform.SetParent(_blockParent.transform);
 		    });
+	    }
+
+	    private void GroupBlocksToOwnLevel()
+	    {
+		    var _levels = gridBlockDataManager.LevelUnit;
+
+		    for (var _i = 0; _i < _levels; _i++)
+		    {
+			    var _levelParent = new GameObject($"Block Level : {_i}");
+
+			    var _blocksLevel = gridBlockDataManager.GetAllBlocksAtLevel(_i);
+
+			    foreach (var _block in _blocksLevel)
+			    {
+				    if(_block == null) continue;
+				    
+				    _block.transform.SetParent(_levelParent.transform);
+			    }
+		    }
 	    }
 
 	    private void CreateTextOverlay()

@@ -128,7 +128,6 @@ namespace MugCup_BlockBuilder.Editor
                 
                 //Need to Find a way to make initialization persistent
                 BlockBuilderEditorManager.GetBlockBuilderManager().Initialized();
-                
                 BlockBuilderEditorManager.GetBlockManager().GenerateGridBlocks();
                 
                 if(_usePrimitive)

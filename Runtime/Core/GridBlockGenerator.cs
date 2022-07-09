@@ -5,6 +5,7 @@ using BlockBuilder.Core;
 using MugCup_BlockBuilder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
+using MugCup_PathFinder.Runtime;
 
 namespace BlockBuilder.Runtime.Core
 {
@@ -12,6 +13,52 @@ namespace BlockBuilder.Runtime.Core
     public static class GridBlockGenerator
     {
         public static NormalFace SelectedFace;
+        
+        /// <summary>
+        /// Create Blocks and Store in NodeBase Array 
+        /// </summary>
+        /// <param name="_nodeBases"></param>
+        /// <param name="_gridUnitSize"></param>
+        /// <param name="_heightLevel"></param>
+        /// <param name="_nodeBasePrefab"></param>
+        /// <param name="_parent"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void PopulateGridBlocksByLevel<T>(NodeBase[] _nodeBases, Vector3Int _gridUnitSize, int _heightLevel, GameObject _nodeBasePrefab, GameObject _parent = null) where T : Block
+        {
+            int _rowUnit    = _gridUnitSize.x;
+            int _columnUnit = _gridUnitSize.z;
+
+            for (var _x = 0; _x < _rowUnit; _x++)
+            {
+                for (var _z = 0; _z < _columnUnit; _z++)
+                {
+                    var _targetNodePos = new Vector3Int(_x, _heightLevel, _z);
+
+                    var _blockObject = Object.Instantiate(_nodeBasePrefab, _targetNodePos, Quaternion.identity);
+                    
+                    /*TODO : Must Find way to get GridWorldNodePosition*/
+                    // Vector3    _targetNodeWorldPos = Vector3.zero;
+                    //
+                    // if (GridBlockData.TryGetGridDataSetting(out var _gridData))
+                    //     _targetNodeWorldPos = _gridData.GetGridWorldNodePosition(_targetNodePos);//---> Just Need Function
+                    //
+                    // Block _block = Object.Instantiate(_blockPrefab, _targetNodeWorldPos, Quaternion.identity).AddComponent<Block>();
+                        
+                    if (_parent != null)
+                    {
+                        _blockObject.transform.position += _parent.transform.position;
+                        _blockObject.transform.SetParent(_parent.transform);
+                    }
+                    
+                    if (!_blockObject.TryGetComponent<T>(out var _block))
+                        _block = _blockObject.AddComponent<T>();
+                    
+                    _block.Init(_targetNodePos, _targetNodePos);
+
+                    _nodeBases[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _heightLevel)] = _block;
+                }
+            }
+        }
 
         public static void PopulateGridIBlocksByLevel<T>(Block[] _blocks, Vector3Int _gridUnitSize, int _heightLevel, GameObject _blockPrefab, GameObject _parent = null) where T : Block
         {

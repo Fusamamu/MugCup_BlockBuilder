@@ -117,21 +117,9 @@ namespace MugCup_BlockBuilder.Editor
                 Vector3Int _mapSize  = BlockBuilderEditorManager.GridDataSettingSo.MapSize;
                 Vector3Int _unitSize = BlockBuilderEditorManager.GridDataSettingSo.GridUnitSize;
 
-                bool _usePrimitive = false;
-                
-                var _defaultBlock = AssetManager.AssetCollection.DefualtBlock.gameObject;
-                if (!_defaultBlock)
-                {
-                    _defaultBlock = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    _usePrimitive = true;
-                }
-                
                 //Need to Find a way to make initialization persistent
                 BlockBuilderEditorManager.GetBlockBuilderManager().Initialized();
                 BlockBuilderEditorManager.GetBlockManager().GenerateGridBlocks();
-                
-                if(_usePrimitive)
-                    DestroyImmediate(_defaultBlock);
               
                 PrefabUtility.RecordPrefabInstancePropertyModifications(_gridBlockDataManager);
             }

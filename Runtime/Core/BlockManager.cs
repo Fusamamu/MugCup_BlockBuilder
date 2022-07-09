@@ -30,9 +30,6 @@ namespace MugCup_BlockBuilder.Runtime
 	    /// </summary>
 	    [SerializeField] private GridBlockDataManager gridBlockDataManager;
 	    
-	    // public const string TextParentName  = "[-------Grid Position Text-------]";
-	    // public const string BlockParentName = "[-------------Blocks-------------]";
-	    
 	    public GridBlockDataManager GetCurrentGridBlockDataManager()
 	    {
 		    return gridBlockDataManager;
@@ -53,23 +50,14 @@ namespace MugCup_BlockBuilder.Runtime
 		    gridBlockDataManager.InitializedWith(_blockDataSetting);
 	    }
 #endregion
-
-	    public void GenerateGridBlocks(Vector3Int _unitSize, GameObject _defaultBlock, GameObject _mainMap)
-	    {
-		    Block[] _blocks = GridBlockGenerator.GenerateGridBlocks(_unitSize, _defaultBlock, _mainMap);
-
-		    gridBlockDataManager.LoadGridBlocksData(_blocks);
-		    gridBlockDataManager.InitializeBlocksData(this);
-	    }
-
+	    
 	    public void GenerateGridBlocks()
 	    {
 		    gridBlockDataManager.InitializeGridArray();
-		    
 		    gridBlockDataManager.PopulateGridBlocksByLevel(0);
 		    
 		    gridBlockDataManager.InitializeBlocksData(this); 
-
+		     
 		    gridBlockDataManager.AvailableBlocksApplyAll(UpdateMeshBlock);
 		    
 		    gridBlockDataManager.AvailableBlocksApplyAll(_block => 
@@ -78,13 +66,13 @@ namespace MugCup_BlockBuilder.Runtime
 			    _block.SetBitMask();
 		    });
 		    
-		    //Need to add option whether to create text overlay
-		    //CreateTextOverlay  ();
-		    
 		    GroupBlocksToParent();
 		    
 		    //GroupBlocksToOwnLevel();
+		    // Need to add option whether to create text overlay
+		    // CreateTextOverlay  ();
 	    }
+	    
 #region Update Surrounding Blocks
 	    public void UpdateSurroundingBlocksData<T>(Vector3Int _nodePos) where T: Block
 	    {
@@ -100,16 +88,16 @@ namespace MugCup_BlockBuilder.Runtime
 
 		    foreach (var _block in _castBlocks)
 		    {
-			    if(_block == null) continue;
+			    if (_block == null) continue;
 			    
 			    _block.GetSurroundingBlocksReference();
 			    _block.SetBitMask();
 		    }
 		    
-		    UpdateMeshBlocks(_castBlocks);
+		    //UpdateMeshBlocks(_castBlocks);
 	    }
 	    
-	    public void UpdateMeshBlocks<T>(IEnumerable<T> _blocks) where T : Block
+	    private void UpdateMeshBlocks<T>(IEnumerable<T> _blocks) where T : Block
 	    {
 		    foreach (var _block in _blocks)
 		    {
@@ -119,23 +107,16 @@ namespace MugCup_BlockBuilder.Runtime
 		    }
 	    }
 	    
-	    public void UpdateMeshBlock<T>(T _block) where T : Block
+	    private void UpdateMeshBlock<T>(T _block) where T : Block
 	    {
 		    Vector3Int _targetNodePos = _block.NodePosition;
 
 		    int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();
-		    
-		    
 			
-		    //BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
-
-
 		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData<PathBlock>().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
-		    
-		    
 
-		    Block _blockPrefab   = _blockMeshInfo.Prefab;
-		    Quaternion _rotation = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
+		    Block      _blockPrefab  = _blockMeshInfo.Prefab;
+		    Quaternion _rotation     = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
 			
 		    if (_blockPrefab == null)
 		    {
@@ -145,6 +126,11 @@ namespace MugCup_BlockBuilder.Runtime
 		    RemoveBlock(_targetNodePos);
 		    AddBlock   (_blockPrefab, _targetNodePos, _rotation);
 	    }
+	    
+	    
+	    
+	    
+	    
 	    
 	    
 	    /// <summary>
@@ -162,17 +148,19 @@ namespace MugCup_BlockBuilder.Runtime
 			    _block.GetSurroundingBlocksReference();
 			    _block.SetBitMask();
 		    }
-
+		    
 		    //Need to clean this section to be able to selection which block section should be updated
 		    
 		    var _middleSectionBlocks = GetBlocksTopSection(_nodePos);
+		    
+		    //var _middleSectionBlocks = GetBlocksMiddleSection(_nodePos);
 		    
 		    UpdateMeshBlocks(_middleSectionBlocks);
 		    
 		    //UpdateMeshBlocks(_blocks);
 	    }
 	    
-        public void UpdateMeshBlocks(IEnumerable<Block> _blocks)
+        private void UpdateMeshBlocks(IEnumerable<Block> _blocks)
 		{
 			foreach (var _block in _blocks)
 			{
@@ -182,7 +170,7 @@ namespace MugCup_BlockBuilder.Runtime
 			}
 		}
 		
-		public void UpdateMeshBlock(Block _block)
+		private void UpdateMeshBlock(Block _block)
 		{
 			Vector3Int _targetNodePos = _block.NodePosition;
 
@@ -190,8 +178,8 @@ namespace MugCup_BlockBuilder.Runtime
 			
 			BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
 
-			Block _blockPrefab   = _blockMeshInfo.Prefab;
-			Quaternion _rotation = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
+			Block      _blockPrefab = _blockMeshInfo.Prefab;
+			Quaternion _rotation    = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
 			
 			if (_blockPrefab == null)
 			{
@@ -209,7 +197,7 @@ namespace MugCup_BlockBuilder.Runtime
 		    AddBlock(_prefab, _nodePos, _prefab.transform.localRotation);
 	    }
 	    
-		public void AddBlock(Block _prefab, Vector3Int _nodePos, Quaternion _rotation)
+		private void AddBlock(Block _prefab, Vector3Int _nodePos, Quaternion _rotation)
 		{
 			if (IsOccupied(_nodePos)) return;
 			
@@ -268,7 +256,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public void AddBlockRef(Block _newBlock, Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitNodeBases;
 			
 			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitIBlocks);
 		}
@@ -276,7 +264,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public void RemoveBlockRef(Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitNodeBases;
 			
 			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitIBlocks);
 		}
@@ -294,7 +282,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public Block GetBlockRef(Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitArray<Block>();
 			
 			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnitIBlocks);
 		}
@@ -302,7 +290,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public List<Block> GetBlocks(Vector3Int _startPos, Vector3Int _endPos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitArray<Block>();
 			
 			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnitIBlocks);
 		}
@@ -310,7 +298,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public List<Block> GetBlocks3x3Cube(Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitArray<Block>();
 			
 			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
 		}
@@ -318,7 +306,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public List<Block> GetBlocksTopSection(Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitArray<Block>();
 			
 			return GridUtility.GetTopSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
 		}
@@ -326,7 +314,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public List<Block> GetBlocksMiddleSection(Vector3Int _nodePos)
 		{
 			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitBlocks();
+			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitArray<Block>();
 			
 			return GridUtility.GetMiddleSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
 		}
@@ -350,7 +338,7 @@ namespace MugCup_BlockBuilder.Runtime
 		    {
 			    var _levelParent = new GameObject($"Block Level : {_i}");
 
-			    var _blocksLevel = gridBlockDataManager.GetAllBlocksAtLevel(_i);
+			    var _blocksLevel = gridBlockDataManager.GetAllBlocksAtLevel<Block>(_i);
 
 			    foreach (var _block in _blocksLevel)
 			    {
@@ -380,7 +368,7 @@ namespace MugCup_BlockBuilder.Runtime
 		{
 			if(!Application.isPlaying) return;
 
-			foreach (var _block in gridBlockDataManager.GetGridUnitBlocks())
+			foreach (var _block in gridBlockDataManager.GetGridUnitArray<Block>()) 
 			{
 				if (_block != null)
 				{

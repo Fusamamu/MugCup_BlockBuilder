@@ -11,7 +11,7 @@ namespace MugCup_BlockBuilder.Runtime
         //Should Has Reference to the Grid and Map that this Block reside//
         [SerializeField] protected BlockManager blockManager;
    
-        [SerializeField] protected Block[] gridBlocks;
+        [SerializeField] protected NodeBase[] gridNodeBases;
         
         [SerializeField] protected GridDataSettingSO  gridData;
         
@@ -53,8 +53,9 @@ namespace MugCup_BlockBuilder.Runtime
 
         public virtual void InjectDependency(BlockManager _blockManager)
         {
-            gridBlocks = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitBlocks();
-            gridData   = _blockManager.GetCurrentGridBlockDataManager().GetGridDataSetting();
+            blockManager  = _blockManager;
+            gridNodeBases = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitArray<NodeBase>();
+            gridData      = _blockManager.GetCurrentGridBlockDataManager().GetGridDataSetting();
         }
 
         public virtual void UpdateBlockData()
@@ -66,10 +67,12 @@ namespace MugCup_BlockBuilder.Runtime
         public virtual void GetSurroundingBlocksReference()
         {
             if(!IsGridDataInit()) return;
+
+            var _gridUnitBlocks = blockManager.GetCurrentGridBlockDataManager().GetGridUnitArray<Block>();
             
-            TopBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
-            MiddleBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
-            BottomBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, gridBlocks).ToArray();
+            TopBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
+            MiddleBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
+            BottomBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
         }
 
         public virtual void SetBitMask()
@@ -155,7 +158,7 @@ namespace MugCup_BlockBuilder.Runtime
                 return false;
             }
 
-            if (gridBlocks == null)
+            if (gridNodeBases == null)
             {
                 Debug.Log($"<color=red>[Warning] : </color>GridUnitBlocksRef is missing");
                 return false;

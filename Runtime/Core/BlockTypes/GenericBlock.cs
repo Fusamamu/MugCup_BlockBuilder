@@ -31,14 +31,17 @@ namespace MugCup_BlockBuilder.Runtime
             
             if(!IsGridDataInit()) return;
             
-            List<T> _castBlocks = new List<T>();
+            var _castBlocks = new List<T>();
 
-            foreach (var _block in gridBlocks)
+            foreach (var _block in gridNodeBases)
             {
                 var _castBlock = _block as T;
                 
                 _castBlocks.Add(_castBlock);
             }
+
+            castBlocks = _castBlocks.ToArray();
+           
             
             TopCastBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
             MiddleCastBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();

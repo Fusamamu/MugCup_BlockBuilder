@@ -95,8 +95,6 @@ namespace MugCup_BlockBuilder.Editor
                             
                      BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<PathBlock>(_block.NodePosition);
                             
-                     //GetBlockManager().UpdateMeshBlocks<PathBlock>();
-                            
                      Object.DestroyImmediate(_blockPrefab);
 
                      isDragged = false;

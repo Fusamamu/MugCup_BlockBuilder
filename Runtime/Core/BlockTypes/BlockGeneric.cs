@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder.Runtime
 {
-    public class GenericBlock<T> : Block where T : Block
+    public class BlockGeneric<T> : Block where T : Block
     {
         [SerializeField] protected T[] castBlocks;
         

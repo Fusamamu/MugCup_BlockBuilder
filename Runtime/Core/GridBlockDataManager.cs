@@ -94,7 +94,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             blockMeshDataTable = new Dictionary<Type, BlockMeshData>()
             {
                 { typeof(Block)    , blockMeshData },
-                { typeof(PathBlock), pathMeshData  }
+                { typeof(Path), pathMeshData  }
             };
         }
 #endregion

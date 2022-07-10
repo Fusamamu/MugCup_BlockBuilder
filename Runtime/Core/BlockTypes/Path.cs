@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder.Runtime
 {
-    public class PathBlock : GenericBlock<PathBlock>
+    public class Path : BlockGeneric<Path>
     {
         
     

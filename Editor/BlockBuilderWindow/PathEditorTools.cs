@@ -80,7 +80,7 @@ namespace MugCup_BlockBuilder.Editor
                      Visualizer.ClearPathVisualizer();
                      
                      var _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                     var _block       = _blockPrefab.AddComponent<PathBlock>();
+                     var _block       = _blockPrefab.AddComponent<Path>();
                             
                      _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
                      _block.Init(originPos, originPos);
@@ -92,7 +92,7 @@ namespace MugCup_BlockBuilder.Editor
                             
                      BlockBuilderEditorManager.GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
                             
-                     BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<PathBlock>(_block.NodePosition);
+                     BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<Path>(_block.NodePosition);
                             
                      Object.DestroyImmediate(_blockPrefab);
 

@@ -123,7 +123,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 		    int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();
 			
-		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData<PathBlock>().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
+		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData<Path>().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
 
 		    Block      _blockPrefab  = _blockMeshInfo.Prefab;
 		    Quaternion _rotation     = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;

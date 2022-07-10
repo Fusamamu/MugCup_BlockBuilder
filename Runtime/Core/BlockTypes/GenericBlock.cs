@@ -38,14 +38,30 @@ namespace MugCup_BlockBuilder.Runtime
                 var _castBlock = _block as T;
                 
                 _castBlocks.Add(_castBlock);
+
+                if (_block is T)
+                {
+                    Debug.Log($"Cast block : {_block.name} : {_block.GetType()}");
+                }
             }
 
             castBlocks = _castBlocks.ToArray();
+            
+            // Debug.Log($"Cast Blocks Count : {castBlocks.Length}");
+            // Debug.Log($"Path Block Count : {_castBlocks.Where(_b => _b != null).ToList().Count}");
+            // Debug.Log($"NodePosition: {NodePosition}");
            
             
             TopCastBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
             MiddleCastBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
             BottomCastBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
+
+            foreach (var _b in MiddleCastBlocks)
+            {
+                if(_b == null) continue;
+                
+                Debug.Log($"{_b.name} : ");
+            }
         }
         
         public override void SetBitMask()

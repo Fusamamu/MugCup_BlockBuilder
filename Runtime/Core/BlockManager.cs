@@ -78,23 +78,33 @@ namespace MugCup_BlockBuilder.Runtime
 	    {
 		    List<Block> _blocks = GetBlocks3x3Cube(_nodePos);
 
+		    // foreach (var _b in _blocks)
+		    // {
+			   //  if(_b is PathBlock)
+				  //   Debug.Log(_b.name);
+		    // }
+
 		    var _castBlocks = new List<T>();
 		    
 		    foreach (var _block in _blocks)
 		    {
+			    if(_block == null) continue;
+			    
 			    var _castBlock = _block as T;
 			    _castBlocks.Add(_castBlock);
 		    }
 
 		    foreach (var _block in _castBlocks)
 		    {
+			    
 			    if (_block == null) continue;
+			    Debug.Log($"{_block.name} : {_block.GetType()}");
 			    
 			    _block.GetSurroundingBlocksReference();
 			    _block.SetBitMask();
 		    }
 		    
-		    //UpdateMeshBlocks(_castBlocks);
+		    UpdateMeshBlocks(_castBlocks);
 	    }
 	    
 	    private void UpdateMeshBlocks<T>(IEnumerable<T> _blocks) where T : Block

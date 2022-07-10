@@ -54,7 +54,7 @@ namespace MugCup_BlockBuilder.Runtime
         public virtual void InjectDependency(BlockManager _blockManager)
         {
             blockManager  = _blockManager;
-            gridNodeBases = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitArray<NodeBase>();
+            gridNodeBases = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitNodeBases;
             gridData      = _blockManager.GetCurrentGridBlockDataManager().GetGridDataSetting();
         }
 

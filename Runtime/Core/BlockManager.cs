@@ -348,7 +348,7 @@ namespace MugCup_BlockBuilder.Runtime
 		    {
 			    var _levelParent = new GameObject($"Block Level : {_i}");
 
-			    var _blocksLevel = gridBlockDataManager.GetAllBlocksAtLevel<Block>(_i);
+			    var _blocksLevel = gridBlockDataManager.GetAllNodeBasesAtLevel<Block>(_i);
 
 			    foreach (var _block in _blocksLevel)
 			    {

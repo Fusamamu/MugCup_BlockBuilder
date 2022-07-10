@@ -26,6 +26,11 @@ namespace MugCup_BlockBuilder.Editor
             {
                 block.UpdateBlockData();
             }
+
+            if (GUILayout.Button("Debug Node Position"))
+            {
+                Debug.Log($"Node Position : {block.NodePosition}");
+            }
         }
     }
 }

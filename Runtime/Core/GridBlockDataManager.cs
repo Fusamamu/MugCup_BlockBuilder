@@ -16,8 +16,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
     [Serializable]
     public class GridBlockDataManager : MonoBehaviour
     {
-        // [SerializeField] private Block[]   gridUnitBlocks;
-        // private Dictionary<int, Block[]> gridBlocksLevelTable = new Dictionary<int, Block[]>();
         [SerializeField] private NodeBase[][] map;
         [SerializeField] private NodeBase[] gridUnitNodeBases;
         
@@ -30,8 +28,10 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public Vector3Int MapSize;
         public Vector3Int GridUnitSize;
 
+#region Get Grid Unit NodeBases
         public NodeBase[] GetGridUnitNodeBases => gridUnitNodeBases;
 
+        //This seems to get shallow reference
         public T[] GetGridUnitArray<T>() where T : NodeBase
         {
             var _gridUnitArray = new T[gridUnitNodeBases.Length];
@@ -43,26 +43,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             return _gridUnitArray;
         }
-
-        // public Block[] GetGridUnitBlocks()
-        // {
-        //     var _blocks = new List<Block>();
-        //     
-        //     foreach (var _node in gridUnitNodeBases)
-        //     {
-        //         if (_node == null)
-        //         {
-        //             _blocks.Add(null);
-        //             continue;
-        //         }
-        //         
-        //         if(_node is Block _block)
-        //             _blocks.Add(_block);
-        //     }
-        //
-        //     return _blocks.ToArray();
-        // }
-
+        
         public IEnumerable<Block> GetAvailableBlocks()
         {
             var _blocks = new List<Block>();
@@ -77,7 +58,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             return _blocks;
         }
-
+#endregion
+ 
+#region Get Grid Data/BlockMesh Data
         public GridDataSettingSO GetGridDataSetting() => gridData;
         public BlockMeshData     GetBlockMeshData  () => blockMeshData;
         public BlockMeshData     GetPathMeshData   () => pathMeshData;
@@ -114,7 +97,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 { typeof(PathBlock), pathMeshData  }
             };
         }
-
+#endregion
+        
         //These can be used as fallback. In case, data cannot be found from BuildBuilderManager//
         //Or User use to use this class directly.
         [SerializeField] private GridDataSettingSO gridData;
@@ -124,16 +108,14 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private bool GRID_DATA_INIT = false;
         private bool GRID_SIZE_INIT = false;
 
-        public void ClearGridUnitBlocks()
+        public void ClearGridUnitNodeBases()
         {
-            //gridUnitBlocks = null;
-
             gridUnitNodeBases = null;
         }
         
         public void InitializeMapSize(int _row, int _column, int _height)
         {
-            map     = new Block[_row * _column * _height][];
+            map     = new NodeBase[_row * _column * _height][];
             MapSize = new Vector3Int(_row, _height, _column);
         }
 
@@ -287,14 +269,16 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         public bool TryGetGridDataSetting(out GridDataSettingSO _data)
         {
-            if (gridData == null) {
+            if (gridData == null) 
+            {
                 Debug.Log($"<color=red>[Warning] : </color> Missing Grid Data. Try Loading from Resource Folder.");
                 gridData = Resources.Load<GridDataSettingSO>("BlockBuilder/Setting/GridData/Setting");
             }
             
             _data = gridData;
             
-            if (_data == null) {
+            if (_data == null) 
+            {
                 Debug.Log($"<color=red>[Warning] : </color> Have not loaded Grid Data Setting");
                 return false;
             }
@@ -317,7 +301,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             GridBlockGenerator.PopulateGridBlocksByLevel<Block>(gridUnitNodeBases, GridUnitSize, _gridLevel, _blockPrefab);
 
-            var _selectedBlockLevel = GetAllBlocksAtLevel<NodeBase>(_gridLevel);
+            var _selectedBlockLevel = GetAllNodeBasesAtLevel<NodeBase>(_gridLevel);
 
             if(!gridNodeBasesLevelTable.ContainsKey(_gridLevel))
                 gridNodeBasesLevelTable.Add(_gridLevel, _selectedBlockLevel);
@@ -325,7 +309,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 gridNodeBasesLevelTable[_gridLevel] = _selectedBlockLevel;
         }
         
-        public T[] GetAllBlocksAtLevel<T>(int _gridLevel) where T : NodeBase
+        public T[] GetAllNodeBasesAtLevel<T>(int _gridLevel) where T : NodeBase
         {
             int _rowUnit    = GridUnitSize.x;
             int _columnUnit = GridUnitSize.z;

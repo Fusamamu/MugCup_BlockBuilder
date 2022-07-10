@@ -157,7 +157,7 @@ namespace MugCup_BlockBuilder.Editor
                 foreach(var _block in _blocks)
                     DestroyImmediate(_block);
 
-                BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager().ClearGridUnitBlocks();
+                BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager().ClearGridUnitNodeBases();
 
                 var _textParent   = GameObject.Find("[-------Grid Position Text-------]");
                 var _blocksParent = GameObject.Find("[-------------Blocks-------------]");

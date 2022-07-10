@@ -60,8 +60,14 @@ namespace MugCup_BlockBuilder.Runtime
 
         public virtual void UpdateBlockData()
         {
+            UpdateNodePosition();
             GetSurroundingBlocksReference();
             SetBitMask();
+        }
+
+        public virtual void UpdateNodePosition()
+        {
+            NodePosition = Utilities.CastVec3ToVec3Int(WorldPosition);
         }
 
         public virtual void GetSurroundingBlocksReference()

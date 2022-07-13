@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BlockBuilder.Core;
 using MugCup_BlockBuilder.Runtime;
+using UnityEditor;
 
 namespace MugCup_BlockBuilder.Editor
 {
@@ -85,14 +86,30 @@ namespace MugCup_BlockBuilder.Editor
                      _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
                      _block.Init(originPos, originPos);
                      _block.UpdateBlockData();
+                     
+                     // var _gridBlockDataManager = BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager();
+                     // Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
+                     //        
+                     // BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
+                     //        
+                     // BlockBuilderEditorManager.GetBlockEditorManager().RemoveBlock(originPos);
+                     //        
+                     // BlockBuilderEditorManager.GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
+                     //        
+                     // BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<Path>(_block.NodePosition);
+                     //
+                     // PrefabUtility.RecordPrefabInstancePropertyModifications(_gridBlockDataManager);
+                     
+                     BBEditorUtility.RecordGridBlockManagerChanges(() =>
+                     {
+                         BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
                             
-                     BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
+                         BlockBuilderEditorManager.GetBlockEditorManager().RemoveBlock(originPos);
                             
-                     BlockBuilderEditorManager.GetBlockEditorManager().RemoveBlock(originPos);
+                         BlockBuilderEditorManager.GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
                             
-                     BlockBuilderEditorManager.GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
-                            
-                     BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<Path>(_block.NodePosition);
+                         BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<Path>(_block.NodePosition);
+                     });
                             
                      Object.DestroyImmediate(_blockPrefab);
 

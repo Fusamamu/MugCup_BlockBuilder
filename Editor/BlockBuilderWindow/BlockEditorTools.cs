@@ -22,20 +22,26 @@ namespace MugCup_BlockBuilder.Editor
                                 {
                                     Vector3 _targetPos = _hit.collider.transform.position;
                             
-                                    GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-                                    var _pos = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
-
-                                    var _block = _blockPrefab.AddComponent<Block>();
+                                    var _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                                    var _pos         = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                                    var _block       = _blockPrefab.AddComponent<Block>();
                             
                                     _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
                                     _block.Init(_targetPos, _pos);
                                     _block.UpdateBlockData();
+                                    
+                                    BBEditorUtility.RecordGridBlockManagerChanges(() =>
+                                    {
+                                        BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
+                                        BlockBuilderEditorManager.GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
                             
-                                    BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
-                                    BlockBuilderEditorManager.GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
+                                        BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Top);
+                                    });
                             
-                                    BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                    // BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
+                                    // BlockBuilderEditorManager.GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
+                                    //
+                                    // BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
                                     
                                     Object.DestroyImmediate(_blockPrefab);
                                 }
@@ -58,8 +64,11 @@ namespace MugCup_BlockBuilder.Editor
 
                             if (_object.TryGetComponent<Block>(out var _block))
                             {
-                                BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
-                                BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
+                                BBEditorUtility.RecordGridBlockManagerChanges(() =>
+                                {
+                                    BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
+                                    BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Middle);
+                                });
                             }
                         }
                     }

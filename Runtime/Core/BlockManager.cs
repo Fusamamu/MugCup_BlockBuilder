@@ -212,9 +212,13 @@ namespace MugCup_BlockBuilder.Runtime
 #region Add/Remove Block by Node Position
 	    public void AddBlock(Block _prefab, Vector3Int _nodePos)
 	    {
-		    AddBlock(_prefab, _nodePos, _prefab.transform.localRotation);
+		    var _newBlock = Add(_prefab, _nodePos, _prefab.transform.localRotation);
+		    
+		    _newBlock.Init();
+		    _newBlock.InjectDependency(this);
 	    }
 	    
+	    //Will Try to Use Generic Version of this Method instead. This will be removed
 		private void AddBlock(Block _prefab, Vector3Int _nodePos, Quaternion _rotation)
 		{
 			if (IsOccupied(_nodePos)) return;
@@ -236,6 +240,29 @@ namespace MugCup_BlockBuilder.Runtime
 			AddBlockRef(_newBlock, _nodePos);
 		}
 
+		public T Add<T>(T _node, Vector3Int _nodePos, Quaternion _rotation) where T : NodeBase
+		{
+			if (IsOccupied<T>(_nodePos)) return null;
+			
+			var _targetNodeWorldPos = gridBlockDataManager.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
+
+			T _newNode;
+			
+			var _blockParent = GameObject.Find(BlockBuilderPathName.BlockParentName);
+			
+			if(_blockParent)
+				_newNode = Instantiate(_node, _targetNodeWorldPos, _rotation, _blockParent.transform);
+			else
+				_newNode = Instantiate(_node, _targetNodeWorldPos, _rotation);
+
+			_newNode.NodePosition      = _nodePos;
+			_newNode.NodeWorldPosition = _targetNodeWorldPos;
+			
+			AddNodeRef(_newNode, _nodePos);
+
+			return _newNode;
+		}
+
 		public void RemoveBlock(Block _block)
 		{
 			RemoveBlock(_block.NodePosition);
@@ -252,7 +279,8 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public bool IsOccupied(Vector3Int _nodePos)
 		{
-			if (GetBlockRef(_nodePos) != null) {
+			if (GetBlockRef(_nodePos) != null) 
+			{
 				Debug.Log($"<color=red>[Warning] : </color> Grid at position {_nodePos} is occupied");
 				return true;
 			}
@@ -260,6 +288,7 @@ namespace MugCup_BlockBuilder.Runtime
 			Debug.Log($"<color=yellow>[Info] : </color> Grid at position {_nodePos} is empty");
 			return false;
 		}
+
 		
 		public void DestroyBlockObject(Vector3Int _nodePos)
 		{
@@ -273,44 +302,65 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public void AddBlockRef(Block _newBlock, Vector3Int _nodePos)
 		{
-			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitNodeBases;
+			var _gridUnitSize      = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
 			
-			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitIBlocks);
+			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
+
 		
 		public void RemoveBlockRef(Vector3Int _nodePos)
 		{
-			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitNodeBases;
+			var _gridUnitSize      = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
 			
-			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitIBlocks);
+			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
 
-#region Get Blocks
-		public Block GetBlock(Vector3Int _nodePos) => GetBlockRef(_nodePos) as Block;
 		
-		public T GetBlock<T>(Vector3Int _nodePos) where T : Block
+#region Add/Remove Node Generic
+	    
+		public bool IsOccupied<T>(Vector3Int _nodePos) where T : NodeBase
 		{
-			return (T)GetBlockRef(_nodePos);
+			if (GetNodeRef<T>(_nodePos) != null)
+			{
+				Debug.Log($"<color=red>[Warning] : </color> Grid at position {_nodePos} is occupied by {typeof(T)}");
+				return true;
+			}
+
+			Debug.Log($"<color=yellow>[Info] : </color> Grid at position {_nodePos} is empty");
+			return false;
+		}
+		
+		public void AddNodeRef<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
+		{
+			var _gridUnitSize      = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
+			
+			GridUtility.AddNode(_newNode, _nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
 #endregion
+		
+		
+#region Get Blocks
+		// public Block GetBlock(Vector3Int _nodePos) => GetBlockRef(_nodePos) as Block;
+		//
+		// public T GetBlock<T>(Vector3Int _nodePos) where T : Block
+		// {
+		// 	return (T)GetBlockRef(_nodePos);
+		// }
+#endregion
 
-#region Get IBlocks
+#region Get Blocks
+	    //Will Try to use Generic Version of this instead
 		public Block GetBlockRef(Vector3Int _nodePos)
 		{
-			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitArray<Block>();
-			
-			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnitIBlocks);
+			return GetNodeRef<Block>(_nodePos);
 		}
 
 		public List<Block> GetBlocks(Vector3Int _startPos, Vector3Int _endPos)
 		{
-			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
-			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitArray<Block>();
-			
-			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnitIBlocks);
+			return GetNodes<Block>(_startPos, _endPos);
 		}
 
 		public List<Block> GetBlocks3x3Cube(Vector3Int _nodePos)
@@ -345,6 +395,67 @@ namespace MugCup_BlockBuilder.Runtime
 			return GridUtility.GetBottomSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
 		}
 #endregion
+	    
+	    
+	    
+#region Get NodeBases Generic
+		//Might need to move to new NodeBase Manager
+		public T GetNodeRef<T>(Vector3Int _nodePos) where T : NodeBase
+		{
+			var _gridUnitSize = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnit     = gridBlockDataManager.GetGridUnitArray<T>();
+			
+			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnit);
+		}
+		
+		public List<T> GetNodes<T>(Vector3Int _startPos, Vector3Int _endPos) where T : NodeBase
+		{
+			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
+			
+			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnit);
+		}
+
+		public List<T> GetNodeBases3x3Cube<T>(Vector3Int _nodePos) where T : NodeBase
+		{
+			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
+			
+			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnit).ToList();
+		}
+
+		public List<T> GetNodeBasesTopSection<T>(Vector3Int _nodePos) where T : NodeBase
+		{
+			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
+			
+			return GridUtility.GetTopSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnit).ToList();
+		}
+
+		public List<T> GetNodeBasesMiddleSection<T>(Vector3Int _nodePos) where T : NodeBase
+		{
+			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
+			
+			return GridUtility.GetMiddleSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnit).ToList();
+		}
+		
+		public List<T> GetNodeBasesBottomSection<T>(Vector3Int _nodePos) where T : NodeBase
+		{
+			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
+			
+			return GridUtility.GetBottomSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnit).ToList();
+		}
+#endregion
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 	    //Generate/Populate Block Related Function
 	    private void GroupBlocksToParent()
 	    {

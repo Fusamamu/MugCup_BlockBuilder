@@ -171,14 +171,21 @@ namespace MugCup_BlockBuilder.Editor
             EditorGUILayout.HelpBox("Select desired edit mode. Use add and remove tab below to start edit blocks", MessageType.Info);
             
             BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode = (InterfaceSetting.EditMode)EditorGUILayout.EnumPopup("Edit mode selection:", BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode);
+            
+            EditorGUILayout.LabelField("Block Element Placement");
+            string[] _blockPlacementTools = { "Place Block Element", "Remove Block Element" };
+            BlockBuilderEditorManager.InterfaceSetting.BlockPlacementToolTabSelection 
+                = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.BlockPlacementToolTabSelection, _blockPlacementTools, GUILayout.Height(30));
 
             EditorGUILayout.LabelField("Edit Blocks");
-            string[] _buildingToolTabs = {"Add Block", "Subtract Block"};
-            BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
+            string[] _buildingToolTabs = { "Add Block", "Subtract Block" };
+            BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection 
+                = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
             
             EditorGUILayout.LabelField("Edit Road Path Blocks");
-            string[] _pathBuildingToolTabs = {"Add Road Path", "Remove Road Path"};
-            BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection, _pathBuildingToolTabs, GUILayout.Height(30));
+            string[] _pathBuildingToolTabs = { "Add Road Path", "Remove Road Path" };
+            BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection 
+                = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection, _pathBuildingToolTabs, GUILayout.Height(30));
             
             DisplayBuilderModeSelectionInApplication();
         }
@@ -226,7 +233,6 @@ namespace MugCup_BlockBuilder.Editor
             ProcessMouseEnterLeaveSceneView();
             
             Event _currentEvent = Event.current; 
-            
             Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
 
             switch (BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection)
@@ -243,6 +249,12 @@ namespace MugCup_BlockBuilder.Editor
                     
                     switch (BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode)
                     {
+                        case InterfaceSetting.EditMode.BlockPlacement:
+                            
+                            UpdateVisualizePointer(_hit, Visualizer.PointerType.Block);
+                            BlockPlacementTools.UpdateBlockBuildTools(_currentEvent, _ray);
+                            break;
+                        
                         case InterfaceSetting.EditMode.EditBlocks:
                             
                             UpdateVisualizePointer(_hit, Visualizer.PointerType.Block);

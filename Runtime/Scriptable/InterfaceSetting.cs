@@ -10,14 +10,15 @@ namespace BlockBuilder.Scriptable
     {
         public enum Mode     { Building, Painting, Setting, Tools }
         
-        public enum EditMode { None, EditBlocks, EditRoads }
+        public enum EditMode { None, BlockPlacement, EditBlocks, EditRoads }
 
         [SerializeField] public Mode     CurrentMode     = Mode.Building;
         [SerializeField] public EditMode CurrentEditMode = EditMode.EditBlocks;
         
-        [SerializeField] public int CurrentMainTapSelection   = -1;
-        [SerializeField] public int BuildToolTabSelection     = -1;
-        [SerializeField] public int RoadBuildToolTabSelection = -1;
+        [SerializeField] public int CurrentMainTapSelection        = -1;
+        [SerializeField] public int BlockPlacementToolTabSelection = -1;
+        [SerializeField] public int BuildToolTabSelection          = -1;
+        [SerializeField] public int RoadBuildToolTabSelection      = -1;
 
         [SerializeField] public bool MapSettingFoldout = false;
 

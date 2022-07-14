@@ -17,7 +17,7 @@ namespace MugCup_BlockBuilder.Runtime
         
         [SerializeField] protected MeshFilter mesh;
         
-        public Vector3 WorldPosition;
+        //public Vector3 WorldPosition;
         
         public int GridPosX => NodePosition.x;
         public int GridPosY => NodePosition.y;
@@ -40,12 +40,21 @@ namespace MugCup_BlockBuilder.Runtime
         {
         }
 
+        public virtual void Init()
+        {
+            mesh = transform.GetComponent<MeshFilter>();
+            
+            tag  = "Block";
+            name = $"Block: ({NodePosition.x}, {NodePosition.y}, {NodePosition.z})";
+        }
+
         public virtual void Init(Vector3 _worldPos, Vector3Int _gridPos)
         {
             mesh = transform.GetComponent<MeshFilter>();
             
-            WorldPosition = _worldPos;
-            NodePosition  = _gridPos;
+            //This might already set by NodeBase
+            NodeWorldPosition = _worldPos;
+            NodePosition      = _gridPos;
             
             tag  = "Block";
             name = $"Block: ({_gridPos.x}, {_gridPos.y}, {_gridPos.z})";
@@ -67,7 +76,7 @@ namespace MugCup_BlockBuilder.Runtime
 
         public virtual void UpdateNodePosition()
         {
-            NodePosition = Utilities.CastVec3ToVec3Int(WorldPosition);
+            NodePosition = Utilities.CastVec3ToVec3Int(NodeWorldPosition);
         }
 
         public virtual void GetSurroundingBlocksReference()

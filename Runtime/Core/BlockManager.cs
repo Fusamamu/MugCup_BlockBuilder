@@ -242,7 +242,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 		public T Add<T>(T _node, Vector3Int _nodePos, Quaternion _rotation) where T : NodeBase
 		{
-			if (IsOccupied<T>(_nodePos)) return null;
+			if (IsOccupiedBy<T>(_nodePos)) return null;
 			
 			var _targetNodeWorldPos = gridBlockDataManager.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
 
@@ -256,7 +256,7 @@ namespace MugCup_BlockBuilder.Runtime
 				_newNode = Instantiate(_node, _targetNodeWorldPos, _rotation);
 
 			_newNode.NodePosition      = _nodePos;
-			_newNode.NodeWorldPosition = _targetNodeWorldPos;
+			_newNode.SetNodeWorldPosition(_targetNodeWorldPos);
 			
 			AddNodeRef(_newNode, _nodePos);
 
@@ -320,7 +320,7 @@ namespace MugCup_BlockBuilder.Runtime
 		
 #region Add/Remove Node Generic
 	    
-		public bool IsOccupied<T>(Vector3Int _nodePos) where T : NodeBase
+		public bool IsOccupiedBy<T>(Vector3Int _nodePos) where T : NodeBase
 		{
 			if (GetNodeRef<T>(_nodePos) != null)
 			{

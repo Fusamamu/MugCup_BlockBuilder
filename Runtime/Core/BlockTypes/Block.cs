@@ -53,7 +53,8 @@ namespace MugCup_BlockBuilder.Runtime
             mesh = transform.GetComponent<MeshFilter>();
             
             //This might already set by NodeBase
-            NodeWorldPosition = _worldPos;
+            //NodeWorldPosition = _worldPos;
+            SetNodeWorldPosition(_worldPos);
             NodePosition      = _gridPos;
             
             tag  = "Block";

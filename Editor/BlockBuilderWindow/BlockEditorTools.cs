@@ -37,11 +37,6 @@ namespace MugCup_BlockBuilder.Editor
                             
                                         BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Top);
                                     });
-                            
-                                    // BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
-                                    // BlockBuilderEditorManager.GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
-                                    //
-                                    // BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition);
                                     
                                     Object.DestroyImmediate(_blockPrefab);
                                 }

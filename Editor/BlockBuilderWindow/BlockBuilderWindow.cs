@@ -35,6 +35,8 @@ namespace MugCup_BlockBuilder.Editor
 
             displayBuilderMode = new AnimBool();
             displayBuilderMode.valueChanged.AddListener(Repaint);
+            
+            BlockPreviewEditor.Init();
         }
 
         private void OnGUI()
@@ -171,6 +173,38 @@ namespace MugCup_BlockBuilder.Editor
             EditorGUILayout.HelpBox("Select desired edit mode. Use add and remove tab below to start edit blocks", MessageType.Info);
             
             BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode = (InterfaceSetting.EditMode)EditorGUILayout.EnumPopup("Edit mode selection:", BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode);
+
+            
+            var _previewWidth = 100f;
+            
+            var _lastRect         = GUILayoutUtility.GetLastRect();
+            var _singleLineHeight = EditorGUIUtility.singleLineHeight;
+            
+            
+            var _targetRect = new Rect(_lastRect.x, _lastRect.y + _singleLineHeight + 5, _previewWidth, _previewWidth);
+            
+            var _cube = Resources.Load<GameObject>("Prefabs/Tower_Castle");
+            
+            if(_cube == null)
+                Debug.LogWarning("Missing Cube");
+
+            
+            var _tex = BlockPreviewEditor.CreatePreviewTexture(new Rect(0, 0, _previewWidth, _previewWidth), _cube);
+            
+            EditorGUI.DrawPreviewTexture(_targetRect, _tex);
+            
+            var _tex1 = BlockPreviewEditor.CreatePreviewTexture(new Rect(0, 0, _previewWidth, _previewWidth), _cube);
+
+            var _nextRect = new Rect(_targetRect.x + _previewWidth + 5, _targetRect.y, _previewWidth, _previewWidth);
+            
+            EditorGUI.DrawPreviewTexture(_nextRect, _tex1);
+            
+            EditorGUILayout.Space(_previewWidth);
+            
+            
+            
+            
+            
             
             EditorGUILayout.LabelField("Block Element Placement");
             string[] _blockPlacementTools = { "Place Block Element", "Remove Block Element" };
@@ -221,9 +255,8 @@ namespace MugCup_BlockBuilder.Editor
         {
             BlockBuilderEditorManager.GridDataSettingSo = (GridDataSettingSO)EditorGUILayout.ObjectField("Grid Data Setting", BlockBuilderEditorManager.GridDataSettingSo, typeof(GridDataSettingSO), true);
             
-            var _meshData     = (BlockMeshData)EditorGUILayout.ObjectField("Block Mesh Data Setting", null, typeof(BlockMeshData), true);
-
-            var _material     = (Material)EditorGUILayout.ObjectField("Default Block Material", null, typeof(Material), true);
+            var _meshData = (BlockMeshData)EditorGUILayout.ObjectField("Block Mesh Data Setting", null, typeof(BlockMeshData), true);
+            var _material = (Material)     EditorGUILayout.ObjectField("Default Block Material" , null, typeof(Material)     , true);
         }
 
         private void OnScene(SceneView _sceneView)
@@ -316,6 +349,8 @@ namespace MugCup_BlockBuilder.Editor
         private void OnDisable()
         {
             EditorUtility.SetDirty(BlockBuilderEditorManager.InterfaceSetting);
+            
+            BlockPreviewEditor.Clean();
         }
     }
 }

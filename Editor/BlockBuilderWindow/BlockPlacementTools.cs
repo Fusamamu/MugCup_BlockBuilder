@@ -5,6 +5,7 @@ using UnityEngine;
 
 using BlockBuilder.Core;
 using MugCup_BlockBuilder.Runtime;
+using MugCup_PathFinder.Runtime;
 using UnityEditor;
 
 namespace MugCup_BlockBuilder.Editor
@@ -19,24 +20,27 @@ namespace MugCup_BlockBuilder.Editor
                     PlaceBlockElement(_currentEvent, _ray);
                     break;
                 
-                case 1: /*Subtract Block*/
+                case 1: 
                     if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
                     {
-                        // Debug.Log($"<color=yellow>[Info]:</color> <color=orange>Left Mouse Button Clicked.</color>");
-                        //
-                        // if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
-                        // {
-                        //     var _object = _hit.collider.gameObject;
-                        //
-                        //     if (_object.TryGetComponent<Block>(out var _block))
-                        //     {
-                        //         BBEditorUtility.RecordGridBlockManagerChanges(() =>
-                        //         {
-                        //             BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
-                        //             BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Middle);
-                        //         });
-                        //     }
-                        // }
+                        if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                        {
+                           
+                            var _object = _hit.collider.gameObject;
+                            
+                            if (_object.TryGetComponent<NodeBase>(out var _nodeBase))
+                            {
+                                BBEditorUtility.RecordGridBlockManagerChanges(() =>
+                                {
+                                    BlockBuilderEditorManager.GetBlockManager().RemoveNode<NodeBase>(_nodeBase);
+                                    
+                                    // BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
+                                    // BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Middle);
+                                });
+                            }
+                            
+                          
+                        }
                     }
                     break;
             }
@@ -51,25 +55,21 @@ namespace MugCup_BlockBuilder.Editor
                     {
                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                         {
-                            Vector3 _targetPos = _hit.collider.transform.position;
-
-                            var _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            var _pos   = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
-                            var _block = _blockPrefab.AddComponent<Block>();
-
-                            _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
-                            _block.Init(_targetPos, _pos);
-                            _block.UpdateBlockData();
-
-                            BBEditorUtility.RecordGridBlockManagerChanges(() =>
+                            var _object = _hit.collider.gameObject;
+                        
+                            if (_object.TryGetComponent<Block>(out var _block))
                             {
-                                BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
-                                BlockBuilderEditorManager.GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY);
-
-                                BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Top);
-                            });
-
-                            Object.DestroyImmediate(_blockPrefab);
+                                BBEditorUtility.RecordGridBlockManagerChanges(() =>
+                                {
+                                    //Temp
+                                    var _tower = Resources.Load<NodeBase>("Prefabs/Tower_Castle");
+                                    
+                                    var _targetPos = _hit.collider.transform.position;
+                                    var _pos       = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                                    
+                                    BlockBuilderEditorManager.GetBlockEditorManager().AddNodeOnTop(_tower, _pos);
+                                });
+                            }
                         }
                     }
                     break;

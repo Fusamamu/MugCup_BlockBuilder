@@ -5,6 +5,7 @@ using UnityEngine;
 using BlockBuilder.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 using MugCup_BlockBuilder.Runtime.Core.Managers;
+using MugCup_PathFinder.Runtime;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
@@ -18,7 +19,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private IInputManager       inputManager;
 #endregion
         
-        private static readonly Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
+        private static Dictionary<NormalFace, Action<Block, Vector3Int>> addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
         
         public override void Init()
         {
@@ -52,6 +53,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
         {
             if (addTable == null || addTable.Count == 0)
             {
+                addTable = new Dictionary<NormalFace, Action<Block, Vector3Int>>();
+                
                 addTable.Add(NormalFace.PosY, AddBlockOnTop  );
                 addTable.Add(NormalFace.PosX, AddBlockRight  );
                 addTable.Add(NormalFace.NegX, AddBlockLeft   );
@@ -166,5 +169,20 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             //blockManager.UpdateMeshBlocks(_checkedBlocks);
         }
+
+        
+#region Add/Remove NodeBase Generic
+        public void AddNodeCenter<T>(T _node, Vector3Int _nodePos) where T : NodeBase
+        {
+            Vector3Int _targetNodePos = _nodePos;
+            GetBlockManager().AddNodeAt(_node, _targetNodePos);
+        }
+        
+        public void AddNodeOnTop<T>(T _node, Vector3Int _nodePos) where T : NodeBase
+        {
+            Vector3Int _targetNodePos = _nodePos + Vector3Int.up;
+            GetBlockManager().AddNodeAt(_node, _targetNodePos);
+        }
+#endregion
     }
 }

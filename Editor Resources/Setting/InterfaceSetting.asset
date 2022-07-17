@@ -15,8 +15,8 @@ MonoBehaviour:
   CurrentMode: 0
   CurrentEditMode: 0
   CurrentMainTapSelection: 0
-  BlockPlacementToolTabSelection: 0
-  BuildToolTabSelection: 0
-  RoadBuildToolTabSelection: 0
+  BlockPlacementToolTabSelection: 1
+  BuildToolTabSelection: 1
+  RoadBuildToolTabSelection: 1
   MapSettingFoldout: 1
   BuilderMode: 0

@@ -48,6 +48,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             if (Application.isPlaying)
                 return blockManager;
 
+            //------Need to separate editor code vs gameplay code more properly//
             if (!blockManagerInstance)
                 blockManagerInstance = FindObjectOfType<BlockManager>();
             

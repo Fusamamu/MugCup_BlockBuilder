@@ -80,6 +80,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		
 		public void Initialized()
 		{
+			InitializeManagers();
 			InitializeBlockManager();
 		}
 		

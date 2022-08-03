@@ -359,7 +359,7 @@ namespace MugCup_BlockBuilder.Runtime
 			return _newNode;
 		}
 		
-		private void AddNodeRef<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
+		public void AddNodeRef<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
 		{
 			var _gridUnitSize      = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
 			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;

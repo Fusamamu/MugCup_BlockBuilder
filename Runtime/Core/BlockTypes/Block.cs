@@ -91,6 +91,26 @@ namespace MugCup_BlockBuilder.Runtime
             BottomBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
         }
 
+        /// <summary>
+        /// Should be called upon grid being generated.
+        /// </summary>
+        public virtual void SetNeighborNodes()
+        {
+            if(!IsGridDataInit()) return;
+
+            var _gridUnitBlocks = blockManager.GetCurrentGridBlockDataManager().GetGridUnitArray<Block>();
+
+            var _northNode = GridUtility.GetNodeForward(NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
+            var _southNode = GridUtility.GetNodeBack   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
+            var _westNode  = GridUtility.GetNodeLeft   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
+            var _eastNode  = GridUtility.GetNodeRight  (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
+            
+            SetNorthNode(_northNode);
+            SetSouthNode(_southNode);
+            SetWestNode (_westNode );
+            SetEastNode (_eastNode );
+        }
+
         public virtual void SetBitMask()
         {
             BitMask = 0b_000000000_000000000_000000000;

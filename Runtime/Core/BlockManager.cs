@@ -239,7 +239,6 @@ namespace MugCup_BlockBuilder.Runtime
 			AddBlockRef(_newBlock, _nodePos);
 		}
 
-
 		public void RemoveBlock(Block _block)
 		{
 			RemoveBlock(_block.NodePosition);

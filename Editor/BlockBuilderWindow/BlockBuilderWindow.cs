@@ -183,7 +183,7 @@ namespace MugCup_BlockBuilder.Editor
             
             var _targetRect = new Rect(_lastRect.x, _lastRect.y + _singleLineHeight + 5, _previewWidth, _previewWidth);
             
-            var _cube = Resources.Load<GameObject>("Prefabs/Tower_Castle");
+            var _cube = Resources.Load<GameObject>("Prefabs/Towers/Tower_Castle");
             
             if(_cube == null)
                 Debug.LogWarning("Missing Cube");

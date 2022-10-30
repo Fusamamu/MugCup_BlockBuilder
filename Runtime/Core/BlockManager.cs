@@ -6,10 +6,10 @@ using Debug = UnityEngine.Debug;
 
 using BlockBuilder.Core.Scriptable;
 
+using MugCup_Utilities.Runtime;
+using MugCup_PathFinder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
-using MugCup_PathFinder.Runtime;
-using MugCup_Utilities.Runtime;
 
 namespace MugCup_BlockBuilder.Runtime
 {

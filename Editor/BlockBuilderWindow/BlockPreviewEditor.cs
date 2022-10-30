@@ -8,34 +8,37 @@ namespace MugCup_BlockBuilder.Editor
     public static class BlockPreviewEditor 
     {
         private static PreviewRenderUtility previewRenderUtility;
-        //private RenderTexture renderTexture;
 
         private static bool isInit;
 
         public static void Init()
         {
-            // if (previewRenderUtility != null)
-            // {
-            //     previewRenderUtility.Cleanup();
-            //     previewRenderUtility = new PreviewRenderUtility();
-            // }
-            
-            // if(isInit) return;
-            // isInit = true;
             Clean();
-            
             
             if(previewRenderUtility == null)
                 previewRenderUtility = new PreviewRenderUtility();
             
             var _camera = previewRenderUtility.camera;
             
+            //_camera.cameraType = CameraType.Preview;
+            
             _camera.fieldOfView   = 30f;
             _camera.nearClipPlane = 0.01f;
             _camera.farClipPlane  = 1000;
-
+            
             _camera.transform.position = new Vector3(-3, 3, 0);
             _camera.transform.LookAt(Vector3.zero);
+            
+            //Not working
+            _camera.clearFlags = CameraClearFlags.SolidColor;
+            _camera.backgroundColor = Color.cyan;
+        }
+
+        public static void ChangeCameraBackgroundColor(Color _color)
+        {
+            //Not working
+            previewRenderUtility.camera.backgroundColor = _color;
+            previewRenderUtility.camera.clearFlags = CameraClearFlags.SolidColor;
         }
         
         public static Texture CreatePreviewTexture(Rect _rect, GameObject _gameObject)

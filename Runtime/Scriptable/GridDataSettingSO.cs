@@ -8,6 +8,11 @@ namespace BlockBuilder.Scriptable
     [System.Serializable]
     public class GridDataSettingSO : ScriptableObject
     {
+        public int GridOffset;
+        
+        public int[] MapSizeArray      = new[] { 0, 0, 0 };
+        public int[] GridUnitSizeArray = new[] { 0, 0, 0 };
+        
         [Header("Map Size Setting")]
         [SerializeField] public int Row;
         [SerializeField] public int Column;

@@ -172,16 +172,16 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         
 #region Add/Remove NodeBase Generic
-        public void AddNodeCenter<T>(T _node, Vector3Int _nodePos) where T : NodeBase
+        public T AddNodeCenter<T>(T _node, Vector3Int _nodePos) where T : NodeBase
         {
             Vector3Int _targetNodePos = _nodePos;
-            GetBlockManager().AddNodeAt(_node, _targetNodePos);
+            return GetBlockManager().AddNodeAt(_node, _targetNodePos);
         }
         
-        public void AddNodeOnTop<T>(T _node, Vector3Int _nodePos) where T : NodeBase
+        public T AddNodeOnTop<T>(T _node, Vector3Int _nodePos) where T : NodeBase
         {
             Vector3Int _targetNodePos = _nodePos + Vector3Int.up;
-            GetBlockManager().AddNodeAt(_node, _targetNodePos);
+            return GetBlockManager().AddNodeAt(_node, _targetNodePos);
         }
 #endregion
     }

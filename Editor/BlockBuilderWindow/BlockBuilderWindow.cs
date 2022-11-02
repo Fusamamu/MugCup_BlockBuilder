@@ -48,15 +48,7 @@ namespace MugCup_BlockBuilder.Editor
             GUILayout.Label("BlockBuilder", EditorStyles.boldLabel);
             GUILayout.Space(10);
             
-            // BBEditorStyling.DrawSection("Tool Selections");
-            // BBEditorStyling.DrawSplitter();
-            //foldout = BBEditorStyling.DrawHeader(Color.green, "Tool Selections", foldout);
-            //GUILayout.BeginArea(new Rect(15, 15, EditorGUIUtility.currentViewWidth - 30, 800));
-            
             string[] _tabCaptions = {"Build", "Paint", "Setting", "Tools"};
-            
-            // BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection 
-            //     = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection, _tabCaptions, new GUIStyle(EditorStyles.toolbarButton), GUILayout.Height(50), GUILayout.ExpandWidth(true));
                 
             BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection 
                 = GUILayout.Toolbar(BlockBuilderEditorManager.InterfaceSetting.CurrentMainTapSelection, _tabCaptions, new GUIStyle(EditorStyles.toolbarButton), UnityEngine.GUI.ToolbarButtonSize.Fixed);
@@ -76,8 +68,6 @@ namespace MugCup_BlockBuilder.Editor
                 case 3:
                     break;;
             }
-            
-            //GUILayout.EndArea();
         }
 
         private static GUIContent[] contents = new GUIContent[]
@@ -101,35 +91,27 @@ namespace MugCup_BlockBuilder.Editor
                 GUILayout.BeginVertical("GroupBox");
                     
                 GUILayout.BeginHorizontal();
-                    
+                
                 var _rect = GUILayoutUtility.GetRect(1, EditorGUIUtility.singleLineHeight);
                 var _fieldRect = _rect;
-                _fieldRect.xMin = 100;
+                _fieldRect.xMin = 150;
                     
                 EditorGUI.LabelField(_rect, new GUIContent("Map Size", "Set map size here"));
-                EditorGUI.MultiIntField(_fieldRect, contents, new []{ 1, 1, 1} );
-                    
+                EditorGUI.MultiIntField(_fieldRect, contents, BlockBuilderEditorManager.GridDataSettingSo.MapSizeArray);
                 GUILayout.EndHorizontal();
                 
                 GUILayout.BeginHorizontal();
                     
                 var _rect1 = GUILayoutUtility.GetRect(1, EditorGUIUtility.singleLineHeight);
                 var _fieldRect1 = _rect1;
-                _fieldRect1.xMin = 100;
+                _fieldRect1.xMin = 150;
                     
                 EditorGUI.LabelField(_rect1, new GUIContent("Grid Unit Size", "Set grid unit size here"));
-                EditorGUI.MultiIntField(_fieldRect1, contents, new []{ 1, 1, 1} );
+                EditorGUI.MultiIntField(_fieldRect1, contents, BlockBuilderEditorManager.GridDataSettingSo.GridUnitSizeArray);
                     
                 GUILayout.EndHorizontal();
-                        
-                // BlockBuilderEditorManager.GridDataSettingSo.MapSize      = EditorGUILayout.Vector3IntField("Map Size",      BlockBuilderEditorManager.GridDataSettingSo.MapSize);
-                // BlockBuilderEditorManager.GridDataSettingSo.GridUnitSize = EditorGUILayout.Vector3IntField("Map Unit Size", BlockBuilderEditorManager.GridDataSettingSo.GridUnitSize);
-                //
-                // int _newRow    = BlockBuilderEditorManager.GridDataSettingSo.MapSize.x;
-                // int _newColumn = BlockBuilderEditorManager.GridDataSettingSo.MapSize.z;
-                // int _newHeight = BlockBuilderEditorManager.GridDataSettingSo.MapSize.y;
-                //
-                // BlockBuilderEditorManager.GridDataSettingSo.MapSize = new Vector3Int(_newRow, _newHeight, _newColumn);
+                
+                BlockBuilderEditorManager.GridDataSettingSo.GridOffset = EditorGUILayout.IntField("Grid Offset", BlockBuilderEditorManager.GridDataSettingSo.GridOffset);
                         
                 GUILayout.EndVertical();
                 GUILayout.EndVertical();
@@ -199,24 +181,7 @@ namespace MugCup_BlockBuilder.Editor
                 
                 GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
-                
-                // if(GUILayout.Button("Delete Blocks", _newStyle, GUILayout.Height(30)))
-                // {
-                //     var _blocks = GameObject.FindGameObjectsWithTag("Block");
-                //     
-                //     foreach(var _block in _blocks)
-                //         DestroyImmediate(_block);
-                //
-                //     BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager().ClearGridUnitNodeBases();
-                //
-                //     var _textParent   = GameObject.Find("[-------Grid Position Text-------]");
-                //     var _blocksParent = GameObject.Find("[-------------Blocks-------------]");
-                //     
-                //     if(_textParent)
-                //         DestroyImmediate(_textParent);
-                //     if(_blocksParent)
-                //         DestroyImmediate(_blocksParent);
-                // }
+              
 
                 EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(7);
@@ -250,11 +215,6 @@ namespace MugCup_BlockBuilder.Editor
 
             EditorGUILayout.BeginVertical("GroupBox");
             
-            BBResource.Initialized();
-            BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode 
-                = (InterfaceSetting.EditMode)GUILayout.Toolbar((int)BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode, BBResource.Tabs, GUILayout.Height(30), GUILayout.Width(100));
-            
-            
             EditorGUILayout.HelpBox("Select desired edit mode. Use add and remove tab below to start edit blocks", MessageType.Info);
             
             BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode = (InterfaceSetting.EditMode)EditorGUILayout.EnumPopup("Edit mode selection:", BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode);
@@ -287,11 +247,26 @@ namespace MugCup_BlockBuilder.Editor
                     EditorGUI.DrawPreviewTexture(_newRect, _tex);
                     EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
                     UnityEngine.GUI.backgroundColor = Color.blue;
+
+                    if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+                    {
+                        BlockPlacementTools.SelectedIndex = _i;
+                        BlockPlacementTools.SelectedBlock = _cube;
+                    }
                 }
                 else
                 {
-                    EditorGUI.DrawPreviewTexture(_newRect, _tex);
-                    UnityEngine.GUI.backgroundColor = Color.white;
+                    if (!BlockPlacementTools.IsSlotSelected(_i))
+                    {
+                        EditorGUI.DrawPreviewTexture(_newRect, _tex);
+                        UnityEngine.GUI.backgroundColor = Color.white;
+                    }
+                    else
+                    {
+                        EditorGUI.DrawPreviewTexture(_newRect, _tex);
+                        EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
+                        UnityEngine.GUI.backgroundColor = Color.blue;
+                    }
                 }
 
                 var _labelRect = _newRect;
@@ -304,6 +279,9 @@ namespace MugCup_BlockBuilder.Editor
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
             
+            BBResource.Initialized();
+            BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode 
+                = (InterfaceSetting.EditMode)GUILayout.Toolbar((int)BlockBuilderEditorManager.InterfaceSetting.CurrentEditMode, BBResource.Tabs, GUILayout.Height(30), GUILayout.Width(100));
             
             
             EditorGUILayout.LabelField("Block Element Placement");

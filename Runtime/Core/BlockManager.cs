@@ -10,6 +10,7 @@ using MugCup_Utilities.Runtime;
 using MugCup_PathFinder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
+using UnityEditor;
 
 namespace MugCup_BlockBuilder.Runtime
 {
@@ -293,9 +294,15 @@ namespace MugCup_BlockBuilder.Runtime
 
 		
 #region Add/Remove NodeBase GameObject
-	    public void AddNodeAt<T>(T _prefab, Vector3Int _nodePos) where T : NodeBase
+	    public T AddNodeAt<T>(T _prefab, Vector3Int _nodePos) where T : NodeBase
 	    {
 		    var _newBlock = CreateNodeAt(_prefab, _nodePos, _prefab.transform.localRotation);
+
+		    return _newBlock;
+		    
+		    #if UNITY_EDITOR
+		    Undo.RegisterCreatedObjectUndo(_newBlock.gameObject, "New Block");
+		    #endif
 	    }
 	    
 	    public void RemoveNode<T>(T _node) where T : NodeBase
@@ -328,11 +335,17 @@ namespace MugCup_BlockBuilder.Runtime
 		public void DestroyNode<T>(Vector3Int _nodePos) where T : NodeBase
 		{
 			var _nodeToBeRemoved = GetNodeRef<T>(_nodePos);
-			
-			if(Application.isPlaying)
+
+			if (Application.isPlaying)
+			{
 				Destroy(_nodeToBeRemoved.gameObject);
+			}
 			else
-				DestroyImmediate(_nodeToBeRemoved.gameObject);
+			{
+				#if UNITY_EDITOR
+				Undo.DestroyObjectImmediate(_nodeToBeRemoved.gameObject);
+				#endif
+			}
 		}
 		
 		private T CreateNodeAt<T>(T _node, Vector3Int _nodePos, Quaternion _rotation) where T : NodeBase

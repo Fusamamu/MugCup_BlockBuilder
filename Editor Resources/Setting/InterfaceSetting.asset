@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: InterfaceSetting
   m_EditorClassIdentifier: 
   CurrentMode: 0
-  CurrentEditMode: 0
+  CurrentEditMode: 2
   CurrentMainTapSelection: 0
   BlockPlacementToolTabSelection: 1
-  BuildToolTabSelection: 1
-  RoadBuildToolTabSelection: 1
+  BuildToolTabSelection: 0
+  RoadBuildToolTabSelection: 0
   MapSettingFoldout: 1
   BuilderMode: 0

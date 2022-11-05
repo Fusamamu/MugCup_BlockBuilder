@@ -22,6 +22,11 @@ namespace MugCup_BlockBuilder.Editor
         {
             DrawDefaultInspector();
 
+            if (GUILayout.Button("Change Mesh Variant"))
+            {
+                block.ChangeMeshVariant();
+            }
+
             if (GUILayout.Button("Update BitMask"))
             {
                 block.UpdateBlockData();

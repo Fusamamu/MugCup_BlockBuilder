@@ -10,7 +10,7 @@ namespace MugCup_BlockBuilder.Editor
     {
         public static void UpdateBlockBuildTools(Event _currentEvent, Ray _ray)
         {
-            switch (BlockBuilderEditorManager.InterfaceSetting.BuildToolTabSelection)
+            switch (BBEditorManager.InterfaceSetting.BuildToolTabSelection)
             {
                 case 0: /*Add Block*/
                     switch (_currentEvent.type)
@@ -26,16 +26,16 @@ namespace MugCup_BlockBuilder.Editor
                                     var _pos         = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
                                     var _block       = _blockPrefab.AddComponent<Block>();
                             
-                                    _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
+                                    _block.InjectDependency(BBEditorManager.BlockManager);
                                     _block.Init(_targetPos, _pos);
                                     _block.UpdateBlockData();
                                     
                                     BBEditorUtility.RecordGridBlockManagerChanges(() =>
                                     {
-                                        BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
-                                        BlockBuilderEditorManager.GetBlockEditorManager().AddBlock(_block, _pos, NormalFace.PosY );
+                                        BBEditorManager.BlockEditorManager.InitializeAddTable();
+                                        BBEditorManager.BlockEditorManager.AddBlock(_block, _pos, NormalFace.PosY );
                             
-                                        BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Top);
+                                        BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Block>(_block.NodePosition, CubeBlockSection.Top);
                                     });
                                     
                                     Object.DestroyImmediate(_blockPrefab);
@@ -61,8 +61,8 @@ namespace MugCup_BlockBuilder.Editor
                             {
                                 BBEditorUtility.RecordGridBlockManagerChanges(() =>
                                 {
-                                    BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
-                                    BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Middle);
+                                    BBEditorManager.BlockManager.RemoveBlock(_block);
+                                    BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Block>(_block.NodePosition, CubeBlockSection.Middle);
                                 });
                             }
                         }

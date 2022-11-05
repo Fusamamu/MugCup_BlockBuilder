@@ -3,6 +3,7 @@ using UnityEngine;
 
 using BlockBuilder.Core;
 using MugCup_BlockBuilder.Runtime;
+using UnityEditor;
 
 namespace MugCup_BlockBuilder.Editor
 {
@@ -14,11 +15,12 @@ namespace MugCup_BlockBuilder.Editor
         
         private static Vector3Int originPos = Vector3Int.zero;
 
-        private static List<GameObject> tempPath = new List<GameObject>();
+        private static List<Vector3Int> tempPathPositions;
+        private static List<Path> modifiedPaths = new List<Path>();
          
         public static void UpdateRoadBuildTools(Event _currentEvent, Ray _ray)
         {
-            switch (BlockBuilderEditorManager.InterfaceSetting.RoadBuildToolTabSelection)
+            switch (BBEditorManager.InterfaceSetting.RoadBuildToolTabSelection)
             {
                 case 0: /*Add Road Block Path*/
                     UpdateAddPathProcess(_currentEvent, _ray);
@@ -63,11 +65,11 @@ namespace MugCup_BlockBuilder.Editor
                          {
                              Vector3Int _targetPos = Utilities.CastVec3ToVec3Int(_hit.collider.transform.position);
 
-                             var _path = GetLShapePath(originPos, _targetPos);
+                             tempPathPositions = GetLShapePath(originPos, _targetPos);
 
-                             if (_path.Count > 0)
+                             if (tempPathPositions.Count > 0)
                              {
-                                 Visualizer.CreatePathPointsVisualizer(_path);
+                                 Visualizer.CreatePathPointsVisualizer(tempPathPositions);
                              }
                          }
                      }
@@ -76,46 +78,59 @@ namespace MugCup_BlockBuilder.Editor
                  case EventType.MouseUp:
 
                      isPressed = false;
-                            
+                     isDragged = false;
                      Visualizer.ClearPathVisualizer();
-                     
-                     var _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                     var _block       = _blockPrefab.AddComponent<Path>();
-                            
-                     _block.InjectDependency(BlockBuilderEditorManager.GetBlockManager());
-                     _block.Init(originPos, originPos);
-                     _block.UpdateBlockData();
-                     
-                     // var _gridBlockDataManager = BlockBuilderEditorManager.GetBlockManager().GetCurrentGridBlockDataManager();
-                     // Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
-                     //        
-                     // BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
-                     //        
-                     // BlockBuilderEditorManager.GetBlockEditorManager().RemoveBlock(originPos);
-                     //        
-                     // BlockBuilderEditorManager.GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
-                     //        
-                     // BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<Path>(_block.NodePosition);
-                     //
-                     // PrefabUtility.RecordPrefabInstancePropertyModifications(_gridBlockDataManager);
                      
                      BBEditorUtility.RecordGridBlockManagerChanges(() =>
                      {
-                         BlockBuilderEditorManager.GetBlockEditorManager().InitializeAddTable();
-                            
-                         BlockBuilderEditorManager.GetBlockEditorManager().RemoveBlock(originPos);
-                            
-                         BlockBuilderEditorManager.GetBlockEditorManager().AddBlock   (_block, originPos, NormalFace.None);
-                            
-                         BlockBuilderEditorManager.GetBlockManager().UpdateSurroundingBlocksData<Path>(_block.NodePosition);
+                         modifiedPaths = new List<Path>();
+                         
+                         if (tempPathPositions.Count > 1)
+                         {
+                             foreach (var _pos in tempPathPositions)
+                             {
+                                 AddPath(_pos);
+                             }
+                             
+                             tempPathPositions.Clear();
+                         }
+                         else
+                         {
+                             AddPath(originPos);
+                         }
+                         
                      });
-                            
-                     Object.DestroyImmediate(_blockPrefab);
+                       
+                     var _gridBlockDataManager = BBEditorManager.BlockDataManager;
+                     Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
 
-                     isDragged = false;
-                            
+                     foreach (var _path in BBEditorManager.BlockDataManager.AvailableBlocks<Path>())
+                     {
+                         _path.GetSurroundingBlocksReference();
+                         _path.SetBitMask();
+                     }
+                  
+                     PrefabUtility.RecordPrefabInstancePropertyModifications(_gridBlockDataManager);
                      break;
              }
+        }
+
+        private static void AddPath(Vector3Int _pos)
+        {
+            var _tempCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var _path     = _tempCube.AddComponent<Path>();
+                            
+            _path.InjectDependency(BBEditorManager.BlockManager);
+            _path.Init(_pos, _pos);
+            _path.UpdateBlockData();
+                     
+            BBEditorManager.BlockEditorManager.InitializeAddTable();
+            BBEditorManager.BlockEditorManager.RemoveBlock(_pos);
+            BBEditorManager.BlockEditorManager.AddBlock   (_path, _pos, NormalFace.None);
+                            
+            BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Path>(_path.NodePosition);
+                            
+            Object.DestroyImmediate(_tempCube);
         }
         
         private static List<Vector3Int> GetLShapePath(Vector3Int _originPos, Vector3Int _targetPos)

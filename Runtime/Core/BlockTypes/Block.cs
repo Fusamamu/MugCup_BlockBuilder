@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using BlockBuilder.Scriptable;
@@ -10,20 +11,19 @@ namespace MugCup_BlockBuilder.Runtime
     {
         //Should Has Reference to the Grid and Map that this Block reside//
         [SerializeField] protected BlockManager blockManager;
-   
         [SerializeField] protected NodeBase[] gridNodeBases;
-        
         [SerializeField] protected GridDataSettingSO  gridData;
-        
         [SerializeField] protected MeshFilter mesh;
-        
-        //public Vector3 WorldPosition;
+
+        [SerializeField] protected int currentMeshIndex;
+        [SerializeField] protected List<Mesh> meshVariants = new List<Mesh>();
         
         public int GridPosX => NodePosition.x;
         public int GridPosY => NodePosition.y;
         public int GridPosZ => NodePosition.z;
 
         public int BitMask              = 0b_000000000_000000000_000000000;
+        public int BitMaskComposite     = 0b_000000000_000000000_000000000;
         public int BitMaskMiddleSection = 0b_000000000_000000000_000000000;
 
         public Block[] TopBlocks    = new Block[9];
@@ -36,8 +36,16 @@ namespace MugCup_BlockBuilder.Runtime
 
         [SerializeField] private bool isInit;
 
-        private void Awake()
+        public void ChangeMeshVariant()
         {
+            if(meshVariants.Count == 0) return;
+            
+            currentMeshIndex++;
+            
+            if (currentMeshIndex > meshVariants.Count - 1)
+                currentMeshIndex = 0;
+            
+            mesh.sharedMesh = meshVariants[currentMeshIndex];
         }
 
         public virtual void Init()
@@ -52,10 +60,8 @@ namespace MugCup_BlockBuilder.Runtime
         {
             mesh = transform.GetComponent<MeshFilter>();
             
-            //This might already set by NodeBase
-            //NodeWorldPosition = _worldPos;
             SetNodeWorldPosition(_worldPos);
-            NodePosition      = _gridPos;
+            NodePosition = _gridPos;
             
             tag  = "Block";
             name = $"Block: ({_gridPos.x}, {_gridPos.y}, {_gridPos.z})";
@@ -113,14 +119,18 @@ namespace MugCup_BlockBuilder.Runtime
 
         public virtual void SetBitMask()
         {
-            BitMask = 0b_000000000_000000000_000000000;
-            
+            BitMask = GetBitMask();
+        }
+
+        public virtual int GetBitMask()
+        {
+            var _bitMask  = 0b_000000000_000000000_000000000;
             int _startBit = 0b_100000000_000000000_000000000;
 
             foreach (var _block in TopBlocks)
             {
                 if (_block != null)
-                    BitMask |= _startBit;
+                    _bitMask |= _startBit;
                 
                 _startBit >>= 1;
             }
@@ -128,7 +138,7 @@ namespace MugCup_BlockBuilder.Runtime
             foreach (var _block in MiddleBlocks)
             {
                 if (_block != null)
-                    BitMask |= _startBit;
+                    _bitMask |= _startBit;
                 
                 _startBit >>= 1;
             }
@@ -136,10 +146,12 @@ namespace MugCup_BlockBuilder.Runtime
             foreach (var _block in BottomBlocks)
             {
                 if (_block != null)
-                    BitMask |= _startBit;
+                    _bitMask |= _startBit;
                 
                 _startBit >>= 1;
             }
+
+            return _bitMask;
         }
         
         public int GetBitMaskMiddleSection()

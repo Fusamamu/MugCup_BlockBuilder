@@ -69,14 +69,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			managerCollections[_type] = _manager;
 		}
 #endregion
-
-		/// <summary>
-		/// BlockBuilder Package Initialization start from here.
-		/// </summary>
-		protected override void Awake()
-		{
-			//Initialized();
-		}
 		
 		public void Initialized()
 		{

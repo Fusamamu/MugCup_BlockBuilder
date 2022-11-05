@@ -22,7 +22,7 @@ namespace MugCup_BlockBuilder.Editor
 
         public static void UpdateBlockBuildTools(Event _currentEvent, Ray _ray)
         {
-            switch (BlockBuilderEditorManager.InterfaceSetting.BlockPlacementToolTabSelection)
+            switch (BBEditorManager.InterfaceSetting.BlockPlacementToolTabSelection)
             {
                 case 0: 
                     PlaceBlockElement(_currentEvent, _ray);
@@ -41,7 +41,7 @@ namespace MugCup_BlockBuilder.Editor
                             {
                                 BBEditorUtility.RecordGridBlockManagerChanges(() =>
                                 {
-                                    BlockBuilderEditorManager.GetBlockManager().RemoveNode<NodeBase>(_nodeBase);
+                                    BBEditorManager.BlockManager.RemoveNode<NodeBase>(_nodeBase);
                                     
                                     // BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
                                     // BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Middle);
@@ -75,7 +75,7 @@ namespace MugCup_BlockBuilder.Editor
                                         {
                                             var _targetPos = _hit.collider.transform.position;
                                             var _pos       = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
-                                            var _newBlock  = BlockBuilderEditorManager.GetBlockEditorManager().AddNodeOnTop(_node, _pos);
+                                            var _newBlock  = BBEditorManager.BlockEditorManager.AddNodeOnTop(_node, _pos);
                                             
                                             Undo.RegisterCreatedObjectUndo(_newBlock.gameObject, "New Block");
                                         }

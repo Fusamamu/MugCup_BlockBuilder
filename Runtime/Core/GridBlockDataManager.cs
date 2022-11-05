@@ -58,6 +58,21 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             return _blocks;
         }
+
+        public IEnumerable<T> AvailableBlocks<T>() where T : Block
+        {
+            var _blocks = new List<T>();
+            
+            foreach (var _node in gridUnitNodeBases)
+            {
+                if(_node == null) continue;
+                
+                if(_node is T _block)
+                    _blocks.Add(_block);
+            }
+
+            return _blocks;
+        }
 #endregion
  
 #region Get Grid Data/BlockMesh Data
@@ -93,8 +108,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
         {
             blockMeshDataTable = new Dictionary<Type, BlockMeshData>()
             {
-                { typeof(Block)    , blockMeshData },
-                { typeof(Path), pathMeshData  }
+                { typeof(Block), blockMeshData },
+                { typeof(Path) , pathMeshData  }
             };
         }
 #endregion
@@ -316,7 +331,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             var _selectedBlockLevel = new T[_rowUnit * _columnUnit];
             
-            for (var _x = 0; _x < _rowUnit; _x++)
+            for (var _x = 0; _x < _rowUnit   ; _x++)
             for (var _z = 0; _z < _columnUnit; _z++)
                 _selectedBlockLevel[_z + GridUnitSize.x * _x] = gridUnitNodeBases[_z + GridUnitSize.x * (_x + GridUnitSize.y * _gridLevel)] as T;
 

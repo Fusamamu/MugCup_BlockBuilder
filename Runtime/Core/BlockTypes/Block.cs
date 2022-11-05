@@ -22,9 +22,10 @@ namespace MugCup_BlockBuilder.Runtime
         public int GridPosY => NodePosition.y;
         public int GridPosZ => NodePosition.z;
 
-        public int BitMask              = 0b_000000000_000000000_000000000;
-        public int BitMaskComposite     = 0b_000000000_000000000_000000000;
-        public int BitMaskMiddleSection = 0b_000000000_000000000_000000000;
+        public int BitMask                       = 0b_000000000_000000000_000000000;
+        public int BitMaskComposite              = 0b_000000000_000000000_000000000;
+        public int BitMaskMiddleSection          = 0b_000000000_000000000_000000000;
+        public int BitMaskCompositeMiddleSection = 0b_000000000_000000000_000000000;
 
         public Block[] TopBlocks    = new Block[9];
         public Block[] MiddleBlocks = new Block[9];
@@ -159,6 +160,13 @@ namespace MugCup_BlockBuilder.Runtime
             BitMaskMiddleSection = (BitMask >> 9) & 0b_000000000_000000000_111111111;
 
             return BitMaskMiddleSection;
+        }
+
+        public int GetBitMaskCompositeMiddleSection()
+        {
+            BitMaskCompositeMiddleSection = (BitMaskComposite >> 9) & 0b_000000000_000000000_111111111;
+
+            return BitMaskCompositeMiddleSection;
         }
 
 #region For Future WFC Function

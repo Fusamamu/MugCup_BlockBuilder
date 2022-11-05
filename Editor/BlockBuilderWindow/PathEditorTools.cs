@@ -109,6 +109,11 @@ namespace MugCup_BlockBuilder.Editor
                          _path.GetSurroundingBlocksReference();
                          _path.SetBitMask();
                      }
+                     
+                     foreach (var _path in BBEditorManager.BlockDataManager.AvailableBlocks<Path>())
+                     {
+                         BBEditorManager.BlockManager.UpdateMeshBlockComposite(_path);
+                     }
                   
                      PrefabUtility.RecordPrefabInstancePropertyModifications(_gridBlockDataManager);
                      break;

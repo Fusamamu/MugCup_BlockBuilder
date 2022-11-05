@@ -41,6 +41,7 @@ namespace MugCup_BlockBuilder.Runtime
         public override void SetBitMask()
         {
             base.SetBitMask();
+            BitMaskComposite = base.GetBitMask();
         }
 
         public override int GetBitMask()

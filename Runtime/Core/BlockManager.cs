@@ -135,7 +135,10 @@ namespace MugCup_BlockBuilder.Runtime
 
 		    int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();
 			
-		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager.GetBlockMeshData<T>().GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
+		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager
+			    .GetBlockMeshData<T>()
+			    .SetUseComposite(false)
+			    .GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
 
 		    Block      _blockPrefab  = _blockMeshInfo.Prefab;
 		    Quaternion _rotation     = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
@@ -149,30 +152,37 @@ namespace MugCup_BlockBuilder.Runtime
 		    AddBlock   (_blockPrefab, _targetNodePos, _rotation);
 	    }
 
-	    private void UpdateMeshBlockComposite<T>(T _block) where T : Block
+	    public void UpdateMeshBlockComposite<T>(T _block) where T : Block
 	    {
 		    Vector3Int _targetNodePos = _block.NodePosition;
 
-		    int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();//Get Bit Mask Composite
+		    int _bitMaskMiddleSection = _block.GetBitMaskCompositeMiddleSection();
 			
 		    BlockMeshInfo _blockMeshInfo = gridBlockDataManager
 			    .GetBlockMeshData<T>()
 			    .SetUseComposite(true)
 			    .GetBlockPrefabMiddleSection(_bitMaskMiddleSection);
 
-		    Block      _blockPrefab  = _blockMeshInfo.Prefab;
-		    Quaternion _rotation     = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
-			
-		    if (_blockPrefab == null)
+		    if (_blockMeshInfo.Prefab)
 		    {
-			    _blockPrefab = gridBlockDataManager.GetBlockMeshData().GetDefaultBlock();
-		    }
+			    Block      _blockPrefab  = _blockMeshInfo.Prefab;
+			    Quaternion _rotation     = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
 				
-		    //AddBlock   (_blockPrefab, _targetNodePos, _rotation);
+			    AddCompositeBlock(_blockPrefab, _targetNodePos, _rotation);
+		    }
 	    }
 #endregion
 
 #region Add/Remove Block by Node Position
+	    private void AddCompositeBlock(Block _prefab, Vector3Int _nodePos, Quaternion _rotation)
+	    {
+		    var _block = GetNodeRef<Block>(_nodePos);
+
+		    var _compositeBlock = Instantiate(_prefab, Vector3.zero, _rotation, _block.transform);
+		    
+		    _compositeBlock.transform.localPosition = Vector3.zero;
+	    }
+	    
 	    public void AddBlock(Block _prefab, Vector3Int _nodePos)
 	    {
 		    var _newBlock = CreateNodeAt(_prefab, _nodePos, _prefab.transform.localRotation);

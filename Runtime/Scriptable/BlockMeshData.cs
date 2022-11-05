@@ -10,6 +10,7 @@ namespace BlockBuilder.Core.Scriptable
 {
     public struct BlockMeshInfo
     {
+        public bool IsValid;
         public Block Prefab;
         public Quaternion Rotation;
     }
@@ -125,7 +126,8 @@ namespace BlockBuilder.Core.Scriptable
 
                     _blockMeshInfo = new BlockMeshInfo
                     {
-                        Prefab   = TopSurfaceBlock,
+                        IsValid  = true,
+                        Prefab   = IsUseComposite ? null : TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
                     break;
@@ -138,6 +140,7 @@ namespace BlockBuilder.Core.Scriptable
                     */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = ConnectOneSide,
                         Rotation = Quaternion.Euler(0, 90, 0)
                     };
@@ -153,6 +156,7 @@ namespace BlockBuilder.Core.Scriptable
                     
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = ConnectOneSide,
                         Rotation = Quaternion.identity
                     };
@@ -168,6 +172,7 @@ namespace BlockBuilder.Core.Scriptable
                     
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Corner,
                         Rotation = Quaternion.Euler(0, 90, 0)
                     };
@@ -182,6 +187,7 @@ namespace BlockBuilder.Core.Scriptable
                     
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Corner,
                         Rotation = Quaternion.Euler(0, 90, 0)
                     };
@@ -195,6 +201,7 @@ namespace BlockBuilder.Core.Scriptable
                     */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = ConnectOneSide,
                         Rotation = Quaternion.Euler(0, 180, 0)
                     };
@@ -209,6 +216,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                      _blockMeshInfo = new BlockMeshInfo
                      {
+                         IsValid  = true,
                          Prefab   = Corner,
                          Rotation = Quaternion.Euler(0, 180, 0)
                      };
@@ -222,6 +230,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Corner,
                         Rotation = Quaternion.Euler(0, 180, 0)
                     };
@@ -236,8 +245,9 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = IsUseComposite ? IShapeComposite : IShape,
-                        Rotation = Quaternion.Euler(0, 90, 0)
+                        Rotation = Quaternion.identity
                     };
                     break;
                 
@@ -251,6 +261,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = ConnectThreeSides,
                         Rotation = Quaternion.Euler(0, 0, 0)
                     };
@@ -265,6 +276,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 0, 0)
                     };
@@ -278,6 +290,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 0, 0)
                     };
@@ -291,6 +304,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 0, 0)
                     };
@@ -304,6 +318,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = ConnectOneSide,
                         Rotation = Quaternion.Euler(0, 270, 0)
                     };
@@ -316,8 +331,9 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = IsUseComposite ? IShapeComposite : IShape,
-                        Rotation = Quaternion.identity
+                        Rotation = Quaternion.Euler(0, 90, 0)
                     };
                     break;
                 case 0b_010_110_000:
@@ -328,6 +344,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Corner,
                         Rotation = Quaternion.identity
                     };
@@ -340,6 +357,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = ConnectThreeSides,
                         Rotation = Quaternion.Euler(0, -90, 0)
                     };
@@ -352,6 +370,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, -90, 0)
                     };
@@ -364,6 +383,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Corner,
                         Rotation = Quaternion.Euler(0, 270, 0)
                     };
@@ -376,6 +396,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 90, 0)
                     };
@@ -388,6 +409,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 90, 0)
                     };
@@ -400,6 +422,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 180, 0)
                     };
@@ -424,6 +447,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -436,6 +460,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -448,6 +473,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -460,6 +486,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Corner,
                         Rotation = Quaternion.identity
                     };
@@ -472,6 +499,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, -90, 0)
                     };
@@ -484,6 +512,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, -90, 0)
                     };
@@ -496,6 +525,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 180, 0)
                     };
@@ -508,6 +538,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -520,6 +551,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -533,6 +565,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -545,6 +578,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Corner,
                         Rotation = Quaternion.Euler(0, 270, 0)
                     };
@@ -557,6 +591,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 90, 0)
                     };
@@ -569,6 +604,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 90, 0)
                     };
@@ -581,6 +617,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 180, 0)
                     };
@@ -593,6 +630,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -606,6 +644,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -618,6 +657,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -630,6 +670,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = Side,
                         Rotation = Quaternion.Euler(0, 180, 0)
                     };
@@ -642,6 +683,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -654,6 +696,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -666,6 +709,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };
@@ -679,6 +723,7 @@ namespace BlockBuilder.Core.Scriptable
                      */
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = true,
                         Prefab   = IsolatedBlock,
                         Rotation = Quaternion.identity
                     };
@@ -700,6 +745,7 @@ namespace BlockBuilder.Core.Scriptable
                 default:
                     _blockMeshInfo = new BlockMeshInfo
                     {
+                        IsValid  = false,
                         Prefab   = TopSurfaceBlock,
                         Rotation = Quaternion.identity
                     };

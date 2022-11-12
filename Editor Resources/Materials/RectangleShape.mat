@@ -2,14 +2,15 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RectangleShape
   m_Shader: {fileID: 4800000, guid: 58aee51a61f0f477faacd170907cda64, type: 3}
-  m_ShaderKeywords: 
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -75,10 +76,11 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AlphaClip: 0
     - _Blend: 0
-    - _BottomBorder: 0.05
+    - _BottomBorder: -0.16
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -92,31 +94,31 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _GridRow: 1
-    - _LeftBorder: 0.05
+    - _LeftBorder: 7.25
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RightBorder: 0.95
+    - _RightBorder: 1.16
     - _Rotation: 0
-    - _Rounding: 3.05
+    - _Rounding: -7.46
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Step: 0
     - _Surface: 0
-    - _UpperBorder: 0.95
+    - _UpperBorder: 1.85
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GridColor: {r: 0.9056604, g: 0.8171061, b: 0.44001427, a: 1}
+    - _GridColor: {r: 0.9056604, g: 0.73061687, b: 0, a: 1}
     - _HalfSize: {r: 0.79, g: 0.78, b: 1, a: 0}
-    - _OffsetPos: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _OffsetPos: {r: 0.73, g: 0.5, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &8176205301977317890

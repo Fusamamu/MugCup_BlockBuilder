@@ -11,31 +11,49 @@ namespace MugCup_BlockBuilder.Runtime
     {
         //Should Has Reference to the Grid and Map that this Block reside//
         [SerializeField] protected BlockManager blockManager;
-        [SerializeField] protected NodeBase[] gridNodeBases;
         [SerializeField] protected GridDataSettingSO  gridData;
-        [SerializeField] protected MeshFilter mesh;
-
+        
+        [SerializeField] protected NodeBase[] gridNodeBases;
+        
+        [Header("Block Meshes Setting")]
         [SerializeField] protected int currentMeshIndex;
+        [SerializeField] protected MeshFilter mesh;
         [SerializeField] protected List<Mesh> meshVariants = new List<Mesh>();
         
         public int GridPosX => NodePosition.x;
         public int GridPosY => NodePosition.y;
         public int GridPosZ => NodePosition.z;
 
+        [Header("Bit Mask")]
         public int BitMask                       = 0b_000000000_000000000_000000000;
-        public int BitMaskComposite              = 0b_000000000_000000000_000000000;
         public int BitMaskMiddleSection          = 0b_000000000_000000000_000000000;
+        
+        [Header("Bit Mask For Composite")]
+        public int BitMaskComposite              = 0b_000000000_000000000_000000000;
         public int BitMaskCompositeMiddleSection = 0b_000000000_000000000_000000000;
 
+        [Header("Neighbor Blocks References")]
         public Block[] TopBlocks    = new Block[9];
         public Block[] MiddleBlocks = new Block[9];
         public Block[] BottomBlocks = new Block[9];
         
+        [Header("Volume Points")]
         public VolumePoint[] VolumePoints = new VolumePoint[8];
         
         public bool IsEnable;
 
-        [SerializeField] private bool isInit;
+        [SerializeField] private bool IsInit;
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// In case of losing node position data. Use this method to reinit
+        /// </summary>
+        public void InitNodePosition()
+        {
+            SetNodeWorldPosition(transform.position);
+            SetNodePosition(Utilities.CastVec3ToVec3Int(NodeWorldPosition));
+        }
+#endif
 
         public void ChangeMeshVariant()
         {
@@ -49,30 +67,30 @@ namespace MugCup_BlockBuilder.Runtime
             mesh.sharedMesh = meshVariants[currentMeshIndex];
         }
 
-        public virtual void Init()
+        public virtual Block SetPosition(Vector3 _worldPos, Vector3Int _gridPos)
+        {
+            SetNodeWorldPosition(_worldPos);
+            SetNodePosition     (_gridPos);
+            return this;
+        }
+        
+        public virtual Block InjectDependency(BlockManager _blockManager)
+        {
+            blockManager  = _blockManager;
+            gridNodeBases = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitNodeBases;
+            gridData      = _blockManager.GetCurrentGridBlockDataManager().GridData;
+            
+            return this;
+        }
+        
+        public virtual Block Init()
         {
             mesh = transform.GetComponent<MeshFilter>();
             
             tag  = "Block";
             name = $"Block: ({NodePosition.x}, {NodePosition.y}, {NodePosition.z})";
-        }
 
-        public virtual void Init(Vector3 _worldPos, Vector3Int _gridPos)
-        {
-            mesh = transform.GetComponent<MeshFilter>();
-            
-            SetNodeWorldPosition(_worldPos);
-            NodePosition = _gridPos;
-            
-            tag  = "Block";
-            name = $"Block: ({_gridPos.x}, {_gridPos.y}, {_gridPos.z})";
-        }
-
-        public virtual void InjectDependency(BlockManager _blockManager)
-        {
-            blockManager  = _blockManager;
-            gridNodeBases = _blockManager.GetCurrentGridBlockDataManager().GetGridUnitNodeBases;
-            gridData      = _blockManager.GetCurrentGridBlockDataManager().GetGridDataSetting();
+            return this;
         }
 
         public virtual void UpdateBlockData()
@@ -84,7 +102,8 @@ namespace MugCup_BlockBuilder.Runtime
 
         public virtual void UpdateNodePosition()
         {
-            NodePosition = Utilities.CastVec3ToVec3Int(NodeWorldPosition);
+            var _nodePosition = Utilities.CastVec3ToVec3Int(NodeWorldPosition);
+            SetNodePosition(_nodePosition);
         }
 
         public virtual void GetSurroundingBlocksReference()

@@ -6,9 +6,11 @@ using UnityEngine;
 using UnityEditor;
 using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
+using MugCup_BlockBuilder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core;
 using UnityEditor.AnimatedValues;
 using UnityEditor.SceneManagement;
+using Object = System.Object;
 
 namespace MugCup_BlockBuilder.Editor.GUI
 {
@@ -166,6 +168,17 @@ namespace MugCup_BlockBuilder.Editor.GUI
             else
             {
                 SceneView.duringSceneGui -= OnScene;
+            }
+
+            if (GUILayout.Button("Init Blocks Position"))
+            {
+                var _blocks = GameObject.FindObjectsOfType<Block>();
+
+                foreach (var _block in _blocks)
+                {
+                    _block.InitNodePosition();
+                    EditorUtility.SetDirty(_block);
+                }
             }
             
             //ToDo

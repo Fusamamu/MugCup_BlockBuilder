@@ -2,83 +2,65 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
+using UnityEngine;
 using BlockBuilder.Core.Scriptable;
 using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
-using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 using MugCup_PathFinder.Runtime;
-using UnityEditor;
-using UnityEngine;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
     //Per stage / Per Scene / Save/Load Scene?
     [Serializable]
-    public class GridBlockDataManager : MonoBehaviour
+    public class GridBlockDataManager : NodeDataBase
     {
-        [SerializeField] private NodeBase[][] map;
-        [SerializeField] private NodeBase[] gridUnitNodeBases;
-        
-        private Dictionary<int, NodeBase[]> gridNodeBasesLevelTable = new Dictionary<int, NodeBase[]>();
+        // [SerializeField] private NodeBase[][] map;
+        // [SerializeField] private NodeBase[] gridUnitNodeBases;
+        // public NodeBase[] GetGridUnitNodeBases => gridUnitNodeBases;
+        //
+        // private Dictionary<int, NodeBase[]> gridNodeBasesLevelTable = new Dictionary<int, NodeBase[]>();
+        //
+        // public int RowUnit   ;
+        // public int ColumnUnit;
+        // public int LevelUnit ;
+        //
+        // public Vector3Int MapSize;
+        // public Vector3Int GridUnitSize;
 
-        public int RowUnit   ;
-        public int ColumnUnit;
-        public int LevelUnit ;
-        
-        public Vector3Int MapSize;
-        public Vector3Int GridUnitSize;
-
-#region Get Grid Unit NodeBases
-        public NodeBase[] GetGridUnitNodeBases => gridUnitNodeBases;
-
-        //This seems to get shallow reference
-        public T[] GetGridUnitArray<T>() where T : NodeBase
-        {
-            var _gridUnitArray = new T[gridUnitNodeBases.Length];
-
-            for (var _i = 0; _i < _gridUnitArray.Length; _i++)
-            {
-                _gridUnitArray[_i] = gridUnitNodeBases[_i] as T;
-            }
-
-            return _gridUnitArray;
-        }
-        
-        public IEnumerable<Block> GetAvailableBlocks()
-        {
-            var _blocks = new List<Block>();
-            
-            foreach (var _node in gridUnitNodeBases)
-            {
-                if(_node == null) continue;
-                
-                if(_node is Block _block)
-                    _blocks.Add(_block);
-            }
-
-            return _blocks;
-        }
-
-        public IEnumerable<T> AvailableBlocks<T>() where T : Block
-        {
-            var _blocks = new List<T>();
-            
-            foreach (var _node in gridUnitNodeBases)
-            {
-                if(_node == null) continue;
-                
-                if(_node is T _block)
-                    _blocks.Add(_block);
-            }
-
-            return _blocks;
-        }
-#endregion
+// #region Get Grid Unit NodeBases
+//         //This seems to get shallow reference
+//         public T[] GetGridUnitArray<T>() where T : NodeBase
+//         {
+//             var _gridUnitArray = new T[gridUnitNodeBases.Length];
+//
+//             for (var _i = 0; _i < _gridUnitArray.Length; _i++)
+//             {
+//                 _gridUnitArray[_i] = gridUnitNodeBases[_i] as T;
+//             }
+//
+//             return _gridUnitArray;
+//         }
+//
+//         public IEnumerable<T> AvailableNodes<T>() where T : NodeBase
+//         {
+//             foreach (var _node in gridUnitNodeBases)
+//             {
+//                 if(_node == null) continue;
+//
+//                 if (_node is T _block)
+//                     yield return _block;
+//             }
+//         }
+// #endregion
  
 #region Get Grid Data/BlockMesh Data
-        public GridDataSettingSO GetGridDataSetting() => gridData;
-        public BlockMeshData     GetBlockMeshData  () => blockMeshData;
-        public BlockMeshData     GetPathMeshData   () => pathMeshData;
+        [field:SerializeField] public GridDataSettingSO GridData      { get; private set; }
+        [field:SerializeField] public BlockMeshData     BlockMeshData { get; private set; }
+        [field:SerializeField] public BlockMeshData     PathMeshData  { get; private set; }
+         
+        private bool GRID_DATA_INIT = false;
+        private bool GRID_SIZE_INIT = false;
 
         private static Dictionary<Type, BlockMeshData> blockMeshDataTable = new Dictionary<Type, BlockMeshData>();
 
@@ -108,31 +90,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
         {
             blockMeshDataTable = new Dictionary<Type, BlockMeshData>()
             {
-                { typeof(Block), blockMeshData },
-                { typeof(Path) , pathMeshData  }
+                { typeof(Block), BlockMeshData },
+                { typeof(Path) , PathMeshData  }
             };
         }
 #endregion
-        
-        //These can be used as fallback. In case, data cannot be found from BuildBuilderManager//
-        //Or User use to use this class directly.
-        [SerializeField] private GridDataSettingSO gridData;
-        [SerializeField] private BlockMeshData     blockMeshData;
-        [SerializeField] private BlockMeshData     pathMeshData;
-         
-        private bool GRID_DATA_INIT = false;
-        private bool GRID_SIZE_INIT = false;
-
-        public void ClearGridUnitNodeBases()
-        {
-            gridUnitNodeBases = null;
-        }
-        
-        public void InitializeMapSize(int _row, int _column, int _height)
-        {
-            map     = new NodeBase[_row * _column * _height][];
-            MapSize = new Vector3Int(_row, _height, _column);
-        }
 
 #region Initialize GridUnitSize Overloads
         public void DefaultInitialized()
@@ -140,8 +102,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
             GridDataSettingSO _gridDataSetting = null;
             BlockMeshData     _meshDataSetting = null;
 
-            _gridDataSetting = gridData;
-            _meshDataSetting = blockMeshData;
+            _gridDataSetting = GridData;
+            _meshDataSetting = BlockMeshData;
             
             #if UNITY_EDITOR
             if (_gridDataSetting == null || _meshDataSetting == null)
@@ -162,7 +124,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             Debug.Log($"GridBlockDataManager Initialized.");
 
-            if (gridData == null)
+            if (GridData == null)
             {
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
             }
@@ -181,9 +143,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             if (_gridDataSetting == null || _meshDataSetting == null)
             {
-                _blockDataSetting.GridDataSetting          = gridData;
-                _blockDataSetting.BlockMeshDataSetting     = blockMeshData;
-                _blockDataSetting.PathBlockMeshDataSetting = pathMeshData;
+                _blockDataSetting.GridDataSetting          = GridData;
+                _blockDataSetting.BlockMeshDataSetting     = BlockMeshData;
+                _blockDataSetting.PathBlockMeshDataSetting = PathMeshData;
                 
                 Debug.Log($"Cannot find data from Block Builder Manager. Fallback to data in GridBlockDataManager.");
             }
@@ -208,16 +170,16 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             Debug.Log($"GridBlockDataManager Initialized.");
 
-            if (gridData == null)
+            if (GridData == null)
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
         }
 
         private void CacheData(BlockDataSetting _blockDataSetting)
         {
-            gridData      = _blockDataSetting.GridDataSetting;
+            GridData      = _blockDataSetting.GridDataSetting;
             
-            blockMeshData = _blockDataSetting.BlockMeshDataSetting;
-            pathMeshData  = _blockDataSetting.PathBlockMeshDataSetting;
+            BlockMeshData = _blockDataSetting.BlockMeshDataSetting;
+            PathMeshData  = _blockDataSetting.PathBlockMeshDataSetting;
         }
         
         private void CacheData(ref GridDataSettingSO _gridData, ref BlockMeshData _meshData)
@@ -226,11 +188,21 @@ namespace MugCup_BlockBuilder.Runtime.Core
             LoadMeshBlocksData (ref _meshData);
         }
         
-        private void LoadMeshBlocksData (ref BlockMeshData     _meshData) => blockMeshData = _meshData;
-        private void LoadGridDataSetting(ref GridDataSettingSO _gridData) => gridData = _gridData;
+        private void LoadMeshBlocksData (ref BlockMeshData     _meshData) => BlockMeshData = _meshData;
+        private void LoadGridDataSetting(ref GridDataSettingSO _gridData) => GridData      = _gridData;
 
         
 #region Initialize Grid Unit Size OverLoads
+        public void InitializeGridUnitSize(GridDataSettingSO _gridData)
+        {
+            InitializeGridUnitSize(_gridData.GridUnitSize.x, _gridData.GridUnitSize.z, _gridData.GridUnitSize.y);
+        }
+        
+        public void InitializeGridUnitSize(Vector3Int _gridSize)
+        {
+            InitializeGridUnitSize(_gridSize.x, _gridSize.z, _gridSize.y);
+        }
+
         public void InitializeGridUnitSize(int _row, int _column, int _height)
         {
             RowUnit    = _row;
@@ -241,56 +213,45 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             GRID_SIZE_INIT = true;
         }
-        
-        public void InitializeGridUnitSize(Vector3Int _gridSize)
-        {
-            RowUnit    = _gridSize.x;
-            ColumnUnit = _gridSize.z;
-            LevelUnit  = _gridSize.y;
-        
-            GridUnitSize = new Vector3Int(RowUnit, LevelUnit, ColumnUnit);
-            
-            GRID_SIZE_INIT = true;
-        }
-
-        public void InitializeGridUnitSize(GridDataSettingSO _gridData)
-        {
-            RowUnit    = _gridData.GridUnitSize.x;
-            ColumnUnit = _gridData.GridUnitSize.z;
-            LevelUnit  = _gridData.GridUnitSize.y;
-        
-            GridUnitSize = new Vector3Int(RowUnit, LevelUnit, ColumnUnit);
-            
-            GRID_SIZE_INIT = true;
-        }
 #endregion
         
-        public void InitializeGridArray()
-        { 
-            int _rowUnit    = gridData.GridUnitSize.x;
-            int _columnUnit = gridData.GridUnitSize.z;
-            int _levelUnit  = gridData.GridUnitSize.y;
-
-            Vector3Int _gridUnitSize = gridData.GridUnitSize;
-            
-            gridUnitNodeBases = new NodeBase[_rowUnit * _columnUnit * _levelUnit];
-
-            for (int _y = 0; _y < _levelUnit ; _y++)
-            for (int _x = 0; _x < _rowUnit   ; _x++)
-            for (int _z = 0; _z < _columnUnit; _z++)
-                gridUnitNodeBases[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = null;
-        }
+        // public void InitializeMapSize(int _row, int _column, int _height)
+        // {
+        //     map     = new NodeBase[_row * _column * _height][];
+        //     MapSize = new Vector3Int(_row, _height, _column);
+        // }
+        //
+        // public void InitializeGridArray()
+        // { 
+        //     int _rowUnit    = GridData.GridUnitSize.x;
+        //     int _columnUnit = GridData.GridUnitSize.z;
+        //     int _levelUnit  = GridData.GridUnitSize.y;
+        //
+        //     Vector3Int _gridUnitSize = GridData.GridUnitSize;
+        //     
+        //     gridUnitNodeBases = new NodeBase[_rowUnit * _columnUnit * _levelUnit];
+        //
+        //     for (int _y = 0; _y < _levelUnit ; _y++)
+        //     for (int _x = 0; _x < _rowUnit   ; _x++)
+        //     for (int _z = 0; _z < _columnUnit; _z++)
+        //         gridUnitNodeBases[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = null;
+        // }
+        //
+        // public void ClearGridUnitNodeBases()
+        // {
+        //     gridUnitNodeBases = null;
+        // }
 #endregion
         
         public bool TryGetGridDataSetting(out GridDataSettingSO _data)
         {
-            if (gridData == null) 
+            if (GridData == null) 
             {
                 Debug.Log($"<color=red>[Warning] : </color> Missing Grid Data. Try Loading from Resource Folder.");
-                gridData = Resources.Load<GridDataSettingSO>("BlockBuilder/Setting/GridData/Setting");
+                GridData = Resources.Load<GridDataSettingSO>("BlockBuilder/Setting/GridData/Setting");
             }
             
-            _data = gridData;
+            _data = GridData;
             
             if (_data == null) 
             {
@@ -301,49 +262,56 @@ namespace MugCup_BlockBuilder.Runtime.Core
             return true;
         }
 
+        // public void ApplyAllNodes<T>(Action<T> _action) where T : NodeBase
+        // {
+        //     foreach (var _node in AvailableNodes<T>())
+        //     {
+        //         _action?.Invoke(_node);
+        //     }
+        // }
+
         public void AvailableBlocksApplyAll(Action<Block> _action)
         {
-            Block[] _blocks = GetAvailableBlocks().ToArray();
-            
-            foreach (Block _block in _blocks)
+            foreach (Block _block in AvailableNodes<Block>())
                 _action?.Invoke(_block);
         }
 
         //Where to push it? BlockManager or This GridBlockDataManager.
-        public void PopulateGridBlocksByLevel(int _gridLevel)
-        {
-            var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
-            
-            GridBlockGenerator.PopulateGridBlocksByLevel<Block>(gridUnitNodeBases, GridUnitSize, _gridLevel, _blockPrefab);
-
-            var _selectedBlockLevel = GetAllNodeBasesAtLevel<NodeBase>(_gridLevel);
-
-            if(!gridNodeBasesLevelTable.ContainsKey(_gridLevel))
-                gridNodeBasesLevelTable.Add(_gridLevel, _selectedBlockLevel);
-            else
-                gridNodeBasesLevelTable[_gridLevel] = _selectedBlockLevel;
-        }
-        
-        public T[] GetAllNodeBasesAtLevel<T>(int _gridLevel) where T : NodeBase
-        {
-            int _rowUnit    = GridUnitSize.x;
-            int _columnUnit = GridUnitSize.z;
-            
-            var _selectedBlockLevel = new T[_rowUnit * _columnUnit];
-            
-            for (var _x = 0; _x < _rowUnit   ; _x++)
-            for (var _z = 0; _z < _columnUnit; _z++)
-                _selectedBlockLevel[_z + GridUnitSize.x * _x] = gridUnitNodeBases[_z + GridUnitSize.x * (_x + GridUnitSize.y * _gridLevel)] as T;
-
-            return _selectedBlockLevel;
-        }
+        // public void PopulateGridBlocksByLevel(int _gridLevel)
+        // {
+        //     var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
+        //     
+        //     GridBlockGenerator.PopulateGridBlocksByLevel<Block>(gridUnitNodeBases, GridUnitSize, _gridLevel, _blockPrefab);
+        //
+        //     var _selectedBlockLevel = GetAllNodeBasesAtLevel<NodeBase>(_gridLevel);
+        //
+        //     if(!gridNodeBasesLevelTable.ContainsKey(_gridLevel))
+        //         gridNodeBasesLevelTable.Add(_gridLevel, _selectedBlockLevel);
+        //     else
+        //         gridNodeBasesLevelTable[_gridLevel] = _selectedBlockLevel;
+        // }
+        //
+        // public T[] GetAllNodeBasesAtLevel<T>(int _gridLevel) where T : NodeBase
+        // {
+        //     int _rowUnit    = GridUnitSize.x;
+        //     int _columnUnit = GridUnitSize.z;
+        //     int _heightUnit = GridUnitSize.y;
+        //     
+        //     var _selectedBlockLevel = new T[_rowUnit * _columnUnit];
+        //     
+        //     for (var _x = 0; _x < _rowUnit   ; _x++)
+        //     for (var _z = 0; _z < _columnUnit; _z++)
+        //         _selectedBlockLevel[_z + _rowUnit * _x] = gridUnitNodeBases[_z + _rowUnit * (_x + _heightUnit * _gridLevel)] as T;
+        //
+        //     return _selectedBlockLevel;
+        // }
         
         public void InitializeBlocksData(BlockManager _blockManager)
         {
-            foreach (Block _block in GetAvailableBlocks())
+            foreach (Block _block in AvailableNodes<Block>())
                 _block.InjectDependency(_blockManager);
             
-            foreach (Block _block in GetAvailableBlocks())
+            foreach (Block _block in AvailableNodes<Block>())
             {
                 if (_block == null) continue;
                 

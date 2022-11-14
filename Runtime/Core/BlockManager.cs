@@ -145,7 +145,7 @@ namespace MugCup_BlockBuilder.Runtime
 			
 		    if (_blockPrefab == null)
 		    {
-			    _blockPrefab = gridBlockDataManager.GetBlockMeshData().GetDefaultBlock();
+			    _blockPrefab = gridBlockDataManager.BlockMeshData.GetDefaultBlock();
 		    }
 				
 		    RemoveBlock(_targetNodePos);
@@ -196,7 +196,7 @@ namespace MugCup_BlockBuilder.Runtime
 		{
 			if (IsOccupied(_nodePos)) return;
 			
-			var _targetNodeWorldPos = gridBlockDataManager.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
+			var _targetNodeWorldPos = gridBlockDataManager.GridData.GetGridWorldNodePosition(_nodePos);
 
 			Block _newBlock;
 			
@@ -206,9 +206,11 @@ namespace MugCup_BlockBuilder.Runtime
 				_newBlock = Instantiate(_prefab, _targetNodeWorldPos, _rotation, _blockParent.transform);
 			else
 				_newBlock = Instantiate(_prefab, _targetNodeWorldPos, _rotation);
-			
-			_newBlock.Init(_targetNodeWorldPos, _nodePos);
-			_newBlock.InjectDependency(this);
+
+			_newBlock
+				.InjectDependency(this)
+				.SetPosition(_targetNodeWorldPos, _nodePos)
+				.Init();
 			
 			AddBlockRef(_newBlock, _nodePos);
 		}
@@ -251,7 +253,7 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public void AddBlockRef(Block _newBlock, Vector3Int _nodePos)
 		{
-			var _gridUnitSize      = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize      = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
 			
 			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitNodeBases);
@@ -259,7 +261,7 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public void RemoveBlockRef(Vector3Int _nodePos)
 		{
-			var _gridUnitSize      = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize      = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
 			
 			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitNodeBases);
@@ -321,7 +323,7 @@ namespace MugCup_BlockBuilder.Runtime
 		{
 			if (IsOccupiedBy<T>(_nodePos)) return null;
 			
-			var _targetNodeWorldPos = gridBlockDataManager.GetGridDataSetting().GetGridWorldNodePosition(_nodePos);
+			var _targetNodeWorldPos = gridBlockDataManager.GridData.GetGridWorldNodePosition(_nodePos);
 
 			T _newNode;
 			
@@ -332,7 +334,7 @@ namespace MugCup_BlockBuilder.Runtime
 			else
 				_newNode = Instantiate(_node, _targetNodeWorldPos, _rotation);
 
-			_newNode.NodePosition      = _nodePos;
+			_newNode.SetNodePosition     (_nodePos);
 			_newNode.SetNodeWorldPosition(_targetNodeWorldPos);
 			
 			AddNodeRef(_newNode, _nodePos);
@@ -342,7 +344,7 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public void AddNodeRef<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
 		{
-			var _gridUnitSize      = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize      = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
 			
 			GridUtility.AddNode(_newNode, _nodePos, _gridUnitSize, ref _gridUnitNodeBases);
@@ -350,7 +352,7 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public void RemoveNodeRef<T>(Vector3Int _nodePos) where T : NodeBase
 		{
-			var _gridUnitSize      = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize      = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
 			
 			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitNodeBases);
@@ -371,7 +373,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 		public List<Block> GetBlocks3x3Cube(Vector3Int _nodePos)
 		{
-			var _gridUnitSize    = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize    = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnitIBlocks = gridBlockDataManager.GetGridUnitArray<Block>();
 			
 			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnitIBlocks).ToList();
@@ -382,7 +384,7 @@ namespace MugCup_BlockBuilder.Runtime
 		//Might need to move to new NodeBase Manager
 		public T GetNodeRef<T>(Vector3Int _nodePos) where T : NodeBase
 		{
-			var _gridUnitSize = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnit     = gridBlockDataManager.GetGridUnitArray<T>();
 			
 			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnit);
@@ -390,7 +392,7 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public List<T> GetNodes<T>(Vector3Int _startPos, Vector3Int _endPos) where T : NodeBase
 		{
-			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize  = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
 			
 			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnit);
@@ -398,7 +400,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 		public List<T> GetNodeBases3x3Cube<T>(Vector3Int _nodePos) where T : NodeBase
 		{
-			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize  = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
 			
 			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnit).ToList();
@@ -406,7 +408,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 		public List<T> GetNodeBasesTopSection<T>(Vector3Int _nodePos) where T : NodeBase
 		{
-			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize  = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
 			
 			return GridUtility.GetTopSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnit).ToList();
@@ -414,7 +416,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 		public List<T> GetNodeBasesMiddleSection<T>(Vector3Int _nodePos) where T : NodeBase
 		{
-			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize  = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
 			
 			return GridUtility.GetMiddleSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnit).ToList();
@@ -422,7 +424,7 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public List<T> GetNodeBasesBottomSection<T>(Vector3Int _nodePos) where T : NodeBase
 		{
-			var _gridUnitSize  = gridBlockDataManager.GetGridDataSetting().GridUnitSize;
+			var _gridUnitSize  = gridBlockDataManager.GridData.GridUnitSize;
 			var _gridUnit      = gridBlockDataManager.GetGridUnitArray<T>();
 			
 			return GridUtility.GetBottomSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnit).ToList();

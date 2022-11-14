@@ -156,7 +156,7 @@ namespace MugCup_BlockBuilder.Editor
                     
                     volumePoints = VolumePointGenerator.GeneratedVolumePoints(_gridUnitSize, 0.1f, _volumePoints);
 
-                    var _blocks = BBEditorManager.BlockManager.GetCurrentGridBlockDataManager().GetAvailableBlocks().ToArray();
+                    var _blocks = BBEditorManager.BlockManager.GetCurrentGridBlockDataManager().AvailableNodes<Block>().ToArray();
 
                     if (_blocks.Length > 0)
                     {

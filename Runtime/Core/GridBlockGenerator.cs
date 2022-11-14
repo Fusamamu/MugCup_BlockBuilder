@@ -53,7 +53,11 @@ namespace BlockBuilder.Runtime.Core
                     if (!_blockObject.TryGetComponent<T>(out var _block))
                         _block = _blockObject.AddComponent<T>();
                     
-                    _block.Init(_targetNodePos, _targetNodePos);
+                    //_block.Init(_targetNodePos, _targetNodePos);
+
+                    _block
+                        .SetPosition(_targetNodePos, _targetNodePos)
+                        .Init();
 
                     _nodeBases[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _heightLevel)] = _block;
                 }
@@ -90,7 +94,9 @@ namespace BlockBuilder.Runtime.Core
                     if (!_blockObject.TryGetComponent<T>(out var _block))
                         _block = _blockObject.AddComponent<T>();
                     
-                    _block.Init(_targetNodePos, _targetNodePos);
+                    _block
+                        .SetPosition(_targetNodePos, _targetNodePos)
+                        .Init();
 
                     _blocks[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _heightLevel)] = _block;
                 }
@@ -164,7 +170,11 @@ namespace BlockBuilder.Runtime.Core
                          if (!_blockObject.TryGetComponent<Block>(out var _block))
                              _block = _blockObject.AddComponent<Block>();
                          
-                         _block.Init(_blockObject.transform.position, new Vector3Int(_x, _y, _z));
+                         //_block.Init(_blockObject.transform.position, new Vector3Int(_x, _y, _z));
+
+                         _block
+                             .SetPosition(_blockObject.transform.position, new Vector3Int(_x, _y, _z))
+                             .Init();
                          
                          _blocks[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = _block;
                      }

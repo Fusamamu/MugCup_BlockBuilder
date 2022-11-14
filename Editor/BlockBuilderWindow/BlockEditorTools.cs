@@ -26,8 +26,11 @@ namespace MugCup_BlockBuilder.Editor
                                     var _pos         = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
                                     var _block       = _blockPrefab.AddComponent<Block>();
                             
-                                    _block.InjectDependency(BBEditorManager.BlockManager);
-                                    _block.Init(_targetPos, _pos);
+                                    _block
+                                        .InjectDependency(BBEditorManager.BlockManager)
+                                        .SetPosition(_targetPos, _pos)
+                                        .Init();
+                                    
                                     _block.UpdateBlockData();
                                     
                                     BBEditorUtility.RecordGridBlockManagerChanges(() =>

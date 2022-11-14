@@ -104,13 +104,13 @@ namespace MugCup_BlockBuilder.Editor
                      var _gridBlockDataManager = BBEditorManager.BlockDataManager;
                      Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
 
-                     foreach (var _path in BBEditorManager.BlockDataManager.AvailableBlocks<Path>())
+                     foreach (var _path in BBEditorManager.BlockDataManager.AvailableNodes<Path>())
                      {
                          _path.GetSurroundingBlocksReference();
                          _path.SetBitMask();
                      }
                      
-                     foreach (var _path in BBEditorManager.BlockDataManager.AvailableBlocks<Path>())
+                     foreach (var _path in BBEditorManager.BlockDataManager.AvailableNodes<Path>())
                      {
                          BBEditorManager.BlockManager.UpdateMeshBlockComposite(_path);
                      }
@@ -125,10 +125,15 @@ namespace MugCup_BlockBuilder.Editor
             var _tempCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             var _path     = _tempCube.AddComponent<Path>();
                             
-            _path.InjectDependency(BBEditorManager.BlockManager);
-            _path.Init(_pos, _pos);
-            _path.UpdateBlockData();
-                     
+            // _path.InjectDependency(BBEditorManager.BlockManager);
+            // _path.Init(_pos, _pos);
+            // _path.UpdateBlockData();
+            
+            _path
+                .InjectDependency(BBEditorManager.BlockManager)
+                .SetPosition(_pos, _pos)
+                .UpdateBlockData();
+
             BBEditorManager.BlockEditorManager.InitializeAddTable();
             BBEditorManager.BlockEditorManager.RemoveBlock(_pos);
             BBEditorManager.BlockEditorManager.AddBlock   (_path, _pos, NormalFace.None);

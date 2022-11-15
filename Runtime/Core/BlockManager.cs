@@ -66,9 +66,9 @@ namespace MugCup_BlockBuilder.Runtime
 		    
 		    gridBlockDataManager.InitializeBlocksData(this); 
 		     
-		    gridBlockDataManager.AvailableBlocksApplyAll(UpdateMeshBlock<Block>);
+		    gridBlockDataManager.ApplyAllNodes<Block>(UpdateMeshBlock<Block>);
 		    
-		    gridBlockDataManager.AvailableBlocksApplyAll(_block => 
+		    gridBlockDataManager.ApplyAllNodes<Block>(_block => 
 		    {
 			    _block.GetSurroundingBlocksReference();
 			    _block.SetBitMask();
@@ -254,7 +254,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public void AddBlockRef(Block _newBlock, Vector3Int _nodePos)
 		{
 			var _gridUnitSize      = gridBlockDataManager.GridData.GridUnitSize;
-			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
+			var _gridUnitNodeBases = gridBlockDataManager.GridUnitNodes;
 			
 			GridUtility.AddNode(_newBlock, _nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
@@ -262,7 +262,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public void RemoveBlockRef(Vector3Int _nodePos)
 		{
 			var _gridUnitSize      = gridBlockDataManager.GridData.GridUnitSize;
-			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
+			var _gridUnitNodeBases = gridBlockDataManager.GridUnitNodes;
 			
 			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
@@ -345,7 +345,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public void AddNodeRef<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
 		{
 			var _gridUnitSize      = gridBlockDataManager.GridData.GridUnitSize;
-			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
+			var _gridUnitNodeBases = gridBlockDataManager.GridUnitNodes;
 			
 			GridUtility.AddNode(_newNode, _nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
@@ -353,7 +353,7 @@ namespace MugCup_BlockBuilder.Runtime
 		public void RemoveNodeRef<T>(Vector3Int _nodePos) where T : NodeBase
 		{
 			var _gridUnitSize      = gridBlockDataManager.GridData.GridUnitSize;
-			var _gridUnitNodeBases = gridBlockDataManager.GetGridUnitNodeBases;
+			var _gridUnitNodeBases = gridBlockDataManager.GridUnitNodes;
 			
 			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
@@ -436,7 +436,7 @@ namespace MugCup_BlockBuilder.Runtime
 	    {
 		    var _blockParent = new GameObject(BlockBuilderPathName.BlockParentName);
 
-		    gridBlockDataManager.AvailableBlocksApplyAll(_block =>
+		    gridBlockDataManager.ApplyAllNodes<Block>(_block =>
 		    {
 			    _block.transform.SetParent(_blockParent.transform);
 		    });
@@ -465,7 +465,7 @@ namespace MugCup_BlockBuilder.Runtime
 	    {
 		    var _textParent = new GameObject(BlockBuilderPathName.TextParentName);
 
-		    gridBlockDataManager.AvailableBlocksApplyAll(_block =>
+		    gridBlockDataManager.ApplyAllNodes<Block>(_block =>
 		    {
 			    Vector3Int _nodePos = ((INode)_block).NodePosition;
 

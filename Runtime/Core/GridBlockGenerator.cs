@@ -52,8 +52,6 @@ namespace BlockBuilder.Runtime.Core
                     
                     if (!_blockObject.TryGetComponent<T>(out var _block))
                         _block = _blockObject.AddComponent<T>();
-                    
-                    //_block.Init(_targetNodePos, _targetNodePos);
 
                     _block
                         .SetPosition(_targetNodePos, _targetNodePos)

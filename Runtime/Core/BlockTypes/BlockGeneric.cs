@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using MugCup_BlockBuilder.Runtime;
-using MugCup_PathFinder.Runtime;
 using UnityEngine;
+using MugCup_PathFinder.Runtime;
 
 namespace MugCup_BlockBuilder.Runtime
 {

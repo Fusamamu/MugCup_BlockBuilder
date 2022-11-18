@@ -124,6 +124,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 _action?.Invoke(_node);
             }
         }
+
+        public void StoreGridUnitNode(NodeBase[] _nodeBases)
+        {
+            GridUnitNodes = _nodeBases;
+        }
         
         public void ClearGridUnitNodeBases()
         {

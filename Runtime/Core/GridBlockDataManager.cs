@@ -127,7 +127,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             InitializeGridUnitSize(_gridData);
             
-            Debug.Log($"GridBlockDataManager Initialized.");
+            //Debug.Log($"GridBlockDataManager Initialized.");
 
             if (GridData == null)
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");

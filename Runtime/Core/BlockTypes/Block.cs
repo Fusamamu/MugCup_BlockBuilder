@@ -9,6 +9,9 @@ namespace MugCup_BlockBuilder.Runtime
     [System.Serializable]
     public class Block: NodeBase
     {
+        //Temp need to change to field:serialized property
+        public NodeBase[] NodeBases => gridNodeBases;
+        
         //Should Has Reference to the Grid and Map that this Block reside//
         [SerializeField] protected BlockManager blockManager;
         [SerializeField] protected GridDataSettingSO  gridData;

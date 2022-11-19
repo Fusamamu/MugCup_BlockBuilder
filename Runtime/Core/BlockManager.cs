@@ -266,7 +266,6 @@ namespace MugCup_BlockBuilder.Runtime
 			
 			GridUtility.RemoveNode(_nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
-
 		
 #region Add/Remove NodeBase GameObject
 	    public T AddNodeAt<T>(T _prefab, Vector3Int _nodePos) where T : NodeBase

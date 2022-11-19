@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using BlockBuilder.Runtime.Core;
 using UnityEngine;
+using BlockBuilder.Runtime.Core;
 using MugCup_PathFinder.Runtime;
 
 namespace MugCup_BlockBuilder.Runtime.Core
@@ -24,12 +24,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
         private bool GRID_DATA_INIT = false;
         private bool GRID_SIZE_INIT = false;
         
-        public void InitializeGridUnitSize(Vector3Int _gridSize)
+        public NodeDataBase InitializeGridUnitSize(Vector3Int _gridSize)
         {
             InitializeGridUnitSize(_gridSize.x, _gridSize.z, _gridSize.y);
+            return this;
         }
 
-        public void InitializeGridUnitSize(int _row, int _column, int _height)
+        public NodeDataBase InitializeGridUnitSize(int _row, int _column, int _height)
         {
             RowUnit    = _row;
             ColumnUnit = _column;
@@ -38,6 +39,59 @@ namespace MugCup_BlockBuilder.Runtime.Core
             GridUnitSize = new Vector3Int(RowUnit, LevelUnit, ColumnUnit);
             
             GRID_SIZE_INIT = true;
+
+            return this;
+        }
+        public NodeDataBase InitializeMapSize(int _row, int _column, int _height)
+        {
+            MapNode = new NodeBase[_row * _column * _height][];
+            MapSize = new Vector3Int(_row, _height, _column);
+
+            return this;
+        }
+        
+        public NodeDataBase InitializeGridArray()
+        { 
+            int _rowUnit    = GridUnitSize.x;
+            int _columnUnit = GridUnitSize.z;
+            int _levelUnit  = GridUnitSize.y;
+
+            Vector3Int _gridUnitSize = GridUnitSize;
+            
+            GridUnitNodes = new NodeBase[_rowUnit * _columnUnit * _levelUnit];
+
+            for (int _y = 0; _y < _levelUnit ; _y++)
+            for (int _x = 0; _x < _rowUnit   ; _x++)
+            for (int _z = 0; _z < _columnUnit; _z++)
+                GridUnitNodes[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = null;
+
+            return this;
+        }
+        
+        public void PopulateGridBlocksByLevel(int _level)
+        {
+            var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
+            
+            GridBlockGenerator.PopulateGridBlocksByLevel<Block>(GridUnitNodes, GridUnitSize, _level, _blockPrefab);
+
+            var _selectedBlockLevel = GetAllNodeBasesAtLevel<NodeBase>(_level);
+
+            if(!levelTable.ContainsKey(_level))
+                levelTable.Add(_level, _selectedBlockLevel);
+            else
+                levelTable[_level] = _selectedBlockLevel;
+        }
+        
+        public void AddNode<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
+        {
+            var _gridUnitNodeBases = GridUnitNodes;
+            GridUtility.AddNode(_newNode, _nodePos, GridUnitSize, ref _gridUnitNodeBases);
+        }
+		
+        public void RemoveNode<T>(Vector3Int _nodePos) where T : NodeBase
+        {
+            var _gridUnitNodeBases = GridUnitNodes;
+            GridUtility.RemoveNode(_nodePos, GridUnitSize, ref _gridUnitNodeBases);
         }
         
 #region Get Grid Unit NodeBases
@@ -64,43 +118,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
                     yield return _block;
             }
         }
-#endregion
-        
-        public void InitializeMapSize(int _row, int _column, int _height)
-        {
-            MapNode = new NodeBase[_row * _column * _height][];
-            MapSize = new Vector3Int(_row, _height, _column);
-        }
-        
-        public void InitializeGridArray()
-        { 
-            int _rowUnit    = GridUnitSize.x;
-            int _columnUnit = GridUnitSize.z;
-            int _levelUnit  = GridUnitSize.y;
-
-            Vector3Int _gridUnitSize = GridUnitSize;
-            
-            GridUnitNodes = new NodeBase[_rowUnit * _columnUnit * _levelUnit];
-
-            for (int _y = 0; _y < _levelUnit ; _y++)
-            for (int _x = 0; _x < _rowUnit   ; _x++)
-            for (int _z = 0; _z < _columnUnit; _z++)
-                GridUnitNodes[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = null;
-        }
-        
-        public void PopulateGridBlocksByLevel(int _level)
-        {
-            var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
-            
-            GridBlockGenerator.PopulateGridBlocksByLevel<Block>(GridUnitNodes, GridUnitSize, _level, _blockPrefab);
-
-            var _selectedBlockLevel = GetAllNodeBasesAtLevel<NodeBase>(_level);
-
-            if(!levelTable.ContainsKey(_level))
-                levelTable.Add(_level, _selectedBlockLevel);
-            else
-                levelTable[_level] = _selectedBlockLevel;
-        }
         
         public T[] GetAllNodeBasesAtLevel<T>(int _gridLevel) where T : NodeBase
         {
@@ -116,6 +133,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             return _selectedBlockLevel;
         }
+#endregion
         
         public void ApplyAllNodes<T>(Action<T> _action) where T : NodeBase
         {

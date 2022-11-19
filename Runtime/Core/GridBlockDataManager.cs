@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using BlockBuilder.Core.Scriptable;
-using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
-using MugCup_PathFinder.Runtime;
+using BlockBuilder.Core.Scriptable;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
@@ -126,8 +122,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
             if(!TryGetGridDataSetting(out var _gridData)) return;
             
             InitializeGridUnitSize(_gridData);
-            
-            //Debug.Log($"GridBlockDataManager Initialized.");
 
             if (GridData == null)
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");

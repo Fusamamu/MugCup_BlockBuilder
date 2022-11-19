@@ -82,6 +82,11 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 levelTable[_level] = _selectedBlockLevel;
         }
         
+        public T GetNode<T>(Vector3Int _nodePos) where T : NodeBase
+        {
+            return GridUtility.GetNode(_nodePos, GridUnitSize, GridUnitNodes) as T;
+        }
+        
         public void AddNode<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
         {
             var _gridUnitNodeBases = GridUnitNodes;
@@ -146,6 +151,14 @@ namespace MugCup_BlockBuilder.Runtime.Core
         public void StoreGridUnitNode(NodeBase[] _nodeBases)
         {
             GridUnitNodes = _nodeBases;
+        }
+
+        public void EmptyGridUnitNodeBases()
+        {
+            for (var _i = 0; _i < GridUnitNodes.Length; _i++)
+            {
+                GridUnitNodes[_i] = null;
+            }
         }
         
         public void ClearGridUnitNodeBases()

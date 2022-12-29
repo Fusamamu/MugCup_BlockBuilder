@@ -9,12 +9,19 @@ using MugCup_BlockBuilder.Runtime.Core.Managers;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
+	[Serializable]
 	public struct BlockDataSetting
 	{
 		public GridDataSettingSO GridDataSetting;
-		
 		public BlockMeshData     BlockMeshDataSetting;
 		public BlockMeshData     PathBlockMeshDataSetting;
+
+		public BlockDataSetting(GridDataSettingSO _gridDataSetting, BlockMeshData _blockMeshDataSetting, BlockMeshData _pathBlockMeshDataSetting)
+		{
+			GridDataSetting          = _gridDataSetting;
+			BlockMeshDataSetting     = _blockMeshDataSetting;
+			PathBlockMeshDataSetting = _pathBlockMeshDataSetting;
+		}
 	}
 	
 	[Serializable]
@@ -31,12 +38,22 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		public BlockMeshData     CustomBlockMeshData    ;
 		public BlockMeshData     CustomPathBlockMeshData;
 
+		public BlockManager BlockManager 
+		{
+			get
+			{
+				if (!blockManager)
+					blockManager = GetComponent<BlockManager>();
+				return blockManager;
+			}
+
+			private set => blockManager = value;
+		}
+		
 		[SerializeField] private BlockManager blockManager;
 
 #region Managers 
 		private readonly Dictionary<Type, BaseBuilderManager> managerCollections = new Dictionary<Type, BaseBuilderManager>();
-
-		[SerializeField] private List<BaseBuilderManager> bbb = new List<BaseBuilderManager>();
 
 		public void Print()
 		{
@@ -69,32 +86,37 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			managerCollections[_type] = _manager;
 		}
 #endregion
-		
+
+		public void PreInit()
+		{
+			//BlockManager.InitializeWith();
+		}
+
 		public void Initialized()
 		{
 			InitializeManagers();
 			InitializeBlockManager();
 		}
 		
-		private void AddRequiredComponents()
+		private void InitializeManagers()
 		{
-			gameObject.AddComponent<InputManager>         ();
-			gameObject.AddComponent<GridBlockSelection>   ();
+			var _managers = FindObjectsOfType<BaseBuilderManager>();
 			
-			gameObject.AddComponent<BlockEditorManager>   ();
-			gameObject.AddComponent<BlockSelectionManager>();
+			_managers.ToList().ForEach(_o =>
+			{
+				_o.Init();
+				AddManager(_o);
+			});
 			
-			gameObject.AddComponent<PointerVisualizer>    ();
-
-			gameObject.AddComponent<StateManager>();//Testing//
+			_managers.ToList().ForEach(Debug.LogWarning);
 		}
-
+		
 		private void InitializeBlockManager()
 		{
 			if (!gameObject.TryGetComponent(out blockManager))
 				blockManager = FindObjectOfType<BlockManager>();
 
-			BlockDataSetting _blockDataSetting = new BlockDataSetting
+			var _blockDataSetting = new BlockDataSetting
 			{
 				GridDataSetting          = CustomGridDataSetting,
 				BlockMeshDataSetting     = CustomBlockMeshData,
@@ -114,17 +136,17 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			}
 		}
 		
-		private void InitializeManagers()
+		private void AddRequiredComponents()
 		{
-			var _managers = FindObjectsOfType<BaseBuilderManager>();
+			gameObject.AddComponent<InputManager>         ();
+			gameObject.AddComponent<GridBlockSelection>   ();
 			
-			_managers.ToList().ForEach(_o =>
-			{
-				_o.Init();
-				AddManager(_o);
-			});
+			gameObject.AddComponent<BlockEditorManager>   ();
+			gameObject.AddComponent<BlockSelectionManager>();
 			
-			_managers.ToList().ForEach(_o => Debug.LogWarning(_o));
+			gameObject.AddComponent<PointerVisualizer>    ();
+
+			gameObject.AddComponent<StateManager>();//Testing//
 		}
 	}
 }

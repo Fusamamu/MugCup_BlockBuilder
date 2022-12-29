@@ -1,16 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using BlockBuilder.Core.Scriptable;
 using UnityEngine;
 using UnityEditor;
-using BlockBuilder.Runtime.Core;
-using BlockBuilder.Scriptable;
-using MugCup_BlockBuilder.Runtime;
-using MugCup_BlockBuilder.Runtime.Core;
 using UnityEditor.AnimatedValues;
 using UnityEditor.SceneManagement;
-using Object = System.Object;
+
+using MugCup_BlockBuilder.Runtime;
+using MugCup_BlockBuilder.Runtime.Core;
+using BlockBuilder.Core.Scriptable;
+using BlockBuilder.Scriptable;
 
 namespace MugCup_BlockBuilder.Editor.GUI
 {
@@ -24,7 +23,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
         private SerializedProperty gridDataSetting;
         private SerializedProperty meshBlockDataSetting;
-        private SerializedProperty pathBlcokDataSetting;
+        private SerializedProperty pathBlockDataSetting;
 
         private AnimBool displayCustomDataFields;
         
@@ -40,7 +39,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             mode                 = serializedObject.FindProperty("Mode");
             gridDataSetting      = serializedObject.FindProperty("CustomGridDataSetting");
             meshBlockDataSetting = serializedObject.FindProperty("CustomBlockMeshData");
-            pathBlcokDataSetting = serializedObject.FindProperty("CustomPathBlockMeshData");
+            pathBlockDataSetting = serializedObject.FindProperty("CustomPathBlockMeshData");
 
             displayCustomDataFields = new AnimBool();
             displayCustomDataFields.valueChanged.AddListener(Repaint);
@@ -91,6 +90,16 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 
                 blockBuilderManager.CustomPathBlockMeshData = (BlockMeshData)    EditorGUILayout
                     .ObjectField(blockBuilderManager.CustomPathBlockMeshData, typeof(BlockMeshData),    true);
+
+                var _blockDataSetting = new BlockDataSetting
+                (
+                    blockBuilderManager.CustomGridDataSetting, 
+                    blockBuilderManager.CustomBlockMeshData, 
+                    blockBuilderManager.CustomPathBlockMeshData
+                );
+
+                blockBuilderManager.BlockManager.CurrentGridBlockBlockData.CacheData(_blockDataSetting);
+                EditorUtility.SetDirty(blockBuilderManager);
                 
                 EditorGUILayout.Space();
                 if (blockBuilderManager.CustomGridDataSetting == null)
@@ -143,32 +152,16 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 toggleButtonStyleToggled.normal.background = toggleButtonStyleToggled.active.background;
             }
             
-            GUILayout.BeginHorizontal(  );
-
-            if ( GUILayout.Button( "Something", toggleButtonStyleNormal ) )
-            {
-                // _setValue = true;
-                // _smoothValue = false;
-            }
-
-            if ( GUILayout.Button("safjsf", toggleButtonStyleToggled))
-            {
-                // _smoothValue = true;
-                // _setValue = false;
-            }
-
-            GUILayout.EndHorizontal();
-            
-            useDebug = GUILayout.Toggle(useDebug, "Toggle me !", "Button");
-
-            if (useDebug)
-            {
-                SceneView.duringSceneGui += OnScene;
-            }
-            else
-            {
-                SceneView.duringSceneGui -= OnScene;
-            }
+            // useDebug = GUILayout.Toggle(useDebug, "Toggle me !", "Button");
+            //
+            // if (useDebug)
+            // {
+            //     SceneView.duringSceneGui += OnScene;
+            // }
+            // else
+            // {
+            //     SceneView.duringSceneGui -= OnScene;
+            // }
 
             if (GUILayout.Button("Init Blocks Position"))
             {

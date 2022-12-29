@@ -124,6 +124,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             }
         }
         
+        //Must replace by GridUtility GetNodesByLevel by need time to test
         public T[] GetAllNodeBasesAtLevel<T>(int _gridLevel) where T : NodeBase
         {
             int _rowUnit    = GridUnitSize.x;

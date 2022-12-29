@@ -32,7 +32,8 @@ namespace MugCup_BlockBuilder.Editor
             BBEditorManager.Initialize();
             
             AssetManager.LoadAssets();
-            
+
+            SceneView.duringSceneGui -= OnScene;
             SceneView.duringSceneGui += OnScene;
 
             displayBuilderMode = new AnimBool();
@@ -156,7 +157,7 @@ namespace MugCup_BlockBuilder.Editor
                     
                     volumePoints = VolumePointGenerator.GeneratedVolumePoints(_gridUnitSize, 0.1f, _volumePoints);
 
-                    var _blocks = BBEditorManager.BlockManager.GetCurrentGridBlockDataManager().AvailableNodes<Block>().ToArray();
+                    var _blocks = BBEditorManager.BlockManager.CurrentGridBlockBlockData.AvailableNodes<Block>().ToArray();
 
                     if (_blocks.Length > 0)
                     {
@@ -192,7 +193,7 @@ namespace MugCup_BlockBuilder.Editor
                     foreach(var _block in _blocks)
                         DestroyImmediate(_block);
 
-                    BBEditorManager.BlockManager.GetCurrentGridBlockDataManager().ClearGridUnitNodeBases();
+                    BBEditorManager.BlockManager.CurrentGridBlockBlockData.ClearGridUnitNodeBases();
 
                     var _textParent   = GameObject.Find("[-------Grid Position Text-------]");
                     var _blocksParent = GameObject.Find("[-------------Blocks-------------]");
@@ -220,6 +221,7 @@ namespace MugCup_BlockBuilder.Editor
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true);
 
             var _previewWidth = 100f;
+            
             var _cube = Resources.Load<GameObject>("Prefabs/Towers/Tower_Castle");
             if(_cube == null)
                 Debug.LogWarning("Missing Cube");
@@ -425,8 +427,9 @@ namespace MugCup_BlockBuilder.Editor
 
         private void OnDisable()
         {
-            EditorUtility.SetDirty(BBEditorManager.InterfaceSetting);
+            SceneView.duringSceneGui -= OnScene;
             
+            EditorUtility.SetDirty(BBEditorManager.InterfaceSetting);
             BlockPreviewEditor.Clean();
         }
         

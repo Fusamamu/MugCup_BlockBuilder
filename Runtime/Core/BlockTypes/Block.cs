@@ -80,8 +80,8 @@ namespace MugCup_BlockBuilder.Runtime
         public virtual Block InjectDependency(BlockManager _blockManager)
         {
             blockManager  = _blockManager;
-            gridNodeBases = _blockManager.GetCurrentGridBlockDataManager().GridUnitNodes;
-            gridData      = _blockManager.GetCurrentGridBlockDataManager().GridData;
+            gridNodeBases = _blockManager.CurrentGridBlockBlockData.GridUnitNodes;
+            gridData      = _blockManager.CurrentGridBlockBlockData.GridData;
             
             return this;
         }
@@ -113,7 +113,7 @@ namespace MugCup_BlockBuilder.Runtime
         {
             if(!IsGridDataInit()) return;
 
-            var _gridUnitBlocks = blockManager.GetCurrentGridBlockDataManager().GetGridUnitArray<Block>();
+            var _gridUnitBlocks = blockManager.CurrentGridBlockBlockData.GetGridUnitArray<Block>();
             
             TopBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
             MiddleBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
@@ -127,7 +127,7 @@ namespace MugCup_BlockBuilder.Runtime
         {
             if(!IsGridDataInit()) return;
 
-            var _gridUnitBlocks = blockManager.GetCurrentGridBlockDataManager().GetGridUnitArray<Block>();
+            var _gridUnitBlocks = blockManager.CurrentGridBlockBlockData.GetGridUnitArray<Block>();
 
             var _northNode = GridUtility.GetNodeForward(NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
             var _southNode = GridUtility.GetNodeBack   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);

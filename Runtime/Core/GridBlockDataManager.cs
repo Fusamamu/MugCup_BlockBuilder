@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using BlockBuilder.Scriptable;
 using BlockBuilder.Core.Scriptable;
+using Unity.Collections;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
@@ -13,9 +14,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
     {
         
 #region Get Grid Data/BlockMesh Data
-        [field:SerializeField] public GridDataSettingSO GridData      { get; private set; }
-        [field:SerializeField] public BlockMeshData     BlockMeshData { get; private set; }
-        [field:SerializeField] public BlockMeshData     PathMeshData  { get; private set; }
+        [field:ReadOnly, SerializeField] public GridDataSettingSO GridData      { get; private set; }
+        [field:ReadOnly, SerializeField] public BlockMeshData     BlockMeshData { get; private set; }
+        [field:ReadOnly, SerializeField] public BlockMeshData     PathMeshData  { get; private set; }
 
         private static Dictionary<Type, BlockMeshData> blockMeshDataTable = new Dictionary<Type, BlockMeshData>();
 
@@ -127,10 +128,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
         }
 
-        private void CacheData(BlockDataSetting _blockDataSetting)
+        public void CacheData(BlockDataSetting _blockDataSetting)
         {
             GridData      = _blockDataSetting.GridDataSetting;
-            
             BlockMeshData = _blockDataSetting.BlockMeshDataSetting;
             PathMeshData  = _blockDataSetting.PathBlockMeshDataSetting;
         }

@@ -42,6 +42,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             return this;
         }
+        
         public NodeDataBase InitializeMapSize(int _row, int _column, int _height)
         {
             MapNode = new NodeBase[_row * _column * _height][];

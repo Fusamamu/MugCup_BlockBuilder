@@ -263,19 +263,19 @@ namespace MugCup_BlockBuilder.Runtime
 		}
 		
 #region Add/Remove NodeBase GameObject
-	    public T AddNodeAt<T>(T _prefab, Vector3Int _nodePos) where T : NodeBase
+	    public T AddNodeAt<T>(T _prefab, Vector3Int _nodePos) where T : GridNode
 	    {
 		    var _newBlock = CreateNodeAt(_prefab, _nodePos, _prefab.transform.localRotation);
 
 		    return _newBlock;
 	    }
 	    
-	    public void RemoveNode<T>(T _node) where T : NodeBase
+	    public void RemoveNode<T>(T _node) where T : GridNode
 	    {
 		    RemoveNode<T>(_node.NodePosition);
 	    }
 
-	    public void RemoveNode<T>(Vector3Int _nodePos) where T : NodeBase
+	    public void RemoveNode<T>(Vector3Int _nodePos) where T : GridNode
 	    {
 		    if (!IsOccupiedBy<T>(_nodePos)) return;
 		    
@@ -285,7 +285,7 @@ namespace MugCup_BlockBuilder.Runtime
 #endregion
 		
 #region Add/Remove NodeBase References in Grid Unit [Generic]
-		private bool IsOccupiedBy<T>(Vector3Int _nodePos) where T : NodeBase
+		private bool IsOccupiedBy<T>(Vector3Int _nodePos) where T : GridNode
 		{
 			if (GetNodeRef<T>(_nodePos) != null)
 			{
@@ -297,7 +297,7 @@ namespace MugCup_BlockBuilder.Runtime
 			return false;
 		}
 		
-		public void DestroyNode<T>(Vector3Int _nodePos) where T : NodeBase
+		public void DestroyNode<T>(Vector3Int _nodePos) where T : GridNode
 		{
 			var _nodeToBeRemoved = GetNodeRef<T>(_nodePos);
 
@@ -313,7 +313,7 @@ namespace MugCup_BlockBuilder.Runtime
 			}
 		}
 		
-		private T CreateNodeAt<T>(T _node, Vector3Int _nodePos, Quaternion _rotation) where T : NodeBase
+		private T CreateNodeAt<T>(T _node, Vector3Int _nodePos, Quaternion _rotation) where T : GridNode
 		{
 			if (IsOccupiedBy<T>(_nodePos)) return null;
 			
@@ -336,7 +336,7 @@ namespace MugCup_BlockBuilder.Runtime
 			return _newNode;
 		}
 		
-		public void AddNodeRef<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
+		public void AddNodeRef<T>(T _newNode, Vector3Int _nodePos) where T : GridNode
 		{
 			var _gridUnitSize      = CurrentGridBlockBlockData.GridData.GridUnitSize;
 			var _gridUnitNodeBases = CurrentGridBlockBlockData.GridUnitNodes;
@@ -344,7 +344,7 @@ namespace MugCup_BlockBuilder.Runtime
 			GridUtility.AddNode(_newNode, _nodePos, _gridUnitSize, ref _gridUnitNodeBases);
 		}
 		
-		public void RemoveNodeRef<T>(Vector3Int _nodePos) where T : NodeBase
+		public void RemoveNodeRef<T>(Vector3Int _nodePos) where T : GridNode
 		{
 			var _gridUnitSize      = CurrentGridBlockBlockData.GridData.GridUnitSize;
 			var _gridUnitNodeBases = CurrentGridBlockBlockData.GridUnitNodes;
@@ -376,7 +376,7 @@ namespace MugCup_BlockBuilder.Runtime
 	    
 #region Get NodeBases Generic
 		//Might need to move to new NodeBase Manager
-		public T GetNodeRef<T>(Vector3Int _nodePos) where T : NodeBase
+		public T GetNodeRef<T>(Vector3Int _nodePos) where T : GridNode
 		{
 			var _gridUnitSize = CurrentGridBlockBlockData.GridData.GridUnitSize;
 			var _gridUnit     = CurrentGridBlockBlockData.GetGridUnitArray<T>();
@@ -384,7 +384,7 @@ namespace MugCup_BlockBuilder.Runtime
 			return GridUtility.GetNode(_nodePos, _gridUnitSize, _gridUnit);
 		}
 		
-		public List<T> GetNodes<T>(Vector3Int _startPos, Vector3Int _endPos) where T : NodeBase
+		public List<T> GetNodes<T>(Vector3Int _startPos, Vector3Int _endPos) where T : GridNode
 		{
 			var _gridUnitSize  = CurrentGridBlockBlockData.GridData.GridUnitSize;
 			var _gridUnit      = CurrentGridBlockBlockData.GetGridUnitArray<T>();
@@ -392,7 +392,7 @@ namespace MugCup_BlockBuilder.Runtime
 			return GridUtility.GetNodesRectArea(_startPos, _endPos, _gridUnitSize, _gridUnit);
 		}
 
-		public List<T> GetNodeBases3x3Cube<T>(Vector3Int _nodePos) where T : NodeBase
+		public List<T> GetNodeBases3x3Cube<T>(Vector3Int _nodePos) where T : GridNode
 		{
 			var _gridUnitSize  = CurrentGridBlockBlockData.GridData.GridUnitSize;
 			var _gridUnit      = CurrentGridBlockBlockData.GetGridUnitArray<T>();
@@ -400,7 +400,7 @@ namespace MugCup_BlockBuilder.Runtime
 			return GridUtility.GetNodesFrom3x3Cubes(_nodePos, _gridUnitSize, _gridUnit).ToList();
 		}
 
-		public List<T> GetNodeBasesTopSection<T>(Vector3Int _nodePos) where T : NodeBase
+		public List<T> GetNodeBasesTopSection<T>(Vector3Int _nodePos) where T : GridNode
 		{
 			var _gridUnitSize  = CurrentGridBlockBlockData.GridData.GridUnitSize;
 			var _gridUnit      = CurrentGridBlockBlockData.GetGridUnitArray<T>();
@@ -408,7 +408,7 @@ namespace MugCup_BlockBuilder.Runtime
 			return GridUtility.GetTopSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnit).ToList();
 		}
 
-		public List<T> GetNodeBasesMiddleSection<T>(Vector3Int _nodePos) where T : NodeBase
+		public List<T> GetNodeBasesMiddleSection<T>(Vector3Int _nodePos) where T : GridNode
 		{
 			var _gridUnitSize  = CurrentGridBlockBlockData.GridData.GridUnitSize;
 			var _gridUnit      = CurrentGridBlockBlockData.GetGridUnitArray<T>();
@@ -416,7 +416,7 @@ namespace MugCup_BlockBuilder.Runtime
 			return GridUtility.GetMiddleSectionNodesFrom3x3Cube(_nodePos, _gridUnitSize, _gridUnit).ToList();
 		}
 		
-		public List<T> GetNodeBasesBottomSection<T>(Vector3Int _nodePos) where T : NodeBase
+		public List<T> GetNodeBasesBottomSection<T>(Vector3Int _nodePos) where T : GridNode
 		{
 			var _gridUnitSize  = CurrentGridBlockBlockData.GridData.GridUnitSize;
 			var _gridUnit      = CurrentGridBlockBlockData.GetGridUnitArray<T>();

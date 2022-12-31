@@ -9,7 +9,7 @@ using MugCup_PathFinder.Runtime;
 
 namespace BlockBuilder.Core.Scriptable
 {
-    public struct NodeMeshInfo<T> where T : NodeBase
+    public struct NodeMeshInfo<T> where T : GridNode
     {
         public bool IsValid;
         
@@ -18,7 +18,7 @@ namespace BlockBuilder.Core.Scriptable
     }
     
     [CreateAssetMenu(fileName = "NodeBaseData", menuName = "ScriptableObjects/Node Mesh Data", order = 7)]
-    public class NodeMeshData<T> : ScriptableObject where T : NodeBase
+    public class NodeMeshData<T> : ScriptableObject where T : GridNode
     {
         [Header("Data Setting")]
         public bool IsUseComposite;

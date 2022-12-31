@@ -37,11 +37,11 @@ namespace MugCup_BlockBuilder.Editor
                            
                             var _object = _hit.collider.gameObject;
                             
-                            if (_object.TryGetComponent<NodeBase>(out var _nodeBase))
+                            if (_object.TryGetComponent<GridNode>(out var _nodeBase))
                             {
                                 BBEditorUtility.RecordGridBlockManagerChanges(() =>
                                 {
-                                    BBEditorManager.BlockManager.RemoveNode<NodeBase>(_nodeBase);
+                                    BBEditorManager.BlockManager.RemoveNode<GridNode>(_nodeBase);
                                     
                                     // BlockBuilderEditorManager.GetBlockManager().RemoveBlock(_block);
                                     // BlockBuilderEditorManager.GetBlockManager().UpdateSurroundBlocksBitMask(_block.NodePosition, CubeBlockSection.Middle);
@@ -71,7 +71,7 @@ namespace MugCup_BlockBuilder.Editor
                                 {
                                     if (SelectedBlock != null)
                                     {
-                                        if (SelectedBlock.TryGetComponent<NodeBase>(out var _node))
+                                        if (SelectedBlock.TryGetComponent<GridNode>(out var _node))
                                         {
                                             var _targetPos = _hit.collider.transform.position;
                                             var _pos       = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);

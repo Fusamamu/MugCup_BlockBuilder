@@ -7,25 +7,42 @@ using MugCup_PathFinder.Runtime;
 namespace MugCup_BlockBuilder.Runtime
 {
     [System.Serializable]
-    public class Block: NodeBase
+    public class Block: GridNode
     {
         //Temp need to change to field:serialized property
-        public NodeBase[] NodeBases => gridNodeBases;
+        public GridNode[] NodeBases => gridNodeBases;
         
         //Should Has Reference to the Grid and Map that this Block reside//
         [SerializeField] protected BlockManager blockManager;
         [SerializeField] protected GridDataSettingSO  gridData;
         
-        [SerializeField] protected NodeBase[] gridNodeBases;
+        [SerializeField] protected GridNode[] gridNodeBases;
+
         
-        [Header("Block Meshes Setting")]
-        [SerializeField] protected int currentMeshIndex;
-        [SerializeField] protected MeshFilter mesh;
-        [SerializeField] protected List<Mesh> meshVariants = new List<Mesh>();
+#region Will Remove to other component
+                //Can remove to another component
+                [Header("Block Meshes Setting")]
+                [SerializeField] protected int currentMeshIndex;
+                [SerializeField] protected MeshFilter mesh;
+                [SerializeField] protected List<Mesh> meshVariants = new List<Mesh>();
+                
+                public void ChangeMeshVariant()
+                {
+                    if(meshVariants.Count == 0) return;
+                    
+                    currentMeshIndex++;
+                    
+                    if (currentMeshIndex > meshVariants.Count - 1)
+                        currentMeshIndex = 0;
+                    
+                    mesh.sharedMesh = meshVariants[currentMeshIndex];
+                }
+                //----------------------------//
+#endregion
         
-        public int GridPosX => NodePosition.x;
-        public int GridPosY => NodePosition.y;
-        public int GridPosZ => NodePosition.z;
+        
+        
+        
 
         [Header("Bit Mask")]
         public int BitMask                       = 0b_000000000_000000000_000000000;
@@ -35,10 +52,17 @@ namespace MugCup_BlockBuilder.Runtime
         public int BitMaskComposite              = 0b_000000000_000000000_000000000;
         public int BitMaskCompositeMiddleSection = 0b_000000000_000000000_000000000;
 
+        
+        
+        
+        
         [Header("Neighbor Blocks References")]
         public Block[] TopBlocks    = new Block[9];
         public Block[] MiddleBlocks = new Block[9];
         public Block[] BottomBlocks = new Block[9];
+        
+        
+        
         
         [Header("Volume Points")]
         public VolumePoint[] VolumePoints = new VolumePoint[8];
@@ -58,17 +82,6 @@ namespace MugCup_BlockBuilder.Runtime
         }
 #endif
 
-        public void ChangeMeshVariant()
-        {
-            if(meshVariants.Count == 0) return;
-            
-            currentMeshIndex++;
-            
-            if (currentMeshIndex > meshVariants.Count - 1)
-                currentMeshIndex = 0;
-            
-            mesh.sharedMesh = meshVariants[currentMeshIndex];
-        }
 
         public virtual Block SetPosition(Vector3 _worldPos, Vector3Int _gridPos)
         {
@@ -123,22 +136,22 @@ namespace MugCup_BlockBuilder.Runtime
         /// <summary>
         /// Should be called upon grid being generated.
         /// </summary>
-        public virtual void SetNeighborNodes()
-        {
-            if(!IsGridDataInit()) return;
-
-            var _gridUnitBlocks = blockManager.CurrentGridBlockBlockData.GetGridUnitArray<Block>();
-
-            var _northNode = GridUtility.GetNodeForward(NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
-            var _southNode = GridUtility.GetNodeBack   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
-            var _westNode  = GridUtility.GetNodeLeft   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
-            var _eastNode  = GridUtility.GetNodeRight  (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
-            
-            SetNorthNode(_northNode);
-            SetSouthNode(_southNode);
-            SetWestNode (_westNode );
-            SetEastNode (_eastNode );
-        }
+        // public virtual void SetNeighborNodes()
+        // {
+        //     if(!IsGridDataInit()) return;
+        //
+        //     var _gridUnitBlocks = blockManager.CurrentGridBlockBlockData.GetGridUnitArray<Block>();
+        //
+        //     var _northNode = GridUtility.GetNodeForward(NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
+        //     var _southNode = GridUtility.GetNodeBack   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
+        //     var _westNode  = GridUtility.GetNodeLeft   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
+        //     var _eastNode  = GridUtility.GetNodeRight  (NodePosition, gridData.GridUnitSize, _gridUnitBlocks);
+        //     
+        //    // SetNorthNode(_northNode);
+        //     // SetSouthNode(_southNode);
+        //     // SetWestNode (_westNode );
+        //     // SetEastNode (_eastNode );
+        // }
 
         public virtual void SetBitMask()
         {

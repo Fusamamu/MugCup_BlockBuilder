@@ -9,10 +9,26 @@ namespace MugCup_BlockBuilder.Runtime.Core
 {
     public class NodeDataBase : MonoBehaviour
     {
-        [field:SerializeField] public NodeBase[][] MapNode       { get; private set; }
-        [field:SerializeField] public NodeBase[]   GridUnitNodes { get; private set; }
+        //For transfer old data to this 
+        [field:SerializeField] public GridNodeData GridNodeData { get; private set; }
+
+
+        private void OnValidate()
+        {
+            if(GridNodeData == null) return;
+            if(GridUnitNodes    == null) return;
+
+            GridNodeData.GridNodes = GridUnitNodes;
+            GridNodeData.GridSize  = GridUnitSize;
+        }
         
-        private Dictionary<int, NodeBase[]> levelTable = new Dictionary<int, NodeBase[]>();
+        //Will Clear node data below!!
+
+
+        [field:SerializeField] public GridNode[][] MapNode       { get; private set; }
+        [field:SerializeField] public GridNode[]   GridUnitNodes { get; private set; }
+        
+        private Dictionary<int, GridNode[]> levelTable = new Dictionary<int, GridNode[]>();
 
         public int RowUnit   ;
         public int ColumnUnit;
@@ -45,7 +61,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         public NodeDataBase InitializeMapSize(int _row, int _column, int _height)
         {
-            MapNode = new NodeBase[_row * _column * _height][];
+            MapNode = new GridNode[_row * _column * _height][];
             MapSize = new Vector3Int(_row, _height, _column);
 
             return this;
@@ -59,7 +75,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             Vector3Int _gridUnitSize = GridUnitSize;
             
-            GridUnitNodes = new NodeBase[_rowUnit * _columnUnit * _levelUnit];
+            GridUnitNodes = new GridNode[_rowUnit * _columnUnit * _levelUnit];
 
             for (int _y = 0; _y < _levelUnit ; _y++)
             for (int _x = 0; _x < _rowUnit   ; _x++)
@@ -75,7 +91,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             GridBlockGenerator.PopulateGridBlocksByLevel<Block>(GridUnitNodes, GridUnitSize, _level, _blockPrefab);
 
-            var _selectedBlockLevel = GetAllNodeBasesAtLevel<NodeBase>(_level);
+            var _selectedBlockLevel = GetAllNodeBasesAtLevel<GridNode>(_level);
 
             if(!levelTable.ContainsKey(_level))
                 levelTable.Add(_level, _selectedBlockLevel);
@@ -83,18 +99,18 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 levelTable[_level] = _selectedBlockLevel;
         }
         
-        public T GetNode<T>(Vector3Int _nodePos) where T : NodeBase
+        public T GetNode<T>(Vector3Int _nodePos) where T : GridNode
         {
             return GridUtility.GetNode(_nodePos, GridUnitSize, GridUnitNodes) as T;
         }
         
-        public void AddNode<T>(T _newNode, Vector3Int _nodePos) where T : NodeBase
+        public void AddNode<T>(T _newNode, Vector3Int _nodePos) where T : GridNode
         {
             var _gridUnitNodeBases = GridUnitNodes;
             GridUtility.AddNode(_newNode, _nodePos, GridUnitSize, ref _gridUnitNodeBases);
         }
 		
-        public void RemoveNode<T>(Vector3Int _nodePos) where T : NodeBase
+        public void RemoveNode<T>(Vector3Int _nodePos) where T : GridNode
         {
             var _gridUnitNodeBases = GridUnitNodes;
             GridUtility.RemoveNode(_nodePos, GridUnitSize, ref _gridUnitNodeBases);
@@ -102,7 +118,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
 #region Get Grid Unit NodeBases
         //This seems to get shallow reference
-        public T[] GetGridUnitArray<T>() where T : NodeBase
+        public T[] GetGridUnitArray<T>() where T : GridNode
         {
             var _gridUnitArray = new T[GridUnitNodes.Length];
 
@@ -114,7 +130,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             return _gridUnitArray;
         }
 
-        public IEnumerable<T> AvailableNodes<T>() where T : NodeBase
+        public IEnumerable<T> AvailableNodes<T>() where T : GridNode
         {
             foreach (var _node in GridUnitNodes)
             {
@@ -126,7 +142,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         }
         
         //Must replace by GridUtility GetNodesByLevel by need time to test
-        public T[] GetAllNodeBasesAtLevel<T>(int _gridLevel) where T : NodeBase
+        public T[] GetAllNodeBasesAtLevel<T>(int _gridLevel) where T : GridNode
         {
             int _rowUnit    = GridUnitSize.x;
             int _columnUnit = GridUnitSize.z;
@@ -142,7 +158,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         }
 #endregion
         
-        public void ApplyAllNodes<T>(Action<T> _action) where T : NodeBase
+        public void ApplyAllNodes<T>(Action<T> _action) where T : GridNode
         {
             foreach (var _node in AvailableNodes<T>())
             {
@@ -150,7 +166,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             }
         }
 
-        public void StoreGridUnitNode(NodeBase[] _nodeBases)
+        public void StoreGridUnitNode(GridNode[] _nodeBases)
         {
             GridUnitNodes = _nodeBases;
         }

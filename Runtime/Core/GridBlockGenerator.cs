@@ -23,7 +23,7 @@ namespace BlockBuilder.Runtime.Core
         /// <param name="_nodeBasePrefab"></param>
         /// <param name="_parent"></param>
         /// <typeparam name="T"></typeparam>
-        public static void PopulateGridBlocksByLevel<T>(NodeBase[] _nodeBases, Vector3Int _gridUnitSize, int _heightLevel, GameObject _nodeBasePrefab, GameObject _parent = null) where T : Block
+        public static void PopulateGridBlocksByLevel<T>(GridNode[] _nodeBases, Vector3Int _gridUnitSize, int _heightLevel, GameObject _nodeBasePrefab, GameObject _parent = null) where T : Block
         {
             int _rowUnit    = _gridUnitSize.x;
             int _columnUnit = _gridUnitSize.z;

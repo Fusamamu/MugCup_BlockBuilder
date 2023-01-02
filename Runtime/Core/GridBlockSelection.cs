@@ -75,7 +75,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
 			if (hitBlock != null)
 			{
-				hitPos = hitBlock.NodePosition;
+				hitPos = hitBlock.NodeGridPosition;
 				PostEvent(GridEvent.ON_GRID_HIT, this);
 			}
 		}

@@ -126,7 +126,7 @@ namespace MugCup_BlockBuilder.Runtime
 	    
 	    private void UpdateMeshBlock<T>(T _block) where T : Block
 	    {
-		    Vector3Int _targetNodePos = _block.NodePosition;
+		    Vector3Int _targetNodePos = _block.NodeGridPosition;
 
 		    int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();
 			
@@ -149,7 +149,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 	    public void UpdateMeshBlockComposite<T>(T _block) where T : Block
 	    {
-		    Vector3Int _targetNodePos = _block.NodePosition;
+		    Vector3Int _targetNodePos = _block.NodeGridPosition;
 
 		    int _bitMaskMiddleSection = _block.GetBitMaskCompositeMiddleSection();
 			
@@ -212,7 +212,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 		public void RemoveBlock(Block _block)
 		{
-			RemoveBlock(_block.NodePosition);
+			RemoveBlock(_block.NodeGridPosition);
 		}
 
 		public void RemoveBlock(Vector3Int _nodePos)
@@ -272,7 +272,7 @@ namespace MugCup_BlockBuilder.Runtime
 	    
 	    public void RemoveNode<T>(T _node) where T : GridNode
 	    {
-		    RemoveNode<T>(_node.NodePosition);
+		    RemoveNode<T>(_node.NodeGridPosition);
 	    }
 
 	    public void RemoveNode<T>(Vector3Int _nodePos) where T : GridNode
@@ -461,7 +461,7 @@ namespace MugCup_BlockBuilder.Runtime
 
 		    CurrentGridBlockBlockData.ApplyAllNodes<Block>(_block =>
 		    {
-			    Vector3Int _nodePos = ((INode)_block).NodePosition;
+			    Vector3Int _nodePos = ((INode)_block).NodeGridPosition;
 
 			    var _posText   = _nodePos.ToString();
 			    var _targetPos = _block.transform.position + Vector3.up * 1.5f;

@@ -104,7 +104,7 @@ namespace MugCup_BlockBuilder.Runtime
             mesh = transform.GetComponent<MeshFilter>();
             
             tag  = "Block";
-            name = $"Block: ({NodePosition.x}, {NodePosition.y}, {NodePosition.z})";
+            name = $"Block: ({NodeGridPosition.x}, {NodeGridPosition.y}, {NodeGridPosition.z})";
 
             return this;
         }
@@ -128,9 +128,9 @@ namespace MugCup_BlockBuilder.Runtime
 
             var _gridUnitBlocks = blockManager.CurrentGridBlockBlockData.GetGridUnitArray<Block>();
             
-            TopBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
-            MiddleBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
-            BottomBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
+            TopBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodeGridPosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
+            MiddleBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodeGridPosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
+            BottomBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodeGridPosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
         }
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace MugCup_BlockBuilder.Editor
 
             if (GUILayout.Button("Debug Node Position"))
             {
-                Debug.Log($"Node Position : {block.NodePosition}");
+                Debug.Log($"Node Position : {block.NodeGridPosition}");
             }
         }
     }

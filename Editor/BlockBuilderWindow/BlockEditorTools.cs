@@ -38,7 +38,7 @@ namespace MugCup_BlockBuilder.Editor
                                         BBEditorManager.BlockEditorManager.InitializeAddTable();
                                         BBEditorManager.BlockEditorManager.AddBlock(_block, _pos, NormalFace.PosY );
                             
-                                        BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Block>(_block.NodePosition, CubeBlockSection.Top);
+                                        BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Block>(_block.NodeGridPosition, CubeBlockSection.Top);
                                     });
                                     
                                     Object.DestroyImmediate(_blockPrefab);
@@ -65,7 +65,7 @@ namespace MugCup_BlockBuilder.Editor
                                 BBEditorUtility.RecordGridBlockManagerChanges(() =>
                                 {
                                     BBEditorManager.BlockManager.RemoveBlock(_block);
-                                    BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Block>(_block.NodePosition, CubeBlockSection.Middle);
+                                    BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Block>(_block.NodeGridPosition, CubeBlockSection.Middle);
                                 });
                             }
                         }

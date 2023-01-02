@@ -96,7 +96,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             if (_hitBlock == null)
                 return Vector3Int.zero;
              
-            return _hitBlock.NodePosition;
+            return _hitBlock.NodeGridPosition;
         }
             
         public void AddBlock(Block _blockPrefab, Vector3Int _nodePos, NormalFace _normalFace)

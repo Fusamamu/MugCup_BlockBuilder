@@ -166,7 +166,7 @@ namespace MugCup_BlockBuilder.Editor
                     {
                         foreach (var _block in _blocks)
                         {
-                            var _coord  = _block.NodePosition;
+                            var _coord  = _block.NodeGridPosition;
                             var _points = VolumePointGenerator.GetVolumePoint(_coord, _gridUnitSize, volumePoints);
                             
                             _block.SetVolumePoints(_points);

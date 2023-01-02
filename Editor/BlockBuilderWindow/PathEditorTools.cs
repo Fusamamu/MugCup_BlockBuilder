@@ -138,7 +138,7 @@ namespace MugCup_BlockBuilder.Editor
             BBEditorManager.BlockEditorManager.RemoveBlock(_pos);
             BBEditorManager.BlockEditorManager.AddBlock   (_path, _pos, NormalFace.None);
                             
-            BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Path>(_path.NodePosition);
+            BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Path>(_path.NodeGridPosition);
                             
             Object.DestroyImmediate(_tempCube);
         }

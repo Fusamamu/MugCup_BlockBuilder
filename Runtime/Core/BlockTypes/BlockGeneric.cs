@@ -32,9 +32,9 @@ namespace MugCup_BlockBuilder.Runtime
 
             castBlocks = _castBlocks.ToArray();
             
-            TopCastBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
-            MiddleCastBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
-            BottomCastBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodePosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
+            TopCastBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodeGridPosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
+            MiddleCastBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodeGridPosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
+            BottomCastBlocks = GridUtility.GetBottomSectionNodesFrom3x3Cube(NodeGridPosition, gridData.GridUnitSize, _castBlocks.ToArray()).ToArray();
         }
         
         public override void SetBitMask()

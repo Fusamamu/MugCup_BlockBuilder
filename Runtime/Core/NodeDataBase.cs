@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BlockBuilder.Runtime.Core;
 using MugCup_PathFinder.Runtime;
+using UnityEditor;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
@@ -12,14 +13,15 @@ namespace MugCup_BlockBuilder.Runtime.Core
         //For transfer old data to this 
         [field:SerializeField] public GridNodeData GridNodeData { get; private set; }
 
-
         private void OnValidate()
         {
-            if(GridNodeData == null) return;
-            if(GridUnitNodes    == null) return;
+            if(GridNodeData  == null) return;
+            if(GridUnitNodes == null) return;
 
             GridNodeData.GridNodes = GridUnitNodes;
             GridNodeData.GridSize  = GridUnitSize;
+            
+            EditorUtility.SetDirty(GridNodeData);
         }
         
         //Will Clear node data below!!
@@ -92,6 +94,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
             GridBlockGenerator.PopulateGridBlocksByLevel<Block>(GridUnitNodes, GridUnitSize, _level, _blockPrefab);
 
             var _selectedBlockLevel = GetAllNodeBasesAtLevel<GridNode>(_level);
+            
+            GridNodeData.GridNodes = GridUnitNodes;
+            GridNodeData.GridSize  = GridUnitSize;
 
             if(!levelTable.ContainsKey(_level))
                 levelTable.Add(_level, _selectedBlockLevel);

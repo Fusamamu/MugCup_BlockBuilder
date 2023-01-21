@@ -68,7 +68,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             return this;
         }
-        
+        //Duplicate code
         public NodeDataBase InitializeGridArray()
         { 
             int _rowUnit    = GridUnitSize.x;
@@ -87,6 +87,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             return this;
         }
         
+        //Try to move to GridBuilder
         public void PopulateGridBlocksByLevel(int _level)
         {
             var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
@@ -104,22 +105,25 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 levelTable[_level] = _selectedBlockLevel;
         }
         
+        //Already try to move to  GridData Class
+        //Duplicate code
         public T GetNode<T>(Vector3Int _nodePos) where T : GridNode
         {
             return GridUtility.GetNode(_nodePos, GridUnitSize, GridUnitNodes) as T;
         }
-        
+        //Duplicate code
         public void AddNode<T>(T _newNode, Vector3Int _nodePos) where T : GridNode
         {
             var _gridUnitNodeBases = GridUnitNodes;
             GridUtility.AddNode(_newNode, _nodePos, GridUnitSize, ref _gridUnitNodeBases);
         }
-		
+        //Duplicate code
         public void RemoveNode<T>(Vector3Int _nodePos) where T : GridNode
         {
             var _gridUnitNodeBases = GridUnitNodes;
             GridUtility.RemoveNode(_nodePos, GridUnitSize, ref _gridUnitNodeBases);
         }
+        //------------------------------------------
         
 #region Get Grid Unit NodeBases
         //This seems to get shallow reference
@@ -135,6 +139,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             return _gridUnitArray;
         }
 
+        //move to gridData
         public IEnumerable<T> AvailableNodes<T>() where T : GridNode
         {
             foreach (var _node in GridUnitNodes)
@@ -163,6 +168,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         }
 #endregion
         
+        //Move to grid Data
         public void ApplyAllNodes<T>(Action<T> _action) where T : GridNode
         {
             foreach (var _node in AvailableNodes<T>())
@@ -171,11 +177,14 @@ namespace MugCup_BlockBuilder.Runtime.Core
             }
         }
 
+        //?????
         public void StoreGridUnitNode(GridNode[] _nodeBases)
         {
             GridUnitNodes = _nodeBases;
         }
 
+        
+        //Moved to GridData
         public void EmptyGridUnitNodeBases()
         {
             for (var _i = 0; _i < GridUnitNodes.Length; _i++)
@@ -184,6 +193,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             }
         }
         
+        //Move to GridData
         public void ClearGridUnitNodeBases()
         {
             GridUnitNodes = null;

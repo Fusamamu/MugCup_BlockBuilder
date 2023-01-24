@@ -8,6 +8,7 @@ using UnityEditor;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
+    //Will remove
     public class NodeDataBase : MonoBehaviour
     {
         //For transfer old data to this 

@@ -104,13 +104,13 @@ namespace MugCup_BlockBuilder.Editor
                      var _gridBlockDataManager = BBEditorManager.BlockDataManager;
                      Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
 
-                     foreach (var _path in BBEditorManager.BlockDataManager.AvailableNodes<Path>())
+                     foreach (var _path in BBEditorManager.BlockDataManager.GridNodeData.AvailableNodes<Path>())
                      {
                          _path.GetSurroundingBlocksReference();
                          _path.SetBitMask();
                      }
                      
-                     foreach (var _path in BBEditorManager.BlockDataManager.AvailableNodes<Path>())
+                     foreach (var _path in BBEditorManager.BlockDataManager.GridNodeData.AvailableNodes<Path>())
                      {
                          BBEditorManager.BlockManager.UpdateMeshBlockComposite(_path);
                      }

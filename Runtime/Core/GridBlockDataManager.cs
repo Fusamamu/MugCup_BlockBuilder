@@ -4,19 +4,21 @@ using UnityEditor;
 using UnityEngine;
 using BlockBuilder.Scriptable;
 using BlockBuilder.Core.Scriptable;
+using MugCup_PathFinder.Runtime;
 using Unity.Collections;
 
 namespace MugCup_BlockBuilder.Runtime.Core
 {
     //Per stage / Per Scene / Save/Load Scene?
     [Serializable]
-    public class GridBlockDataManager : NodeDataBase
+    public class GridBlockDataManager : MonoBehaviour
     {
+        [field:SerializeField] public GridNodeData GridNodeData { get; private set; }
         
 #region Get Grid Data/BlockMesh Data
-        [field:ReadOnly, SerializeField] public GridDataSettingSO GridData      { get; private set; }
-        [field:ReadOnly, SerializeField] public BlockMeshData     BlockMeshData { get; private set; }
-        [field:ReadOnly, SerializeField] public BlockMeshData     PathMeshData  { get; private set; }
+        [field:ReadOnly, SerializeField] public GridDataSettingSO GridDataSetting { get; private set; }
+        [field:ReadOnly, SerializeField] public BlockMeshData     BlockMeshData   { get; private set; }
+        [field:ReadOnly, SerializeField] public BlockMeshData     PathMeshData    { get; private set; }
 
         private static Dictionary<Type, BlockMeshData> blockMeshDataTable = new Dictionary<Type, BlockMeshData>();
 
@@ -58,7 +60,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             GridDataSettingSO _gridDataSetting = null;
             BlockMeshData     _meshDataSetting = null;
 
-            _gridDataSetting = GridData;
+            _gridDataSetting = GridDataSetting;
             _meshDataSetting = BlockMeshData;
             
             #if UNITY_EDITOR
@@ -80,7 +82,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             Debug.Log($"GridBlockDataManager Initialized.");
 
-            if (GridData == null)
+            if (GridDataSetting == null)
             {
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
             }
@@ -99,7 +101,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
             if (_gridDataSetting == null || _meshDataSetting == null)
             {
-                _blockDataSetting.GridDataSetting          = GridData;
+                _blockDataSetting.GridDataSetting          = GridDataSetting;
                 _blockDataSetting.BlockMeshDataSetting     = BlockMeshData;
                 _blockDataSetting.PathBlockMeshDataSetting = PathMeshData;
                 
@@ -124,13 +126,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             InitializeGridUnitSize(_gridData);
 
-            if (GridData == null)
+            if (GridDataSetting == null)
                 Debug.LogWarning($"GridBlockDataManager Initialized Failed. Missing Grid Data Setting.");
         }
 
         public void CacheData(BlockDataSetting _blockDataSetting)
         {
-            GridData      = _blockDataSetting.GridDataSetting;
+            GridDataSetting      = _blockDataSetting.GridDataSetting;
             BlockMeshData = _blockDataSetting.BlockMeshDataSetting;
             PathMeshData  = _blockDataSetting.PathBlockMeshDataSetting;
         }
@@ -142,25 +144,25 @@ namespace MugCup_BlockBuilder.Runtime.Core
         }
         
         private void LoadMeshBlocksData (ref BlockMeshData     _meshData) => BlockMeshData = _meshData;
-        private void LoadGridDataSetting(ref GridDataSettingSO _gridData) => GridData      = _gridData;
+        private void LoadGridDataSetting(ref GridDataSettingSO _gridData) => GridDataSetting      = _gridData;
 #endregion
         
 #region Initialize Grid Unit Size 
         public void InitializeGridUnitSize(GridDataSettingSO _gridData)
         {
-            InitializeGridUnitSize(_gridData.GridUnitSize.x, _gridData.GridUnitSize.z, _gridData.GridUnitSize.y);
+            //InitializeGridUnitSize(_gridData.GridUnitSize.x, _gridData.GridUnitSize.z, _gridData.GridUnitSize.y);
         }
 #endregion
         
         public bool TryGetGridDataSetting(out GridDataSettingSO _data)
         {
-            if (GridData == null) 
+            if (GridDataSetting == null) 
             {
                 Debug.Log($"<color=red>[Warning] : </color> Missing Grid Data. Try Loading from Resource Folder.");
-                GridData = Resources.Load<GridDataSettingSO>("BlockBuilder/Setting/GridData/Setting");
+                GridDataSetting = Resources.Load<GridDataSettingSO>("BlockBuilder/Setting/GridData/Setting");
             }
             
-            _data = GridData;
+            _data = GridDataSetting;
             
             if (_data == null) 
             {
@@ -173,18 +175,16 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         public void InitializeBlocksData(BlockManager _blockManager)
         {
-            foreach (Block _block in AvailableNodes<Block>())
-                _block.InjectDependency(_blockManager);
-            
-            foreach (Block _block in AvailableNodes<Block>())
-            {
-                if (_block == null) continue;
-                
-                _block.GetSurroundingBlocksReference();
-                _block.SetBitMask();
-                    
-                Debug.Log("Initializing a Block");
-            }
+            // foreach (Block _block in AvailableNodes<Block>())
+            //     _block.InjectDependency(_blockManager);
+            //
+            // foreach (Block _block in AvailableNodes<Block>())
+            // {
+            //     if (_block == null) continue;
+            //     
+            //     _block.GetSurroundingBlocksReference();
+            //     _block.SetBitMask();
+            // }
         }
     }
 }

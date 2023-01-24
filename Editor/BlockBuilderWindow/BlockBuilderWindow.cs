@@ -145,12 +145,18 @@ namespace MugCup_BlockBuilder.Editor
                 {
                     var _gridBlockDataManager = BBEditorManager.BlockDataManager;
                     Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
-                    
-                    Vector3Int _mapSize  = BBEditorManager.GridDataSettingSo.MapSize;
-                    Vector3Int _unitSize = BBEditorManager.GridDataSettingSo.GridUnitSize;
 
                     BBEditorManager.BlockManager.GenerateGridBlocks();
                   
+                    PrefabUtility.RecordPrefabInstancePropertyModifications(_gridBlockDataManager);
+                }
+                
+                if (GUILayout.Button("Generate Grid Elements", _newStyle, GUILayout.Height(30)))
+                {
+                    var _gridBlockDataManager = BBEditorManager.BlockDataManager;
+                    Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
+                    
+                    
                     PrefabUtility.RecordPrefabInstancePropertyModifications(_gridBlockDataManager);
                 }
 
@@ -161,7 +167,7 @@ namespace MugCup_BlockBuilder.Editor
                     
                     volumePoints = VolumePointGenerator.GeneratedVolumePoints(_gridUnitSize, 0.1f, _volumePoints);
 
-                    var _blocks = BBEditorManager.BlockManager.CurrentGridBlockBlockData.AvailableNodes<Block>().ToArray();
+                    var _blocks = BBEditorManager.BlockManager.CurrentGridBlockBlockData.GridNodeData.AvailableNodes<Block>().ToArray();
 
                     if (_blocks.Length > 0)
                     {
@@ -197,7 +203,7 @@ namespace MugCup_BlockBuilder.Editor
                     foreach(var _block in _blocks)
                         DestroyImmediate(_block);
 
-                    BBEditorManager.BlockManager.CurrentGridBlockBlockData.ClearGridUnitNodeBases();
+                    BBEditorManager.BlockManager.CurrentGridBlockBlockData.GridNodeData.ClearData();
 
                     var _textParent   = GameObject.Find("[-------Grid Position Text-------]");
                     var _blocksParent = GameObject.Find("[-------------Blocks-------------]");

@@ -93,8 +93,8 @@ namespace MugCup_BlockBuilder.Runtime
         public virtual Block InjectDependency(BlockManager _blockManager)
         {
             blockManager  = _blockManager;
-            gridNodeBases = _blockManager.CurrentGridBlockBlockData.GridUnitNodes;
-            gridData      = _blockManager.CurrentGridBlockBlockData.GridData;
+            gridNodeBases = _blockManager.CurrentGridBlockBlockData.GridNodeData.GridNodes;
+            gridData      = _blockManager.CurrentGridBlockBlockData.GridDataSetting;
             
             return this;
         }
@@ -126,7 +126,7 @@ namespace MugCup_BlockBuilder.Runtime
         {
             if(!IsGridDataInit()) return;
 
-            var _gridUnitBlocks = blockManager.CurrentGridBlockBlockData.GetGridUnitArray<Block>();
+            var _gridUnitBlocks = blockManager.CurrentGridBlockBlockData.GridNodeData.GetGridUnitArray<Block>();
             
             TopBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodeGridPosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
             MiddleBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodeGridPosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
@@ -193,14 +193,12 @@ namespace MugCup_BlockBuilder.Runtime
         public int GetBitMaskMiddleSection()
         {
             BitMaskMiddleSection = (BitMask >> 9) & 0b_000000000_000000000_111111111;
-
             return BitMaskMiddleSection;
         }
 
         public int GetBitMaskCompositeMiddleSection()
         {
             BitMaskCompositeMiddleSection = (BitMaskComposite >> 9) & 0b_000000000_000000000_111111111;
-
             return BitMaskCompositeMiddleSection;
         }
 

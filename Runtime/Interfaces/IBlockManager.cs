@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder.Runtime.Core.Interfaces
 {
-	public interface IBlockManager
+	public interface IGridManager
 	{
 		public bool IsOccupied(Vector3Int _nodePos);
 		

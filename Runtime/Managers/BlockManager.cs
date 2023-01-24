@@ -29,7 +29,7 @@ namespace MugCup_BlockBuilder.Runtime
 	/// Class to keep track of blocks when blocks get added, removed and updated.
 	/// This class modify blocks data [Block Array] via GridBlockDataManager.
 	/// </summary>
-    public class BlockManager : MonoBehaviour, IBlockManager
+    public class BlockManager : MonoBehaviour, IGridManager
 	{
 	    /// <summary>
 	    /// Grid Block Data should be only managed via BlockManager

@@ -12,7 +12,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
     /// </summary>
     public abstract class BaseBuilderManager : MonoBehaviour
     {
-        private IBlockManager iBlockManager;
+        private IGridManager gridManager;
         
         private BlockManager blockManager;
 
@@ -33,9 +33,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         public virtual void Init()
         {
-            iBlockManager = FindObjectOfType<BlockManager>();
+            gridManager = FindObjectOfType<BlockManager>();
             
-            blockManager  = (BlockManager)iBlockManager;
+            blockManager  = (BlockManager)gridManager;
         }
 
         public void InjectBlockManager(BlockManager _blockManager)

@@ -207,36 +207,36 @@ namespace MugCup_BlockBuilder.Runtime
         /// For Marching Points [Not using right now]
         /// </summary>
         /// <param name="_volumePoints"></param>
-        public void SetVolumePoints(VolumePoint[] _volumePoints)
-        {
-            VolumePoints = _volumePoints;
-        }
-        
-        public void SetMesh(Mesh _mesh)
-        {
-            mesh.mesh = _mesh;
-        }
-        
-        public void Enable()
-        {
-            IsEnable = true;
-
-            foreach (var _point in VolumePoints)
-            {
-                _point.SetBitMask   ();
-                _point.SetCornerMesh();
-            }
-        }
-        public void Disable()
-        {
-            IsEnable = false;
-            
-            foreach (var _point in VolumePoints)
-            {
-                _point.SetBitMask   ();
-                _point.SetCornerMesh();
-            }
-        }
+        // public void SetVolumePoints(VolumePoint[] _volumePoints)
+        // {
+        //     VolumePoints = _volumePoints;
+        // }
+        //
+        // public void SetMesh(Mesh _mesh)
+        // {
+        //     mesh.mesh = _mesh;
+        // }
+        //
+        // public void Enable()
+        // {
+        //     IsEnable = true;
+        //
+        //     foreach (var _point in VolumePoints)
+        //     {
+        //         _point.SetBitMask   ();
+        //         _point.SetCornerMesh();
+        //     }
+        // }
+        // public void Disable()
+        // {
+        //     IsEnable = false;
+        //     
+        //     foreach (var _point in VolumePoints)
+        //     {
+        //         _point.SetBitMask   ();
+        //         _point.SetCornerMesh();
+        //     }
+        // }
 #endregion
         
         protected bool IsGridDataInit()

@@ -74,7 +74,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             {
                 Vector3Int _mapSize  = gridDataSettingSo.MapSize;
                 Vector3Int _unitSize = gridDataSettingSo.GridUnitSize;
-                GridBlockGenerator.GenerateMap(_mapSize, _unitSize);
+               // GridGenerator.GenerateMap(_mapSize, _unitSize);
             }
 
             if (GUILayout.Button("Generate Grid", newStylee, GUILayout.Height(30)))
@@ -85,8 +85,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 
                 GameObject _blockPrefab = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 
-                blocks = GridBlockGenerator.GenerateGridBlocks(_unitSize, _blockPrefab, _mainMap);
-                Object.DestroyImmediate(_blockPrefab);
+                // blocks = GridGenerator.GenerateGridBlocks(_unitSize, _blockPrefab, _mainMap);
+                // Object.DestroyImmediate(_blockPrefab);
             }
             
             if(GUILayout.Button("Delete Blocks", newStylee, GUILayout.Height(30)))

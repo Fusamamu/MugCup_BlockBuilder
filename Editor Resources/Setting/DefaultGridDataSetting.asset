@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62049b732aafa4754be7b8bd50086040, type: 3}
   m_Name: DefaultGridDataSetting
   m_EditorClassIdentifier: 
+  GridOffset: 0
+  MapSizeArray: 000000000000000000000000
+  GridUnitSizeArray: 000000000000000000000000
   Row: 1
   Column: 1
   Height: 1
-  UnitRow: 10
-  UnitColumn: 10
-  UnitHeight: 10
+  UnitRow: 5
+  UnitColumn: 5
+  UnitHeight: 1
   BlockWidth: 1
   BlockHeight: 1
   BlockDepth: 1

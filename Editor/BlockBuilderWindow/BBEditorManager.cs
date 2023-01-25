@@ -12,12 +12,15 @@ namespace MugCup_BlockBuilder.Editor
         public static GridDataSettingSO  GridDataSettingSo;
         
         public static BlockBuilderManager  BlockBuilderManager;
+        
         public static BlockManager         BlockManager;
         public static GridBlockDataManager BlockDataManager;
+
+        public static GridElementManager     GridElementManager;
+        public static GridElementDataManager GridElementDataManager;
+
         public static BlockEditorManager   BlockEditorManager;
-
-        public static GridElementManager GridElementManager;
-
+        
         public static void Initialize()
         {
             LoadBlockBuilderManager();
@@ -29,11 +32,14 @@ namespace MugCup_BlockBuilder.Editor
         private static void LoadBlockBuilderManager()
         {
             if (!BlockBuilderManager) BlockBuilderManager = Object.FindObjectOfType<BlockBuilderManager>();
-            if (!BlockManager)        BlockManager        = Object.FindObjectOfType<BlockManager>();
-            if (!BlockDataManager)    BlockDataManager    = Object.FindObjectOfType<GridBlockDataManager>();
-            if (!BlockEditorManager)  BlockEditorManager  = Object.FindObjectOfType<BlockEditorManager>();
+            
+            if (!BlockManager)     BlockManager        = Object.FindObjectOfType<BlockManager>();
+            if (!BlockDataManager) BlockDataManager    = Object.FindObjectOfType<GridBlockDataManager>();
 
-            if (!GridElementManager)  GridElementManager = Object.FindObjectOfType<GridElementManager>();
+            if (!GridElementManager)     GridElementManager     = Object.FindObjectOfType<GridElementManager>();
+            if (!GridElementDataManager) GridElementDataManager = Object.FindObjectOfType<GridElementDataManager>();
+            
+            if (!BlockEditorManager)  BlockEditorManager  = Object.FindObjectOfType<BlockEditorManager>();
         }
 
         private static GameObject GetBlockParent()

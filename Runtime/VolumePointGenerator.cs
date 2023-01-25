@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BlockBuilder.Core;
+using BlockBuilder.Runtime.Scriptable;
 using MugCup_BlockBuilder;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
@@ -13,13 +14,15 @@ namespace BlockBuilder.Runtime.Core
     {
         public static VolumePoint[] GeneratedVolumePoints(Vector3Int _gridUnitSize, float _pointScale = 0.1f, GameObject _parent = null)
         {
-            var _sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            // var _sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            //
+            // _sphere.transform.localScale *= _pointScale;
             
-            _sphere.transform.localScale *= _pointScale;
+            var _volumePointPrefab = AssetManager.AssetCollection.VolumePoint.gameObject;
             
-            var _volumePoints = GeneratedVolumePoints(_gridUnitSize, _sphere, _parent);
+            var _volumePoints = GeneratedVolumePoints(_gridUnitSize, _volumePointPrefab, _parent);
             
-            Object.DestroyImmediate(_sphere);
+            //Object.DestroyImmediate(_sphere);
             
             return _volumePoints;
         }
@@ -40,14 +43,16 @@ namespace BlockBuilder.Runtime.Core
                     {
                         var _offset   = new Vector3(-0.5f, -0.5f, -0.5f);
                         var _position = new Vector3(_x, _y, _z) + _offset;
-            
-                        VolumePoint _volumePoint = Object.Instantiate(_volumePointPrefab, _position, Quaternion.identity).AddComponent<VolumePoint>();
-                         
+
+                        var _pointObject = Object.Instantiate(_volumePointPrefab, _position, Quaternion.identity);
+
                         if (_parent != null)
                         {
-                            _volumePoint.transform.position += _parent.transform.position;
-                            _volumePoint.transform.SetParent(_parent.transform);
+                            _pointObject.transform.position += _parent.transform.position;
+                            _pointObject.transform.SetParent(_parent.transform);
                         }
+                        
+                        var _volumePoint = _pointObject.GetComponent<VolumePoint>();
                         
                         _volumePoint.Init(new Vector3Int(_x, _y, _z));
                          
@@ -59,7 +64,7 @@ namespace BlockBuilder.Runtime.Core
             return _volumePoints;
         }
 
-        public static VolumePoint[] GetVolumePoint(Vector3Int _nodeCoord, Vector3Int _gridUnitSize, VolumePoint[] _points)
+        public static VolumePoint[] GetVolumePoints(Vector3Int _nodeCoord, Vector3Int _gridUnitSize, VolumePoint[] _points)
         {
             var _x = _nodeCoord.x;
             var _y = _nodeCoord.y;

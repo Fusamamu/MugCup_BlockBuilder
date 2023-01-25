@@ -27,20 +27,23 @@ namespace MugCup_BlockBuilder.Runtime.Core
 	[Serializable]
 	public class BlockBuilderManager : Singleton<BlockBuilderManager>
 	{
-		public enum ManagerMode
-		{
-			Default, Custom
-		}
+		public enum ManagerMode { Default, Custom }
+		public enum BuildType   { BLOBTILE, MARCHINGCUBE }
 
 		public ManagerMode Mode = ManagerMode.Default;
-		
-		[field: SerializeField] public BlockManager BlockManager { get; private set; }
+		public BuildType SelectedBuildType = BuildType.BLOBTILE;
+
+		[field: SerializeField] public BlockManager       BlockManager       { get; private set; }
+		[field: SerializeField] public GridElementManager GridElementManager { get; private set; }
 
 #if UNITY_EDITOR
 		private void OnValidate()
 		{
 			if (BlockManager == null)
 				BlockManager = GetComponent<BlockManager>();
+
+			if (GridElementManager == null)
+				GridElementManager = GetComponent<GridElementManager>();
 		}
 #endif
 

@@ -1,48 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
+using BlockBuilder.Core.Scriptable;
 using MugCup_BlockBuilder.Runtime;
+using MugCup_PathFinder.Runtime;
 using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
-    public class VolumePoint : MonoBehaviour
+    public class VolumePoint : MonoBehaviour, IGridCoord
     {
-        [SerializeField] private Vector3Int coord;
+	    [field: SerializeField] public Vector3Int NodeGridPosition  { get; private set; }
+	    [field: SerializeField] public Vector3    NodeWorldPosition { get; private set; }
+	    
+	    //Temp
+	    public CornerMeshData CornerMeshData;
+
+	    public IGridCoord SetNodePosition(Vector3Int _nodePosition)
+	    {
+		    NodeGridPosition = _nodePosition;
+		    return this;
+	    }
+	    public IGridCoord SetNodeWorldPosition(Vector3 _worldPosition)
+	    {
+		    NodeWorldPosition = _worldPosition;
+		    return this;
+	    }
+	    
+        [SerializeField] private Vector3Int Coord;
         
-        [SerializeField] private int bitMask;
+        [SerializeField] private int BitMask;
 
-        [SerializeField] private Block[] adjacentBlocks = new Block[8];
+        [SerializeField] private GridElement[] AdjacentGridElements = new GridElement[8];
 
-        private MeshFilter mesh;
-        private Renderer   renderer;
+        [SerializeField] private MeshFilter Mesh;
+        [SerializeField] private Renderer   Renderer;
 
-        public Block UpperNorthEastBlock;
-        public Block UpperNorthWestBlock;
-        public Block UpperSouthWestBlock;
-        public Block UpperSouthEastBlock;
+        public GridElement UpperNorthEastGridElement;
+        public GridElement UpperNorthWestGridElement;
+        public GridElement UpperSouthWestGridElement;
+        public GridElement UpperSouthEastGridElement;
         
-        public Block LowerNorthEastBlock;
-        public Block LowerNorthWestBlock;
-        public Block LowerSouthWestBlock;
-        public Block LowerSouthEastBlock;
+        public GridElement LowerNorthEastGridElement;
+        public GridElement LowerNorthWestGridElement;
+        public GridElement LowerSouthWestGridElement;
+        public GridElement LowerSouthEastGridElement;
         
         public void Init(Vector3Int _coord)
         {
-	        coord = _coord;
+	        Coord = _coord;
 	        
-			name = "CE_" + coord.x +"_" + coord.y +"_" + coord.z;
+			name = "CE_" + Coord.x +"_" + Coord.y +"_" + Coord.z;
 			
-	        mesh     = GetComponent<MeshFilter>();
-	        renderer = GetComponent<Renderer>();
+	        Mesh     = GetComponent<MeshFilter>();
+	        Renderer = GetComponent<Renderer>();
 
-	        UpperNorthEastBlock = adjacentBlocks[0];
-	        UpperNorthWestBlock = adjacentBlocks[1];
-	        UpperSouthWestBlock = adjacentBlocks[2]; 
-	        UpperSouthEastBlock = adjacentBlocks[3];
-	        LowerNorthEastBlock = adjacentBlocks[4];
-	        LowerNorthWestBlock = adjacentBlocks[5];
-	        LowerSouthWestBlock = adjacentBlocks[6];
-	        LowerSouthEastBlock = adjacentBlocks[7];
+	        UpperNorthEastGridElement = AdjacentGridElements[0];
+	        UpperNorthWestGridElement = AdjacentGridElements[1];
+	        UpperSouthWestGridElement = AdjacentGridElements[2]; 
+	        UpperSouthEastGridElement = AdjacentGridElements[3];
+	        
+	        LowerNorthEastGridElement = AdjacentGridElements[4];
+	        LowerNorthWestGridElement = AdjacentGridElements[5];
+	        LowerSouthWestGridElement = AdjacentGridElements[6];
+	        LowerSouthEastGridElement = AdjacentGridElements[7];
         }
 	
         public void SetPosition(float _x, float _y, float _z)
@@ -55,102 +75,109 @@ namespace MugCup_BlockBuilder
 	        SetAdjacentBlocks(null, Vector3Int.back);
         }
 
-        public void SetAdjacentBlocks(Block[] _blocks, Vector3Int _gridUnitSize)
+        public void SetAdjacentBlocks(GridElement[] _gridElements, Vector3Int _gridUnitSize)
         {
 	        int _rowUnit    = _gridUnitSize.x;
 	        int _columnUnit = _gridUnitSize.z;
 	        int _levelUnit  = _gridUnitSize.y;
 
-	        var _x = coord.x;
-	        var _y = coord.y;
-	        var _z = coord.z;
+	        var _x = Coord.x;
+	        var _y = Coord.y;
+	        var _z = Coord.z;
 
 	        if (_x < _rowUnit && _y < _levelUnit && _z < _columnUnit)
 	        {
 		        //Upper North East Block
-		        UpperNorthEastBlock = _blocks[_z +     _gridUnitSize.x * (_x + _gridUnitSize.y * _y)];
+		        UpperNorthEastGridElement = _gridElements[_z +     _gridUnitSize.x * (_x + _gridUnitSize.y * _y)];
 	        }
 	        if (_x < _rowUnit && _y < _levelUnit && _z > 0)
 	        {
 		        //Upper North West Block
-		        UpperNorthWestBlock = _blocks[_z - 1 + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)];
+		        UpperNorthWestGridElement = _gridElements[_z - 1 + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)];
 	        }
 	        
 	        if (_x > 0 && _y < _levelUnit && _z > 0)
 	        {
 		        //Upper South West Block
-		        UpperSouthWestBlock = _blocks[_z - 1 + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * _y)];
+		        UpperSouthWestGridElement = _gridElements[_z - 1 + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * _y)];
 	        }
 	        if (_x > 0 && _y < _levelUnit && _z < _columnUnit)
 	        {
 		        //Upper South East Block
-		        UpperSouthEastBlock  = _blocks[_z     + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * _y)];
+		        UpperSouthEastGridElement  = _gridElements[_z     + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * _y)];
 	        }
 	        
 	        if (_x < _rowUnit && _y > 0 && _z < _columnUnit)
 	        {
 		        //Lower North East Block
-		        LowerNorthEastBlock = _blocks[_z +     _gridUnitSize.x * (_x +    _gridUnitSize.y * (_y - 1))];
+		        LowerNorthEastGridElement = _gridElements[_z +     _gridUnitSize.x * (_x +    _gridUnitSize.y * (_y - 1))];
 	        }
+	        
 	        if (_x < _rowUnit && _y > 0 && _z > 0)
 	        {
 		        //Lower North West Block
-		        LowerNorthWestBlock = _blocks[_z - 1 + _gridUnitSize.x * (_x +    _gridUnitSize.y * (_y - 1))];
+		        LowerNorthWestGridElement = _gridElements[_z - 1 + _gridUnitSize.x * (_x +    _gridUnitSize.y * (_y - 1))];
 	        }
 	        
 	        if (_x > 0 && _y > 0 && _z > 0)
 	        {
 		        //Lower South West Block
-		        LowerSouthWestBlock = _blocks[_z - 1 + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * (_y - 1))];
+		        LowerSouthWestGridElement = _gridElements[_z - 1 + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * (_y - 1))];
 	        }
+	        
 	        if (_x > 0 && _y > 0 && _z < _columnUnit)
 	        {
 		        //Lower South East Block
-		        LowerSouthEastBlock = _blocks[_z     + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * (_y - 1))];
+		        LowerSouthEastGridElement = _gridElements[_z     + _gridUnitSize.x * (_x - 1 + _gridUnitSize.y * (_y - 1))];
 	        }
         }
         
         public void SetCornerMesh()
-        {	
-	        //mesh.mesh = cornerMeshes.instance.GetCornerMesh(bitMaskValue, coord.y);
+        {
+	        var _mesh = CornerMeshData.GetCornerMesh(BitMask);
+
+	        if (_mesh != null)
+	        {
+		        Mesh.mesh = _mesh;
+	        }
         }
 
         public void SetBitMask()
         { 
-	        bitMask = 0b_0000_0000;
+	        BitMask = 0b_0000_0000;
 
-	        if (UpperNorthEastBlock != null && UpperNorthEastBlock.IsEnable)
+	        if (UpperNorthEastGridElement != null && UpperNorthEastGridElement.IsEnable)
 	        {
-		        bitMask += 0b_0000_0001;
+		        BitMask += 0b_0000_0001;
 	        }
-	        if (UpperNorthWestBlock != null && UpperNorthWestBlock.IsEnable)
+	        if (UpperNorthWestGridElement != null && UpperNorthWestGridElement.IsEnable)
 	        {
-		        bitMask += 0b_0000_0010;
+		        BitMask += 0b_0000_0010;
 	        }
-	        if (UpperSouthWestBlock != null && UpperSouthWestBlock.IsEnable)
+	        if (UpperSouthWestGridElement != null && UpperSouthWestGridElement.IsEnable)
 	        {
-		        bitMask += 0b_0000_0100;
+		        BitMask += 0b_0000_0100;
 	        }
-	        if (UpperSouthEastBlock != null && UpperSouthEastBlock.IsEnable)
+	        if (UpperSouthEastGridElement != null && UpperSouthEastGridElement.IsEnable)
 	        {
-		        bitMask += 0b_0000_1000;
+		        BitMask += 0b_0000_1000;
 	        }
 
-	        if (LowerNorthEastBlock != null && LowerNorthEastBlock.IsEnable)
+	        if (LowerNorthEastGridElement != null && LowerNorthEastGridElement.IsEnable)
 	        {
-		        bitMask += 0b_0001_0000;
+		        BitMask += 0b_0001_0000;
 	        }
-	        if (LowerNorthWestBlock != null && LowerNorthWestBlock.IsEnable)
+	        if (LowerNorthWestGridElement != null && LowerNorthWestGridElement.IsEnable)
 	        {
-		        bitMask += 0b_0010_0000;
+		        BitMask += 0b_0010_0000;
 	        }
-	        if (LowerSouthWestBlock != null && LowerSouthWestBlock.IsEnable)
+	        if (LowerSouthWestGridElement != null && LowerSouthWestGridElement.IsEnable)
 	        {
-		        bitMask += 0b_0100_0000;
+		        BitMask += 0b_0100_0000;
 	        }
-	        if (LowerSouthEastBlock != null && LowerSouthEastBlock.IsEnable)
+	        if (LowerSouthEastGridElement != null && LowerSouthEastGridElement.IsEnable)
 	        {
-		        bitMask += 0b_1000_0000;
+		        BitMask += 0b_1000_0000;
 	        }
         }
     }

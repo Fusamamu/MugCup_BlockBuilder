@@ -15,7 +15,9 @@ GameObject:
   - component: {fileID: 957237639199737727}
   - component: {fileID: 1984947528}
   - component: {fileID: 8552529509201367316}
+  - component: {fileID: 7458563524013073088}
   - component: {fileID: 4938557985771779237}
+  - component: {fileID: 7288600626842189160}
   m_Layer: 0
   m_Name: '[---Block Manager---]'
   m_TagString: Untagged
@@ -51,7 +53,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Mode: 1
+  SelectedBuildType: 0
   <BlockManager>k__BackingField: {fileID: 6668422764112966310}
+  <GridElementManager>k__BackingField: {fileID: 8552529509201367316}
 --- !u!114 &7342133537920494938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1122,6 +1126,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ec321f529aa4ed8bf3ba3cd797f79c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <GridElementDataManager>k__BackingField: {fileID: 7458563524013073088}
+--- !u!114 &7458563524013073088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611072854211523857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bcca6741d8424759979e80772cf419e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <GridElementData>k__BackingField: {fileID: 4938557985771779237}
+  <VolumePointData>k__BackingField: {fileID: 7288600626842189160}
+  <GridDataSetting>k__BackingField: {fileID: 0}
+  GridElementParent: {fileID: 0}
+  VolumePointParent: {fileID: 0}
 --- !u!114 &4938557985771779237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1132,6 +1154,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a359b68777ac243ff88218cf3620399b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GridNodes: []
+  GridSize: {x: 0, y: 0, z: 0}
+  RowUnit: 0
+  ColumnUnit: 0
+  LevelUnit: 0
+--- !u!114 &7288600626842189160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611072854211523857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d852d70a56fd4a69bbea1ba542bf62f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   GridNodes: []

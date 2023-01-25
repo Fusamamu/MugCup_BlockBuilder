@@ -7,7 +7,7 @@ namespace MugCup_BlockBuilder
 {
     public class GridElementManager : MonoBehaviour, IGridManager
     {
-        //[field: SerializeField] public GridBlockDataManager CurrentGridBlockBlockData { get; private set; }
+        [field: SerializeField] public GridElementDataManager GridElementDataManager { get; private set; }
         
         public void Initialized()
         {
@@ -16,13 +16,7 @@ namespace MugCup_BlockBuilder
         
         public void GenerateGrid()
         {
-	        // CurrentGridBlockBlockData
-		       //  .GridElementData
-		       //  .InitializeGridArray();
-
-	       
-
-
+            GridElementDataManager.GenerateGrid();
         }
     }
 }

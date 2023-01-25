@@ -17,29 +17,22 @@ namespace MugCup_BlockBuilder.Editor.GUI
     [CanEditMultipleObjects]
     public class BlockBuilderManagerEditor : UnityEditor.Editor
     {
-        private BlockBuilderManager blockBuilderManager;
+        private BlockBuilderManager  blockBuilderManager;
+        private GridBlockDataManager gridBlockDataManager;
         
-        private SerializedProperty mode;
-
-        private SerializedProperty gridDataSetting;
-        private SerializedProperty meshBlockDataSetting;
-        private SerializedProperty pathBlockDataSetting;
-
         private AnimBool displayCustomDataFields;
         
-        private static GUIStyle toggleButtonStyleNormal  = null;
-        private static GUIStyle toggleButtonStyleToggled = null;
+        private static GUIStyle toggleButtonStyleNormal ;
+        private static GUIStyle toggleButtonStyleToggled;
 
         private static bool useDebug;
 
         private void OnEnable()
         {
-            blockBuilderManager = (BlockBuilderManager)target;
+            blockBuilderManager  = (BlockBuilderManager)target;
+
+            gridBlockDataManager = blockBuilderManager.BlockManager.GridBlockDataManager;
             
-            mode                 = serializedObject.FindProperty("Mode");
-            gridDataSetting      = serializedObject.FindProperty("CustomGridDataSetting");
-            meshBlockDataSetting = serializedObject.FindProperty("CustomBlockMeshData");
-            pathBlockDataSetting = serializedObject.FindProperty("CustomPathBlockMeshData");
 
             displayCustomDataFields = new AnimBool();
             displayCustomDataFields.valueChanged.AddListener(Repaint);
@@ -82,31 +75,22 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Custom Data Fields", EditorStyles.boldLabel);
                 
-                blockBuilderManager.CustomGridDataSetting = (GridDataSettingSO)EditorGUILayout
-                    .ObjectField(blockBuilderManager.CustomGridDataSetting, typeof(GridDataSettingSO), true);
+                var _customGridDataSetting = (GridDataSettingSO)EditorGUILayout.ObjectField(gridBlockDataManager.GridDataSetting, typeof(GridDataSettingSO), true);
+                var _customBlockMeshData   = (BlockMeshData)    EditorGUILayout.ObjectField(gridBlockDataManager.BlockMeshData  , typeof(BlockMeshData)    , true);
+                var _customPathMeshData    = (BlockMeshData)    EditorGUILayout.ObjectField(gridBlockDataManager.PathMeshData   , typeof(BlockMeshData)    , true);
 
-                blockBuilderManager.CustomBlockMeshData   = (BlockMeshData)    EditorGUILayout
-                    .ObjectField(blockBuilderManager.CustomBlockMeshData,    typeof(BlockMeshData),    true);
+                gridBlockDataManager.SetGridDataSetting(_customGridDataSetting);
+                gridBlockDataManager.SetBlockMeshData  (_customBlockMeshData);
+                gridBlockDataManager.SetPathMeshData   (_customPathMeshData);
                 
-                blockBuilderManager.CustomPathBlockMeshData = (BlockMeshData)    EditorGUILayout
-                    .ObjectField(blockBuilderManager.CustomPathBlockMeshData, typeof(BlockMeshData),    true);
-
-                var _blockDataSetting = new BlockDataSetting
-                (
-                    blockBuilderManager.CustomGridDataSetting, 
-                    blockBuilderManager.CustomBlockMeshData, 
-                    blockBuilderManager.CustomPathBlockMeshData
-                );
-
-                blockBuilderManager.BlockManager.CurrentGridBlockBlockData.CacheData(_blockDataSetting);
-                EditorUtility.SetDirty(blockBuilderManager);
+                EditorUtility.SetDirty(gridBlockDataManager);
                 
                 EditorGUILayout.Space();
-                if (blockBuilderManager.CustomGridDataSetting == null)
+                if (gridBlockDataManager.GridDataSetting == null)
                 {
                     EditorGUILayout.HelpBox("Missing Custom Grid Data Setting Scriptable Object.", MessageType.Warning);
                 }
-                if (blockBuilderManager.CustomBlockMeshData == null)
+                if (gridBlockDataManager.BlockMeshData == null)
                 {
                     EditorGUILayout.HelpBox("Missing Custom Mesh Block Data Scriptable Object.", MessageType.Warning);
                 }
@@ -118,7 +102,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 EditorUtility.SetDirty(blockBuilderManager);
                 EditorSceneManager.MarkSceneDirty(blockBuilderManager.gameObject.scene);
             }
-            
             
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Current Grid Data Setting", EditorStyles.boldLabel);
@@ -151,17 +134,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 toggleButtonStyleToggled = new GUIStyle(toggleButtonStyleNormal);
                 toggleButtonStyleToggled.normal.background = toggleButtonStyleToggled.active.background;
             }
-            
-            // useDebug = GUILayout.Toggle(useDebug, "Toggle me !", "Button");
-            //
-            // if (useDebug)
-            // {
-            //     SceneView.duringSceneGui += OnScene;
-            // }
-            // else
-            // {
-            //     SceneView.duringSceneGui -= OnScene;
-            // }
 
             if (GUILayout.Button("Init Blocks Position"))
             {
@@ -173,30 +145,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     EditorUtility.SetDirty(_block);
                 }
             }
-            
-            //ToDo
-            //Debug Mode
-            //Save Data
-        }
-        
-        private static void OnScene(SceneView _sceneview)
-        {
-            Handles.BeginGUI();
-            GUILayout.BeginArea(new Rect(20, 20, 300, 100));
-            
-            if (GUILayout.Button("Generate Grid Unit")) 
-            {
-                if (Application.isPlaying)
-                {
-                    
-                }
-            }
-
-            // selectedBlock = EditorGUILayout.ObjectField("Selected Block", selectedBlock, typeof(GameObject), true) as GameObject;
-            // blockPosition = EditorGUILayout.Vector3IntField("Block Position", blockPosition);
-        
-            GUILayout.EndArea();
-            Handles.EndGUI();
         }
 
         private static void DisplayInAdjacentTwoColumns(string _c1, string _cc1, string _c2, string _cc2)

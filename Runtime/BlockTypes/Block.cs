@@ -93,8 +93,8 @@ namespace MugCup_BlockBuilder.Runtime
         public virtual Block InjectDependency(BlockManager _blockManager)
         {
             blockManager  = _blockManager;
-            gridNodeBases = _blockManager.CurrentGridBlockBlockData.GridNodeData.GridNodes;
-            gridData      = _blockManager.CurrentGridBlockBlockData.GridDataSetting;
+            gridNodeBases = _blockManager.GridBlockDataManager.GridNodeData.GridNodes;
+            gridData      = _blockManager.GridBlockDataManager.GridDataSetting;
             
             return this;
         }
@@ -126,7 +126,7 @@ namespace MugCup_BlockBuilder.Runtime
         {
             if(!IsGridDataInit()) return;
 
-            var _gridUnitBlocks = blockManager.CurrentGridBlockBlockData.GridNodeData.GetGridUnitArray<Block>();
+            var _gridUnitBlocks = blockManager.GridBlockDataManager.GridNodeData.GetGridUnitArray<Block>();
             
             TopBlocks    = GridUtility.GetTopSectionNodesFrom3x3Cube   (NodeGridPosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();
             MiddleBlocks = GridUtility.GetMiddleSectionNodesFrom3x3Cube(NodeGridPosition, gridData.GridUnitSize, _gridUnitBlocks).ToArray();

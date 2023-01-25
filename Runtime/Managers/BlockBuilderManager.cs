@@ -33,37 +33,19 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		}
 
 		public ManagerMode Mode = ManagerMode.Default;
-
-		public GridDataSettingSO CustomGridDataSetting  ;
-		public BlockMeshData     CustomBlockMeshData    ;
-		public BlockMeshData     CustomPathBlockMeshData;
-
-		public BlockManager BlockManager 
-		{
-			get
-			{
-				if (!blockManager)
-					blockManager = GetComponent<BlockManager>();
-				return blockManager;
-			}
-
-			private set => blockManager = value;
-		}
 		
-		[SerializeField] private BlockManager blockManager;
+		[field: SerializeField] public BlockManager BlockManager { get; private set; }
+
+#if UNITY_EDITOR
+		private void OnValidate()
+		{
+			if (BlockManager == null)
+				BlockManager = GetComponent<BlockManager>();
+		}
+#endif
 
 #region Managers 
 		private readonly Dictionary<Type, BaseBuilderManager> managerCollections = new Dictionary<Type, BaseBuilderManager>();
-
-		public void Print()
-		{
-			managerCollections.Keys.ToList().ForEach(_t => Debug.LogWarning($"{_t}"));
-		}
-
-		public BlockManager GetBlockManager()
-		{
-			return blockManager != null ? blockManager : null;
-		}
 
 		public T GetManager<T>() where T : BaseBuilderManager
 		{
@@ -87,15 +69,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 		}
 #endregion
 
-		public void PreInit()
-		{
-			//BlockManager.InitializeWith();
-		}
-
 		public void Initialized()
 		{
 			InitializeManagers();
-			InitializeBlockManager();
 		}
 		
 		private void InitializeManagers()
@@ -111,42 +87,18 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			_managers.ToList().ForEach(Debug.LogWarning);
 		}
 		
-		private void InitializeBlockManager()
-		{
-			if (!gameObject.TryGetComponent(out blockManager))
-				blockManager = FindObjectOfType<BlockManager>();
-
-			var _blockDataSetting = new BlockDataSetting
-			{
-				GridDataSetting          = CustomGridDataSetting,
-				BlockMeshDataSetting     = CustomBlockMeshData,
-				PathBlockMeshDataSetting = CustomPathBlockMeshData
-			};
-			
-			switch (Mode)
-			{
-				case ManagerMode.Default:
-					blockManager.DefaultInitialized();
-					break;
-				case ManagerMode.Custom:
-					blockManager.InitializeWith(_blockDataSetting);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
-		
-		private void AddRequiredComponents()
-		{
-			gameObject.AddComponent<InputManager>         ();
-			gameObject.AddComponent<GridBlockSelection>   ();
-			
-			gameObject.AddComponent<BlockEditorManager>   ();
-			gameObject.AddComponent<BlockSelectionManager>();
-			
-			gameObject.AddComponent<PointerVisualizer>    ();
-
-			gameObject.AddComponent<StateManager>();//Testing//
-		}
+		//Not using?
+		// private void AddRequiredComponents()
+		// {
+		// 	gameObject.AddComponent<InputManager>         ();
+		// 	gameObject.AddComponent<GridBlockSelection>   ();
+		// 	
+		// 	gameObject.AddComponent<BlockEditorManager>   ();
+		// 	gameObject.AddComponent<BlockSelectionManager>();
+		// 	
+		// 	gameObject.AddComponent<PointerVisualizer>    ();
+		//
+		// 	gameObject.AddComponent<StateManager>();//Testing//
+		// }
 	}
 }

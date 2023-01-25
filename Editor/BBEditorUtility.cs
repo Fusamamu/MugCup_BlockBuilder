@@ -12,7 +12,7 @@ namespace MugCup_BlockBuilder.Editor
 	{
 		public static void RecordGridBlockManagerChanges(Action _action)
 		{
-			var _gridBlockDataManager = BBEditorManager.BlockManager.CurrentGridBlockBlockData;
+			var _gridBlockDataManager = BBEditorManager.BlockManager.GridBlockDataManager;
 			
 			Undo.RecordObject(_gridBlockDataManager, "GridBlockDataManager Changed");
                             

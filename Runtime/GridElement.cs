@@ -39,6 +39,7 @@ namespace MugCup_BlockBuilder
 			NodeGridPosition = _nodePosition;
 			return this;
 		}
+		
 		public IGridCoord SetNodeWorldPosition(Vector3 _worldPosition)
 		{
 			NodeWorldPosition = _worldPosition;
@@ -65,6 +66,8 @@ namespace MugCup_BlockBuilder
 			    
 		        _point.SetBitMask   ();
 		        _point.SetCornerMesh();
+		        
+		        Debug.Log(_point.NodeGridPosition);
 		    }
 
 		    InsideBoxCollider .enabled = false;
@@ -89,6 +92,18 @@ namespace MugCup_BlockBuilder
 		    OutsideBoxCollider.enabled = false;
 
 		    Renderer.material = InactiveMaterial;
+		}
+
+		private void OnDrawGizmosSelected()
+		{
+			Gizmos.color = Color.red;
+
+			foreach (var _point in VolumePoints)
+			{
+				if(_point == null) continue;
+
+				Gizmos.DrawLine(transform.position, _point.transform.position);
+			}
 		}
 	}
 }

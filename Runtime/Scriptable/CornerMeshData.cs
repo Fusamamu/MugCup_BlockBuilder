@@ -19,48 +19,49 @@ namespace BlockBuilder.Core.Scriptable
         public Mesh M_0010_0000;
         public Mesh M_0100_0000;
         public Mesh M_1000_0000;
+
+        public Mesh M_0000_0011;
+        public Mesh M_0000_1100;
+        public Mesh M_0011_0000;
+        public Mesh M_1100_0000;
         
         public Mesh GetCornerMesh(int _bitMask)
         {
             if (_bitMask == 0b_0000_0001)
-            {
                 return M_0000_0001;
-            }
 
             if (_bitMask == 0b_0000_0010)
-            {
                 return M_0000_0010;
-            }
 
             if (_bitMask == 0b_0000_0100)
-            {
                 return M_0000_0100;
-            }
 
             if (_bitMask == 0b_0000_1000)
-            {
                 return M_0000_1000;
-            }
 
             if (_bitMask == 0b_0001_0000)
-            {
                 return M_0001_0000;
-            }
 
             if (_bitMask == 0b_0010_0000)
-            {
                 return M_0010_0000;
-            }
             
             if (_bitMask == 0b_0100_0000)
-            {
                 return M_0100_0000;
-            }
 
             if (_bitMask == 0b_1000_0000)
-            {
                 return M_1000_0000;
-            }
+
+            if (_bitMask == 0b_0000_0011)
+                return M_0000_0011;
+
+            if (_bitMask == 0b_0000_1100)
+                return M_0000_1100;
+
+            if (_bitMask == 0b_0011_0000)
+                return M_0011_0000;
+
+            if (_bitMask == 0b_1100_0000)
+                return M_1100_0000;
 
             return null;
         }

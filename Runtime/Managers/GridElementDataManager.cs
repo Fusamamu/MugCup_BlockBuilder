@@ -57,8 +57,10 @@ namespace MugCup_BlockBuilder
                 _element.SetVolumePoints(_points);
             }
             
-            foreach (var _point in VolumePointData.ValidNodes)
+            foreach (var _point in VolumePointData.GridNodes)
             {
+                if(_point == null) continue;
+                
                 _point.SetAdjacentBlocks(GridElementData.GridNodes, GridDataSetting.GridUnitSize);
             }
             

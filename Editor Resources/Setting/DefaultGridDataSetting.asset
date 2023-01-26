@@ -18,9 +18,9 @@ MonoBehaviour:
   Row: 1
   Column: 1
   Height: 1
-  UnitRow: 5
-  UnitColumn: 5
-  UnitHeight: 1
+  UnitRow: 4
+  UnitColumn: 4
+  UnitHeight: 4
   BlockWidth: 1
   BlockHeight: 1
   BlockDepth: 1

@@ -165,7 +165,7 @@ namespace BlockBuilder.Runtime.Core
 
                          _node.SetNodePosition(new Vector3Int(_x, _y, _z));
                          
-                         _gridNodes[_z + _gridUnitSize.x * (_x + _gridUnitSize.y * _y)] = _node;
+                         _gridNodes[_z + _gridUnitSize.x * (_x + _gridUnitSize.z * _y)] = _node;
                      }
                  }
              }

@@ -55,8 +55,9 @@ namespace BlockBuilder.Runtime.Core
                         var _volumePoint = _pointObject.GetComponent<VolumePoint>();
                         
                         _volumePoint.Init(new Vector3Int(_x, _y, _z));
+                        _volumePoint.SetNodePosition(new Vector3Int(_x, _y, _z));
                          
-                        _volumePoints[_z + (_gridUnitSize.x + 1) * (_x + (_gridUnitSize.y + 1) * _y)] = _volumePoint;
+                        _volumePoints[_z + (_gridUnitSize.x + 1) * (_x + (_gridUnitSize.z + 1) * _y)] = _volumePoint;
                     }
                 }
             }
@@ -71,7 +72,7 @@ namespace BlockBuilder.Runtime.Core
             var _z = _nodeCoord.z;
 
             var _arrayWidth  = _gridUnitSize.x + 1;
-            var _arrayHeight = _gridUnitSize.y + 1;
+            var _arrayHeight = _gridUnitSize.z + 1;
             
             var _swbPoint = _points[_z +     _arrayWidth * (_x +     _arrayHeight * _y)];
             var _nwbPoint = _points[_z + 1 + _arrayWidth * (_x +     _arrayHeight * _y)];

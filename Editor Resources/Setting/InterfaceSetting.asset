@@ -18,5 +18,5 @@ MonoBehaviour:
   BlockPlacementToolTabSelection: 0
   BuildToolTabSelection: 0
   RoadBuildToolTabSelection: 0
-  MapSettingFoldout: 0
+  MapSettingFoldout: 1
   BuilderMode: 0

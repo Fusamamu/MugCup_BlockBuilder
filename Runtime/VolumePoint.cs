@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BlockBuilder.Core.Scriptable;
 using MugCup_BlockBuilder.Runtime;
 using MugCup_PathFinder.Runtime;
+using UnityEditor;
 using UnityEngine;
 
 namespace MugCup_BlockBuilder
@@ -44,6 +46,13 @@ namespace MugCup_BlockBuilder
         public GridElement LowerNorthWestGridElement;
         public GridElement LowerSouthWestGridElement;
         public GridElement LowerSouthEastGridElement;
+
+        [field: SerializeField] public string PosXSocket { get; private set; } = "PosX";
+        [field: SerializeField] public string NegXSocket { get; private set; } = "NegX";
+        [field: SerializeField] public string PosZSocket { get; private set; } = "PosZ";
+        [field: SerializeField] public string NegZSocket { get; private set; } = "NegZ";
+        [field: SerializeField] public string PosYSocket { get; private set; } = "PosY";
+        [field: SerializeField] public string NegYSocket { get; private set; } = "NegY";
         
         public void Init(Vector3Int _coord)
         {
@@ -53,27 +62,12 @@ namespace MugCup_BlockBuilder
 			
 	        Mesh     = GetComponent<MeshFilter>();
 	        Renderer = GetComponent<Renderer>();
-
-	        // UpperNorthEastGridElement = AdjacentGridElements[0];
-	        // UpperNorthWestGridElement = AdjacentGridElements[1];
-	        // UpperSouthWestGridElement = AdjacentGridElements[2]; 
-	        // UpperSouthEastGridElement = AdjacentGridElements[3];
-	        //
-	        // LowerNorthEastGridElement = AdjacentGridElements[4];
-	        // LowerNorthWestGridElement = AdjacentGridElements[5];
-	        // LowerSouthWestGridElement = AdjacentGridElements[6];
-	        // LowerSouthEastGridElement = AdjacentGridElements[7];
         }
 	
         public void SetPosition(float _x, float _y, float _z)
         {
 	        transform.position = new Vector3(_x, _y, _z);
         }
-
-        // private void SetAdjacentBlocks()
-        // {
-	       //  SetAdjacentBlocks(null, Vector3Int.back);
-        // }
 
         public void SetAdjacentBlocks(GridElement[] _gridElements, Vector3Int _gridUnitSize)
         {
@@ -169,6 +163,23 @@ namespace MugCup_BlockBuilder
 	        {
 		        BitMask += 0b_1000_0000;
 	        }
+        }
+
+        private void OnDrawGizmos()
+        {
+	        var _center = transform.position;
+	        Gizmos.color = Color.yellow;
+	        Gizmos.DrawSphere(_center, 0.05f);
+	        Gizmos.color = Color.green;
+	        Gizmos.DrawWireCube(_center, Vector3.one);
+	        
+	        Handles.Label(_center + Vector3.right/2,   PosXSocket);
+	        Handles.Label(_center + Vector3.left/2,    NegXSocket);
+	        Handles.Label(_center + Vector3.forward/2, PosZSocket);
+	        Handles.Label(_center + Vector3.back/2,    NegZSocket);
+	        Handles.Label(_center + Vector3.up/2,      PosYSocket);
+	        Handles.Label(_center + Vector3.down/2,    NegYSocket);
+	        
         }
     }
 }

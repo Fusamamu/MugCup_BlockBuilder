@@ -22,6 +22,11 @@ namespace MugCup_BlockBuilder.Editor
         {
             DrawDefaultInspector();
 
+            if (GUILayout.Button("Test"))
+            {
+                combineMesh.Clone();
+            }
+
             if (GUILayout.Button("Clone Mesh"))
             {
                 combineMesh.CloneMesh();

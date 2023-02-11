@@ -9,7 +9,21 @@ namespace MugCup_BlockBuilder.Runtime
 {
     public class CombineMesh : MonoBehaviour
     {
-        [SerializeField] private MeshFilter SourceMeshFilter;
+        [SerializeField] private MeshFilter CM_0000_0001;
+        [SerializeField] private MeshFilter CM_0001_0000;
+        
+        [SerializeField] private MeshFilter CM_0000_0011;
+        [SerializeField] private MeshFilter CM_0011_0000;
+        
+        [SerializeField] private MeshFilter CM_0000_0111;
+        [SerializeField] private MeshFilter CM_0111_0000;
+        
+        [SerializeField] private MeshFilter CM_0001_0011;
+        [SerializeField] private MeshFilter CM_0011_0001;
+        
+        [SerializeField] private MeshFilter CM_0001_1011;
+        [SerializeField] private MeshFilter CM_0001_1111;
+        
         [SerializeField] private Material DefaultMaterial;
 
         [SerializeField] private bool CreateMeshAsset;
@@ -18,26 +32,186 @@ namespace MugCup_BlockBuilder.Runtime
         private const string targetSavePath          = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Meshes/Corner Meshes/DualCornerMesh/";
         private const string volumePointPrefabFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Prefabs/VolumePoints";
         
-        public void Clone()
+        [SerializeField] private int bit = 0b_0000_0011;
+
+        [SerializeField] private int XInterval = 2;
+        [SerializeField] private int ZInterval = 2;
+
+        // public void TestShiftBit()
+        // {
+        //     var _bitTex = $"CM_{Convert.ToString(bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+        //     
+        //     Debug.Log(_bitTex);
+        //
+        //     var _upperBit = bit & 0b_0000_1111;
+        //     var _lowerBit = bit & 0b_1111_0000;
+        //
+        //     _upperBit <<= 1;
+        //
+        //     var _checkBit = _upperBit & (1 << 4);
+        //
+        //     if (_checkBit == 0b_0001_0000)
+        //     {
+        //         _upperBit -= 0b_0001_0000;
+        //         _upperBit += 0b_0000_0001;
+        //     }
+        //
+        //     _lowerBit <<= 1;
+        //
+        //     _checkBit = _lowerBit & 1 << 8;
+        //     
+        //     if (_checkBit == 0b_1_0000_0000)
+        //     {
+        //         _lowerBit -= 0b_1_0000_0000;
+        //         _lowerBit += 0b_0_0001_0000;
+        //     }
+        //
+        //     bit = _upperBit | _lowerBit;
+        //
+        // }
+
+        [SerializeField] private List<GameObject> AllGeneratedMeshes = new List<GameObject>();
+
+        public void ClearGeneratedMeshes()
         {
-            int _bit = 0b_0000_0001;
+#if UNITY_EDITOR
+            foreach (var _object in AllGeneratedMeshes)
+            {
+                if(!Application.isPlaying)
+                    DestroyImmediate(_object);
+            }
 
-            var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
-                
-            var _cloneMesh = CloneMesh(SourceMeshFilter.sharedMesh);
-
-            RotateMesh(_cloneMesh, SourceMeshFilter.transform.position, new Vector3(90, 0, 0));
-
-            if (CreateMeshAsset)
-                SaveMesh(_cloneMesh, _meshName);
-
-            var _newVolumePoint = CreateNewMesh(_cloneMesh, _meshName, out _, out _);
-
-            if(CreatePrefabAsset)
-                SaveAsPrefab(_newVolumePoint, _meshName);
+            AllGeneratedMeshes = new List<GameObject>();
+#endif
         }
 
-        public void CloneMesh()
+        public void ToggleShowGizmos()
+        {
+            foreach (var _object in AllGeneratedMeshes)
+            {
+                if (_object.TryGetComponent<VolumePoint>(out var _volumePoint))
+                {
+                    _volumePoint.ToggleShowGizmos();
+                }
+            }
+        }
+
+        public void ToggleShowDebugText()
+        {
+            foreach (var _object in AllGeneratedMeshes)
+            {
+                if (_object.TryGetComponent<VolumePoint>(out var _volumePoint))
+                {
+                    _volumePoint.ToggleShowDebugText();
+                }
+            }
+        }
+
+        private int ShiftBit(int _bit)
+        {
+            //var _bitTex = $"CM_{Convert.ToString(bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+            
+            //Debug.Log(_bitTex);
+
+            var _upperBit = _bit & 0b_0000_1111;
+            var _lowerBit = _bit & 0b_1111_0000;
+
+            _upperBit <<= 1;
+
+            var _checkBit = _upperBit & (1 << 4);
+
+            if (_checkBit == 0b_0001_0000)
+            {
+                _upperBit -= 0b_0001_0000;
+                _upperBit += 0b_0000_0001;
+            }
+
+            _lowerBit <<= 1;
+
+            _checkBit = _lowerBit & 1 << 8;
+            
+            if (_checkBit == 0b_1_0000_0000)
+            {
+                _lowerBit -= 0b_1_0000_0000;
+                _lowerBit += 0b_0_0001_0000;
+            }
+
+            _bit = _upperBit | _lowerBit;
+
+            return _bit;
+        }
+        
+        public void GenerateCornerMeshes()
+        {
+            var _bitMeshLut = new Dictionary<int, MeshFilter>()
+            {
+                { 0b_0000_0001, CM_0000_0001 },
+                { 0b_0001_0000, CM_0001_0000 },
+                
+                { 0b_0000_0011, CM_0000_0011 },
+                { 0b_0011_0000, CM_0011_0000 },
+                
+                { 0b_0000_0111, CM_0000_0111 },
+                { 0b_0111_0000, CM_0111_0000 },
+                
+                { 0b_0001_0011, CM_0001_0011 },
+                { 0b_0011_0001, CM_0011_0001 },
+                
+                { 0b_0001_1011, CM_0001_1011 },
+                { 0b_0001_1111, CM_0001_1111 }
+            };
+
+            var _j = 0;
+            foreach (var _kvp in _bitMeshLut)
+            {
+                var _bit        = _kvp.Key;
+                var _meshFilter = _kvp.Value;
+                
+                var _volumePoints = GenerateCornerMeshes_ByRotate_CounterClockwise(_bit, _meshFilter);
+
+                for (int _i = 0; _i < _volumePoints.Count; _i++)
+                {
+                    _volumePoints[_i].transform.position += new Vector3(_i * XInterval, 0, _j * ZInterval);
+                }
+
+                _j++;
+            }
+        }
+
+        private List<GameObject> GenerateCornerMeshes_ByRotate_CounterClockwise(int _bit, MeshFilter _sourceMesh)
+        {
+            var _volumePoints = new List<GameObject>();
+            
+            for (var _i = 0; _i < 4; _i++)
+            {
+                var _xRot = 0;
+                var _yRot = _i * -90;
+                var _zRot = 0;
+
+                var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+                
+                var _cloneMesh = CloneMesh(_sourceMesh.sharedMesh);
+
+                RotateMesh(_cloneMesh, _sourceMesh.transform.position, new Vector3(_xRot, _yRot, _zRot));
+
+                if (CreateMeshAsset)
+                    SaveMesh(_cloneMesh, _meshName);
+
+                var _newVolumePoint = CreateNewMesh(_cloneMesh, _meshName, out _, out _);
+
+                if(CreatePrefabAsset)
+                    SaveAsPrefab(_newVolumePoint, _meshName);
+
+                _bit = ShiftBit(_bit);
+                
+                _volumePoints     .Add(_newVolumePoint);
+                AllGeneratedMeshes.Add(_newVolumePoint);
+            }
+
+            return _volumePoints;
+        }
+        
+        public void Generate_CM_0000_0001()
         {
             int _bit = 0b_0000_0001;
 
@@ -48,13 +222,13 @@ namespace MugCup_BlockBuilder.Runtime
                 var _zRot = 0;
 
                 if (_i > 3)
-                    _xRot = 90;
+                    _xRot = 180;
 
                 var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
                 
-                var _cloneMesh = CloneMesh(SourceMeshFilter.sharedMesh);
+                var _cloneMesh = CloneMesh(CM_0000_0001.sharedMesh);
 
-                RotateMesh(_cloneMesh, SourceMeshFilter.transform.position, new Vector3(_xRot, _yRot, _zRot));
+                RotateMesh(_cloneMesh, CM_0000_0001.transform.position, new Vector3(_xRot, _yRot, _zRot));
 
                 if (CreateMeshAsset)
                     SaveMesh(_cloneMesh, _meshName);
@@ -65,6 +239,222 @@ namespace MugCup_BlockBuilder.Runtime
                     SaveAsPrefab(_newVolumePoint, _meshName);
              
                 _bit <<= 1;
+            }
+        }
+        
+        public void Generate_CM_0000_0011()
+        {
+            var _bitArray = new int[]
+            {
+                0b_0000_0011,
+                0b_0000_0110,
+                0b_0000_1100,
+                0b_0000_1001,
+                
+                0b_0011_0000,
+                0b_0110_0000,
+                0b_1100_0000,
+                0b_1001_0000
+            };
+
+            for (var _i = 0; _i < 8; _i++)
+            {
+                var _xRot = 0;
+                var _yRot = _i * -90;
+                var _zRot = 0;
+
+                if (_i > 3)
+                    _xRot = 90;
+
+                var _bit = _bitArray[_i];
+
+                var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+                
+                var _cloneMesh = CloneMesh(CM_0000_0011.sharedMesh);
+
+                RotateMesh(_cloneMesh, CM_0000_0011.transform.position, new Vector3(_xRot, _yRot, _zRot));
+
+                if (CreateMeshAsset)
+                    SaveMesh(_cloneMesh, _meshName);
+
+                var _newVolumePoint = CreateNewMesh(_cloneMesh, _meshName, out _, out _);
+
+                if(CreatePrefabAsset)
+                    SaveAsPrefab(_newVolumePoint, _meshName);
+            }
+        }
+        
+        public void Generate_CM_0000_0111()
+        {
+            var _bitArray = new int[]
+            {
+                0b_0000_0111,
+                0b_0000_1110,
+                0b_0000_1101,
+                0b_0000_1011,
+                
+                0b_1110_0000,
+                0b_1101_0000,
+                0b_1011_0000,
+                0b_0111_0000
+            };
+
+            for (var _i = 0; _i < 8; _i++)
+            {
+                var _xRot = 0;
+                var _yRot = _i * -90;
+                var _zRot = 0;
+
+                if (_i > 3)
+                    _xRot = 180;
+
+                var _bit = _bitArray[_i];
+
+                var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+                
+                var _cloneMesh = CloneMesh(CM_0000_0111.sharedMesh);
+
+                RotateMesh(_cloneMesh, CM_0000_0111.transform.position, new Vector3(_xRot, _yRot, _zRot));
+
+                if (CreateMeshAsset)
+                    SaveMesh(_cloneMesh, _meshName);
+
+                var _newVolumePoint = CreateNewMesh(_cloneMesh, _meshName, out _, out _);
+
+                if(CreatePrefabAsset)
+                    SaveAsPrefab(_newVolumePoint, _meshName);
+            }
+        }
+        
+        public void Generate_CM_0001_0011()
+        {
+            var _bitArray = new int[]
+            {
+                0b_0001_0011,
+                0b_0010_0110,
+                0b_0100_1100,
+                0b_1000_1001,
+                
+                0b_1100_1000,
+                0b_1001_0001,
+                0b_0011_0010,
+                0b_0110_0100
+            };
+
+            for (var _i = 0; _i < 8; _i++)
+            {
+                var _xRot = 0;
+                var _yRot = _i * -90;
+                var _zRot = 0;
+
+                if (_i > 3)
+                    _xRot = 180;
+
+                var _bit = _bitArray[_i];
+
+                var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+                
+                var _cloneMesh = CloneMesh(CM_0001_0011.sharedMesh);
+
+                RotateMesh(_cloneMesh, CM_0001_0011.transform.position, new Vector3(_xRot, _yRot, _zRot));
+
+                if (CreateMeshAsset)
+                    SaveMesh(_cloneMesh, _meshName);
+
+                var _newVolumePoint = CreateNewMesh(_cloneMesh, _meshName, out _, out _);
+
+                _newVolumePoint.transform.position += Vector3.right * 2 * _i;
+
+                if(CreatePrefabAsset)
+                    SaveAsPrefab(_newVolumePoint, _meshName);
+            }
+        }
+        
+        public void Generate_CM_0001_1011()
+        {
+            var _bitArray = new int[]
+            {
+                0b_0001_1011,
+                0b_0010_0111,
+                0b_0100_1011,
+                0b_1000_1101,
+                
+                0b_1101_1000,
+                0b_1011_0001,
+                0b_0111_0010,
+                0b_1110_0100
+            };
+
+            for (var _i = 0; _i < 8; _i++)
+            {
+                var _xRot = 0;
+                var _yRot = _i * -90;
+                var _zRot = 0;
+
+                if (_i > 3)
+                    _xRot = 180;
+
+                var _bit = _bitArray[_i];
+
+                var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+                
+                var _cloneMesh = CloneMesh(CM_0001_1011.sharedMesh);
+
+                RotateMesh(_cloneMesh, CM_0001_1011.transform.position, new Vector3(_xRot, _yRot, _zRot));
+
+                if (CreateMeshAsset)
+                    SaveMesh(_cloneMesh, _meshName);
+
+                var _newVolumePoint = CreateNewMesh(_cloneMesh, _meshName, out _, out _);
+
+                _newVolumePoint.transform.position += Vector3.right * 2 * _i;
+
+                if(CreatePrefabAsset)
+                    SaveAsPrefab(_newVolumePoint, _meshName);
+            }
+        }
+        
+        public void Generate_CM_0001_1111()
+        {
+            var _bitArray = new int[]
+            {
+                0b_0001_1111,
+                0b_0010_1111,
+                0b_0100_1111,
+                0b_1000_1111,
+                
+                0b_1111_1000,
+                0b_1111_0001,
+                0b_1111_0010,
+                0b_1111_0100
+            };
+
+            for (var _i = 0; _i < 8; _i++)
+            {
+                var _xRot = 0;
+                var _yRot = _i * -90;
+                var _zRot = 0;
+
+                if (_i > 3)
+                    _xRot = 180;
+
+                var _bit = _bitArray[_i];
+
+                var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+                
+                var _cloneMesh = CloneMesh(CM_0001_1111.sharedMesh);
+
+                RotateMesh(_cloneMesh, CM_0001_1111.transform.position, new Vector3(_xRot, _yRot, _zRot));
+
+                if (CreateMeshAsset)
+                    SaveMesh(_cloneMesh, _meshName);
+
+                var _newVolumePoint = CreateNewMesh(_cloneMesh, _meshName, out _, out _);
+
+                _newVolumePoint.transform.position += Vector3.right * 2 * _i;
+
+                if(CreatePrefabAsset)
+                    SaveAsPrefab(_newVolumePoint, _meshName);
             }
         }
 

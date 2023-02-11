@@ -22,14 +22,59 @@ namespace MugCup_BlockBuilder.Editor
         {
             DrawDefaultInspector();
 
-            if (GUILayout.Button("Test"))
+            // if (GUILayout.Button("Test Shift Bit"))
+            // {
+            //     combineMesh.TestShiftBit();
+            // }
+            
+            if (GUILayout.Button("Generate Corner Meshes"))
             {
-                combineMesh.Clone();
+                combineMesh.GenerateCornerMeshes();
+            }
+            
+            if (GUILayout.Button("Clear All Corner Meshes"))
+            {
+                combineMesh.ClearGeneratedMeshes();
+            }
+            
+            if (GUILayout.Button("Toggle Show Gizmos"))
+            {
+                combineMesh.ToggleShowGizmos();
+            }
+            
+            if (GUILayout.Button("Toggle Show Debug Text"))
+            {
+                combineMesh.ToggleShowDebugText();
             }
 
-            if (GUILayout.Button("Clone Mesh"))
+            if (GUILayout.Button("Generate CM 0000_0001"))
             {
-                combineMesh.CloneMesh();
+                combineMesh.Generate_CM_0000_0001();
+            }
+            
+            if (GUILayout.Button("Generate CM 0000_0011"))
+            {
+                combineMesh.Generate_CM_0000_0011();
+            }
+            
+            if (GUILayout.Button("Generate CM 0000_0111"))
+            {
+                combineMesh.Generate_CM_0000_0111();
+            }
+            
+            if (GUILayout.Button("Generate CM 0001_0011"))
+            {
+                combineMesh.Generate_CM_0001_0011();
+            }
+            
+            if (GUILayout.Button("Generate CM 0001_1011"))
+            {
+                combineMesh.Generate_CM_0001_1011();
+            }
+            
+            if (GUILayout.Button("Generate CM 0001_1111"))
+            {
+                combineMesh.Generate_CM_0001_1111();
             }
         }
     }

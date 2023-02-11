@@ -53,6 +53,10 @@ namespace MugCup_BlockBuilder
         [field: SerializeField] public string NegZSocket { get; private set; } = "NegZ";
         [field: SerializeField] public string PosYSocket { get; private set; } = "PosY";
         [field: SerializeField] public string NegYSocket { get; private set; } = "NegY";
+
+        [SerializeField] private bool ShowGizmos;
+        [SerializeField] private bool ShowDebugText;
+        [SerializeField] private bool ShowGizmosOnSelected;
         
         public void Init(Vector3Int _coord)
         {
@@ -165,13 +169,32 @@ namespace MugCup_BlockBuilder
 	        }
         }
 
+        public void ToggleShowDebugText()
+        {
+	        ShowDebugText = !ShowDebugText;
+        }
+
+        public void ToggleShowGizmos()
+        {
+	        ShowGizmos = !ShowGizmos;
+        }
+
+        public void SetShowGizmos(bool _value)
+        {
+	        ShowGizmos = _value;
+        }
+
         private void OnDrawGizmos()
         {
+	        if(ShowGizmosOnSelected || !ShowGizmos) return;
+	        
 	        var _center = transform.position;
 	        Gizmos.color = Color.yellow;
 	        Gizmos.DrawSphere(_center, 0.05f);
 	        Gizmos.color = Color.green;
 	        Gizmos.DrawWireCube(_center, Vector3.one);
+	        
+	        if(!ShowDebugText) return;
 	        
 	        Handles.Label(_center + Vector3.right/2,   PosXSocket);
 	        Handles.Label(_center + Vector3.left/2,    NegXSocket);
@@ -179,7 +202,34 @@ namespace MugCup_BlockBuilder
 	        Handles.Label(_center + Vector3.back/2,    NegZSocket);
 	        Handles.Label(_center + Vector3.up/2,      PosYSocket);
 	        Handles.Label(_center + Vector3.down/2,    NegYSocket);
-	        
+
+	        var _guiStyle = new GUIStyle
+	        {
+		        normal = { textColor = Color.yellow },
+		        alignment = TextAnchor.MiddleCenter
+	        };
+
+	        Handles.Label(_center + Vector3.up,  gameObject.name, _guiStyle);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+	        // if(!ShowGizmosOnSelected || !ShowGizmos) return;
+	        //
+	        // var _center = transform.position;
+	        // Gizmos.color = Color.yellow;
+	        // Gizmos.DrawSphere(_center, 0.05f);
+	        // Gizmos.color = Color.green;
+	        // Gizmos.DrawWireCube(_center, Vector3.one);
+	        //
+	        // Handles.Label(_center + Vector3.right/2,   PosXSocket);
+	        // Handles.Label(_center + Vector3.left/2,    NegXSocket);
+	        // Handles.Label(_center + Vector3.forward/2, PosZSocket);
+	        // Handles.Label(_center + Vector3.back/2,    NegZSocket);
+	        // Handles.Label(_center + Vector3.up/2,      PosYSocket);
+	        // Handles.Label(_center + Vector3.down/2,    NegYSocket);
+	        //
+	        // Handles.Label(_center + Vector3.up /1.5f,  gameObject.name);
         }
     }
 }

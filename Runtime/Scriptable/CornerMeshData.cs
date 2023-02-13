@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MugCup_BlockBuilder;
 using UnityEngine;
-using BlockBuilder.Runtime.Core;
-using MugCup_BlockBuilder.Runtime.Core;
 
 namespace BlockBuilder.Core.Scriptable
 {
@@ -24,6 +23,21 @@ namespace BlockBuilder.Core.Scriptable
         public Mesh M_0000_1100;
         public Mesh M_0011_0000;
         public Mesh M_1100_0000;
+
+        public PrototypeData P_0000_0001;
+        public PrototypeData P_0000_0010;
+
+        public PrototypeData GetPrototypeData(int _bit)
+        {
+            if (_bit == BitTable.B_0000_00001) return P_0000_0001;
+            
+            return null;
+        }
+
+        public Mesh GetPrototypeMesh(int _bit)
+        {
+            return null;
+        }
         
         public Mesh GetCornerMesh(int _bitMask)
         {

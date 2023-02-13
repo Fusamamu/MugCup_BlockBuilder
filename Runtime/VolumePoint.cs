@@ -47,13 +47,6 @@ namespace MugCup_BlockBuilder
         public GridElement LowerSouthWestGridElement;
         public GridElement LowerSouthEastGridElement;
 
-        [field: SerializeField] public string PosXSocket { get; private set; } = "PosX";
-        [field: SerializeField] public string NegXSocket { get; private set; } = "NegX";
-        [field: SerializeField] public string PosZSocket { get; private set; } = "PosZ";
-        [field: SerializeField] public string NegZSocket { get; private set; } = "NegZ";
-        [field: SerializeField] public string PosYSocket { get; private set; } = "PosY";
-        [field: SerializeField] public string NegYSocket { get; private set; } = "NegY";
-
         [SerializeField] private bool ShowGizmos;
         [SerializeField] private bool ShowDebugText;
         [SerializeField] private bool ShowGizmosOnSelected;
@@ -187,29 +180,28 @@ namespace MugCup_BlockBuilder
         private void OnDrawGizmos()
         {
 	        if(ShowGizmosOnSelected || !ShowGizmos) return;
-	        
-	        var _center = transform.position;
-	        Gizmos.color = Color.yellow;
-	        Gizmos.DrawSphere(_center, 0.05f);
-	        Gizmos.color = Color.green;
-	        Gizmos.DrawWireCube(_center, Vector3.one);
+	        // var _center = transform.position;
+	        // Gizmos.color = Color.yellow;
+	        // Gizmos.DrawSphere(_center, 0.05f);
+	        // Gizmos.color = Color.green;
+	        // Gizmos.DrawWireCube(_center, Vector3.one);
 	        
 	        if(!ShowDebugText) return;
 	        
-	        Handles.Label(_center + Vector3.right/2,   PosXSocket);
-	        Handles.Label(_center + Vector3.left/2,    NegXSocket);
-	        Handles.Label(_center + Vector3.forward/2, PosZSocket);
-	        Handles.Label(_center + Vector3.back/2,    NegZSocket);
-	        Handles.Label(_center + Vector3.up/2,      PosYSocket);
-	        Handles.Label(_center + Vector3.down/2,    NegYSocket);
+	        // Handles.Label(_center + Vector3.right/2,   PosXSocket);
+	        // Handles.Label(_center + Vector3.left/2,    NegXSocket);
+	        // Handles.Label(_center + Vector3.forward/2, PosZSocket);
+	        // Handles.Label(_center + Vector3.back/2,    NegZSocket);
+	        // Handles.Label(_center + Vector3.up/2,      PosYSocket);
+	        // Handles.Label(_center + Vector3.down/2,    NegYSocket);
 
-	        var _guiStyle = new GUIStyle
-	        {
-		        normal = { textColor = Color.yellow },
-		        alignment = TextAnchor.MiddleCenter
-	        };
-
-	        Handles.Label(_center + Vector3.up,  gameObject.name, _guiStyle);
+	        // var _guiStyle = new GUIStyle
+	        // {
+		       //  normal = { textColor = Color.yellow },
+		       //  alignment = TextAnchor.MiddleCenter
+	        // };
+	        //
+	        // Handles.Label(_center + Vector3.up,  gameObject.name, _guiStyle);
         }
 
         private void OnDrawGizmosSelected()

@@ -8,7 +8,7 @@ namespace BlockBuilder.Scriptable
     public class MaterialData : ScriptableObject
     {
         public Material DefaultBlockMaterial;
-        public Material VisualizerPointerMaterial;
+        public Material VisualizerPointerV1Material;
+        public Material VisualizerPointerV2Material;
     }
-    
 }

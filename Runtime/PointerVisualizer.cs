@@ -15,7 +15,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         private void Start()
         {
-            pointer = Visualizer.CreateBlockTypePointer();
+            pointer = Visualizer.CreateBlockTypeV1Pointer();
             pointer.SetActive(false);
 
             gridBlockSelection = FindObjectOfType<GridBlockSelection>();

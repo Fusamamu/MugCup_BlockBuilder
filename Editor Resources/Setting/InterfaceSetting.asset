@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df52f84d238dc4b4890d1994f3040667, type: 3}
   m_Name: InterfaceSetting
   m_EditorClassIdentifier: 
+  SelectedBuildType: 1
   CurrentMode: 0
   CurrentEditMode: 0
   CurrentMainTapSelection: 0
   BlockPlacementToolTabSelection: 0
   BuildToolTabSelection: 0
   RoadBuildToolTabSelection: 0
-  MapSettingFoldout: 0
+  MapSettingFoldout: 1
   BuilderMode: 0

@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6612381297408700179
 Transform:
   m_ObjectHideFlags: 0
@@ -55,6 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6612381298158132042}
   - component: {fileID: 6612381298158132043}
+  - component: {fileID: 5687223425996112092}
   m_Layer: 0
   m_Name: GridElement
   m_TagString: Untagged
@@ -71,7 +72,7 @@ Transform:
   m_GameObject: {fileID: 6612381298158132037}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6612381297408700179}
@@ -93,6 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
   <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
+  BoxCollider: {fileID: 5687223425996112092}
   InsideBoxCollider: {fileID: 6612381297408700178}
   OutsideBoxCollider: {fileID: 6612381298504109778}
   ShowGizmos: 1
@@ -107,6 +109,19 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+--- !u!65 &5687223425996112092
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6612381298158132037}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6612381298504109776
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6612381298504109777
 Transform:
   m_ObjectHideFlags: 0

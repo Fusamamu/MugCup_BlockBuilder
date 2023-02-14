@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: DefaultMaterialDataSetting
   m_EditorClassIdentifier: 
   DefaultBlockMaterial: {fileID: 2100000, guid: f16cbad6aa0914986b419a2df088bffc, type: 2}
-  VisualizerPointerMaterial: {fileID: 2100000, guid: bf9e2178b0dee41028925e655932fe41, type: 2}
+  VisualizerPointerV1Material: {fileID: 2100000, guid: bf9e2178b0dee41028925e655932fe41, type: 2}
+  VisualizerPointerV2Material: {fileID: 2100000, guid: 185fb8d61d70e4868bdde967de3a7815, type: 2}

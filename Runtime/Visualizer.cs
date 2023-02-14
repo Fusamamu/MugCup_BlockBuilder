@@ -17,24 +17,31 @@ namespace MugCup_BlockBuilder
 
         private static List<GameObject> pathPoints = new List<GameObject>();
 
-        private const string PointerName = "Pointer";
+        private const string POINTER_NAME = "Pointer";
         
-        public enum PointerType { Block, Path }
+        public enum PointerType { BLOCK_V1, BLOCK_V2, PATH }
 
-        private static PointerType selectedPointerType = PointerType.Block;
+        private static PointerType selectedPointerType = PointerType.BLOCK_V1;
 
         public static GameObject GetPointerReference(PointerType _type)
         {
             switch (_type)
             {
-                case PointerType.Block:
+                case PointerType.BLOCK_V1:
                     
                     if (pointer == null)
-                        pointer = CreateBlockTypePointer();
+                        pointer = CreateBlockTypeV1Pointer();
                     
                     break;
                 
-                case PointerType.Path:
+                case PointerType.BLOCK_V2:
+
+                    if (pointer == null)
+                        pointer = CreateBlockTypeV2Pointer();
+                    
+                    break;
+                
+                case PointerType.PATH:
 
                     if (pointer == null)
                         pointer = CreatePathTypePointer();
@@ -45,16 +52,7 @@ namespace MugCup_BlockBuilder
             return pointer;
         }
 
-        //may remove
-        // public static GameObject GetPointerReference()
-        // {
-        //     if (pointer == null)
-        //         pointer = CreateBlockTypePointer();
-        //     
-        //     return pointer;
-        // }
-
-        public static GameObject CreateBlockTypePointer()
+        public static GameObject CreateBlockTypeV1Pointer()
         {
             AssetManager.LoadAssets();
                 
@@ -62,8 +60,8 @@ namespace MugCup_BlockBuilder
             
             var _pointer  = Object.Instantiate(_block, Vector3.zero, Quaternion.identity);
             
-            _pointer.name = PointerName;
-            _pointer.GetComponent<Renderer>().material = AssetManager.MaterialData.VisualizerPointerMaterial;
+            _pointer.name = POINTER_NAME;
+            _pointer.GetComponent<Renderer>().material = AssetManager.MaterialData.VisualizerPointerV1Material;
             _pointer.GetComponent<Collider>().enabled = false;
             _pointer.transform.localScale *= 1.2f;
             
@@ -72,6 +70,23 @@ namespace MugCup_BlockBuilder
             return _pointer;
         }
         
+        public static GameObject CreateBlockTypeV2Pointer()
+        {
+            AssetManager.LoadAssets();
+                
+            GameObject _block = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            
+            var _pointer  = Object.Instantiate(_block, Vector3.zero, Quaternion.identity);
+            
+            _pointer.name = POINTER_NAME;
+            _pointer.GetComponent<Renderer>().material = AssetManager.MaterialData.VisualizerPointerV2Material;
+            _pointer.GetComponent<Collider>().enabled = false;
+            _pointer.transform.localScale *= 1.2f;
+            
+            Object.DestroyImmediate(_block);
+
+            return _pointer;
+        }
 
         public static GameObject CreatePathTypePointer()
         {
@@ -81,7 +96,7 @@ namespace MugCup_BlockBuilder
             
             var _pointer  = Object.Instantiate(_pathPointerPrefab, Vector3.zero, _pathPointerPrefab.transform.localRotation);
             
-            _pointer.name = PointerName;
+            _pointer.name = POINTER_NAME;
 
             return _pointer;
         }
@@ -106,7 +121,7 @@ namespace MugCup_BlockBuilder
             
                 var _pathPointVisual  = Object.Instantiate(_pathPointerPrefab, _point, _pathPointerPrefab.transform.localRotation);
             
-                _pathPointVisual.name = PointerName;
+                _pathPointVisual.name = POINTER_NAME;
                 
                 pathPoints.Add(_pathPointVisual);
             }

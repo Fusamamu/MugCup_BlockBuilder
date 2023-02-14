@@ -36,9 +36,13 @@ namespace MugCup_BlockBuilder
         private void OnDisable()
         {
             SceneView.duringSceneGui -= OnScene;
+
+            BBEditorManager.InterfaceSetting.CurrentEditMode = InterfaceSetting.EditMode.NONE;
             
             EditorUtility.SetDirty(BBEditorManager.InterfaceSetting);
+            
             BlockPreviewEditor.Clean();
+            BBEditorManager   .Clean();
         }
 
         private void OnGUI()
@@ -74,43 +78,23 @@ namespace MugCup_BlockBuilder
             if(Application.isPlaying) return;
             
             ProcessMouseEnterLeaveSceneView();
-            
-            Event _currentEvent = Event.current; 
-            Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
 
             switch (BBEditorManager.InterfaceSetting.CurrentMainTapSelection)
             {
                 case 0: /*Build Mode*/
-
-                    if(BBEditorManager.InterfaceSetting.CurrentEditMode == InterfaceSetting.EditMode.NONE) return;
-                    
-                    if (!Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity)) return;
-                    
-                    GetSelectedFace(_hit);
-                    
                     HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-                    
-                    switch (BBEditorManager.InterfaceSetting.CurrentEditMode)
+
+                    switch (BBEditorManager.InterfaceSetting.SelectedBuildType)     
                     {
-                        case InterfaceSetting.EditMode.BLOCK_PLACEMENT:
-                            
-                            UpdateVisualizePointer(_hit, Visualizer.PointerType.Block);
-                            BlockPlacementTools.UpdateBlockBuildTools(_currentEvent, _ray);
+                        case InterfaceSetting.BuildType.BLOB_TILE:
+                            UpdateBlobTileEditMode();
                             break;
-                        
-                        case InterfaceSetting.EditMode.EDIT_BLOCKS:
-                            
-                            UpdateVisualizePointer(_hit, Visualizer.PointerType.Block);
-                            BlockEditorTools.UpdateBlockBuildTools(_currentEvent, _ray);
-                            break;
-                        
-                        case InterfaceSetting.EditMode.EDIT_ROADS:
-                            
-                            UpdateVisualizePointer(_hit, Visualizer.PointerType.Path);
-                            PathEditorTools.UpdateRoadBuildTools(_currentEvent, _ray);
+                        case InterfaceSetting.BuildType.MARCHING_CUBE:
+                            UpdateMarchingCubeEditMode();
                             break;
                     }
                     break;
+                
                 case 1:
                     Visualizer.ClearPointer();
                     break;
@@ -119,6 +103,72 @@ namespace MugCup_BlockBuilder
                     break;
                 case 3:
                     Visualizer.ClearPointer();
+                    break;
+            }
+        }
+
+        private static void UpdateBlobTileEditMode()
+        {
+            if(BBEditorManager.InterfaceSetting.CurrentEditMode == InterfaceSetting.EditMode.NONE) return;
+            
+            Event _currentEvent = Event.current; 
+            Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
+                    
+            if (!Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity)) return;
+                    
+            GetSelectedFace(_hit);
+            
+            switch (BBEditorManager.InterfaceSetting.CurrentEditMode)
+            {
+                case InterfaceSetting.EditMode.BLOCK_PLACEMENT:
+                                    
+                    UpdateVisualizePointer(_hit, Visualizer.PointerType.BLOCK_V1);
+                    BlockPlacementTools.UpdateBlockBuildTools(_currentEvent, _ray);
+                    break;
+                                
+                case InterfaceSetting.EditMode.EDIT_BLOCKS:
+                                    
+                    UpdateVisualizePointer(_hit, Visualizer.PointerType.BLOCK_V1);
+                    BlockEditorTools.UpdateBlockBuildTools(_currentEvent, _ray);
+                    break;
+                                
+                case InterfaceSetting.EditMode.EDIT_ROADS:
+                                    
+                    UpdateVisualizePointer(_hit, Visualizer.PointerType.PATH);
+                    PathEditorTools.UpdateRoadBuildTools(_currentEvent, _ray);
+                    break;
+            }
+        }
+        
+        private static void UpdateMarchingCubeEditMode()
+        {
+            if(BBEditorManager.InterfaceSetting.CurrentEditMode == InterfaceSetting.EditMode.NONE) return;
+            
+            Event _currentEvent = Event.current; 
+            Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
+                    
+            if (!Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity)) return;
+                    
+            GetSelectedFace(_hit);
+            
+            switch (BBEditorManager.InterfaceSetting.CurrentEditMode)
+            {
+                case InterfaceSetting.EditMode.BLOCK_PLACEMENT:
+                                    
+                    // UpdateVisualizePointer(_hit, Visualizer.PointerType.Block);
+                    // BlockPlacementTools.UpdateBlockBuildTools(_currentEvent, _ray);
+                    break;
+                                
+                case InterfaceSetting.EditMode.EDIT_BLOCKS:
+                                    
+                    UpdateVisualizePointer(_hit, Visualizer.PointerType.BLOCK_V2);
+                    BlockEditorTools.UpdateMarchingCubeEditMode(_currentEvent, _ray);
+                    break;
+                                
+                case InterfaceSetting.EditMode.EDIT_ROADS:
+                                    
+                    // UpdateVisualizePointer(_hit, Visualizer.PointerType.Path);
+                    // PathEditorTools.UpdateRoadBuildTools(_currentEvent, _ray);
                     break;
             }
         }

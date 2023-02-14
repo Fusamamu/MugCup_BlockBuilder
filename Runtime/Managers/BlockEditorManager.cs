@@ -108,8 +108,6 @@ namespace MugCup_BlockBuilder.Runtime.Core
         /// <summary>
         /// Add Block at node center. Called when Normal Face is none.
         /// </summary>
-        /// <param name="_blockPrefab"></param>
-        /// <param name="_nodePos"></param>
         private void AddBlockCenter(Block _blockPrefab, Vector3Int _nodePos)
         {
             Vector3Int _targetNodePos = _nodePos;

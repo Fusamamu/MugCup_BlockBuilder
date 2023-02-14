@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
-using MugCup_BlockBuilder.Runtime;
 using MugCup_BlockBuilder.Editor;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_PathFinder.Runtime;
@@ -14,28 +13,33 @@ namespace MugCup_BlockBuilder
 {
     public static class BuildPanelGUI
     {
-        private static Block[] blocks;
+        //private static Block[] blocks;
         private static InterfaceSetting   interfaceSetting;
         private static GridDataSettingSO  gridDataSettingSo;
+
+        private static bool showGridElementGizmos;
+        private static int gridLevel;
         
         private static bool blockGeneratorFoldout;
         private static bool gridElementGeneratorFoldout;
         
         private static Vector2 scrollPosition;
-        
         private static AnimBool displayBuilderMode;
         
         private static GUIContent[] contents = new GUIContent[]
         {
             new GUIContent("Row"), new GUIContent("Column"), new GUIContent("Height")
         };
-
-        public static void Init()
-        {
-         
-        }
         
         public static void Display()
+        {
+            DisplayGridDataSettingSection();
+            DisplayBlockGeneratorSection();
+            DisplayGridElementGeneratorSection();
+            DisplayBlockEditorSection();
+        }
+
+        private static void DisplayGridDataSettingSection()
         {
             BBEditorManager.InterfaceSetting.MapSettingFoldout 
                 = BBEditorStyling.DrawHeader(Color.yellow, "Grid Data Setting", BBEditorManager.InterfaceSetting.MapSettingFoldout);
@@ -75,10 +79,11 @@ namespace MugCup_BlockBuilder
                 GUILayout.EndVertical();
             }
 
-            var _newStyle = new GUIStyle(UnityEngine.GUI.skin.button);
-
             Undo.RecordObject(BBEditorManager.GridDataSettingSo,"Undo");
-            
+        }
+
+        private static void DisplayBlockGeneratorSection()
+        {
             blockGeneratorFoldout = BBEditorStyling.DrawHeader(Color.cyan, "Blocks Generator", blockGeneratorFoldout);
 
             if (blockGeneratorFoldout)
@@ -88,6 +93,8 @@ namespace MugCup_BlockBuilder
                 EditorGUILayout.LabelField("Generate Map");
 
                 GUILayout.BeginVertical();
+                
+                var _newStyle = new GUIStyle(GUI.skin.button);
              
                 if (GUILayout.Button("Generate Map", _newStyle, GUILayout.Height(30)))
                 {
@@ -172,97 +179,150 @@ namespace MugCup_BlockBuilder
                 EditorGUILayout.Space();
                 
             }
-            
-            gridElementGeneratorFoldout = BBEditorStyling.DrawHeader(new Color(30, 30, 30), "Grid Elements Generator", gridElementGeneratorFoldout);
+        }
+
+        private static void DisplayGridElementGeneratorSection()
+        {
+            gridElementGeneratorFoldout = BBEditorStyling.DrawHeader(Color.black, "Grid Elements Generator", gridElementGeneratorFoldout);
 
             if (gridElementGeneratorFoldout)
             {
-                EditorGUILayout.BeginVertical("GroupBox");
-                
-                GUILayout.BeginHorizontal("GroupBox");
-                
-                EditorGUILayout.LabelField("Grid Element");
-                
-                if (GUILayout.Button("Generate", _newStyle, GUILayout.Height(30)))
+                var _generateButtonStyle = new GUIStyle(GUI.skin.button)
                 {
-                    var _gridElementDataManager = BBEditorManager.GridElementDataManager;
-                    Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
-
-                    _gridElementDataManager.Initialized();
-                    _gridElementDataManager.GenerateGrid();
-                    
-                    PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
-                }
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal("GroupBox");
+                    fixedWidth = 100,
+                };
                 
-                EditorGUILayout.LabelField("Volume Points");
-                
-                if (GUILayout.Button("Generate", _newStyle, GUILayout.Height(30)))
+                var _clearButtonStyle = new GUIStyle(GUI.skin.button)
                 {
-                    var _gridElementDataManager = BBEditorManager.GridElementDataManager;
-                    Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+                    fixedWidth = 100,
+                };
+                
+                EditorGUILayout.BeginVertical(new GUIStyle {padding = new RectOffset(20, 20, 8, 3)});
+                {
+                    EditorGUILayout.LabelField("Configuration", EditorStyles.boldLabel);
+                      
+                    showGridElementGizmos = EditorGUILayout.Toggle("Display gizmos", showGridElementGizmos);
 
-                    _gridElementDataManager.GenerateVolumePoints();
-                    
-                    PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
-                    
-                    
-                    // Vector3Int _gridUnitSize  = BBEditorManager.GridDataSettingSo.GridUnitSize;
-                    //
-                    // var _volumePoints  = new GameObject("[Volume Points]");
-                    //
-                    // volumePoints = VolumePointGenerator.GeneratedVolumePoints(_gridUnitSize, 0.1f, _volumePoints);
-                    //
-                    // var _blocks = BBEditorManager.BlockManager.GridBlockDataManager.GridNodeData.AvailableNodes<Block>().ToArray();
-                    //
-                    // if (_blocks.Length > 0)
-                    // {
-                    //     foreach (var _block in _blocks)
-                    //     {
-                    //         var _coord  = _block.NodeGridPosition;
-                    //         var _points = VolumePointGenerator.GetVolumePoints(_coord, _gridUnitSize, volumePoints);
-                    //         
-                    //         _block.SetVolumePoints(_points);
-                    //     }
-                    //
-                    //     foreach (var _point in volumePoints)
-                    //     {
-                    //         //_point.SetAdjacentBlocks(_blocks, _gridUnitSize);
-                    //     }
-                    // }
+                    var _allGridElements = BBEditorManager.GridElementDataManager.GridElementData.GridNodes;
+
+                    if (_allGridElements is { Length: > 0 })
+                    {
+                        foreach (var _element in _allGridElements)
+                        {
+                            if(_element == null) continue;
+                            _element.SetShowGizmos(showGridElementGizmos);
+                        }
+                    }
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        
+                        gridLevel = EditorGUILayout.IntField("Target Level", gridLevel);
+                        
+                        if (GUILayout.Button("Enable", _clearButtonStyle))
+                        {
+                            var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                            Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+
+                            var _gridElements = _gridElementDataManager.GridElementData.GetAllNodeBasesAtLevel(gridLevel);
+
+                            foreach (var _element in _gridElements)
+                            {
+                                if(_element == null) continue;
+                                _element.Enable();
+                            }
+                            
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                        }
+                        
+                        if (GUILayout.Button("Disable", _clearButtonStyle))
+                        {
+                           
+                        }
+                        
+                    }
+                    EditorGUILayout.EndHorizontal();
                 }
-                GUILayout.EndHorizontal();
                 EditorGUILayout.EndVertical();
                 
                 
-                EditorGUILayout.BeginHorizontal();
-                GUILayout.Space(7);
-            
-                if(GUILayout.Button("Clear Grid", EditorStyles.miniButton, GUILayout.Width(80)))
-                {
-                    var _gridElementDataManager = BBEditorManager.GridElementDataManager;
-                    Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+                EditorGUILayout.BeginVertical("GroupBox");
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Grid Element");
+                                
+                        if (GUILayout.Button("Generate", _generateButtonStyle))
+                        {
+                            var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                            Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
 
-                    _gridElementDataManager.ClearGrid();
+                            _gridElementDataManager.Initialized();
+                            _gridElementDataManager.GenerateGrid();
+                                    
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                        }
+                                
+                        if (GUILayout.Button("Clear", _clearButtonStyle))
+                        {
+                            var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                            Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+
+                            _gridElementDataManager.ClearGrid();
                     
-                    PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
-                }  
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                        }
+                    }
+                    EditorGUILayout.EndHorizontal();
+
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Volume Points");
+                                
+                        if (GUILayout.Button("Generate", _generateButtonStyle))
+                        {
+                            var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                            Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+
+                            _gridElementDataManager.GenerateVolumePoints();
+                                    
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                        }
+                        
+                        if (GUILayout.Button("Clear", _generateButtonStyle))
+                        {
+                            var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                            Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+
+                            _gridElementDataManager.ClearVolumePoints();
+                    
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                        }
+                    }
+                    EditorGUILayout.EndHorizontal();
+                EditorGUILayout.EndVertical();
                 
-                if(GUILayout.Button("Clear Volume Points", EditorStyles.miniButton, GUILayout.Width(80)))
+                EditorGUILayout.BeginHorizontal();
                 {
-                    var _gridElementDataManager = BBEditorManager.GridElementDataManager;
-                    Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+                    GUILayout.Space(15);
+                    if(GUILayout.Button("Clear All", EditorStyles.miniButton, GUILayout.Width(80)))
+                    {
+                        var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                        Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
 
-                    _gridElementDataManager.ClearVolumePoints();
-                    
-                    PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
-                }  
+                        _gridElementDataManager.ClearGrid();
+                        _gridElementDataManager.ClearVolumePoints();
+                        
+                        PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                    }  
+                }
                 EditorGUILayout.EndHorizontal();
                 EditorGUILayout.Space();
             }
-            
+        }
+
+        private static void DisplayBlockEditorSection()
+        {
+             
             blockGeneratorFoldout = BBEditorStyling.DrawHeader(Color.magenta, "Blocks Editor", blockGeneratorFoldout);
 
             EditorGUILayout.BeginVertical("GroupBox");

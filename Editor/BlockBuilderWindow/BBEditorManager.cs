@@ -36,15 +36,26 @@ namespace MugCup_BlockBuilder.Editor
         
         private static void LoadBlockBuilderManager()
         {
-            if (!BlockBuilderManager) BlockBuilderManager = Object.FindObjectOfType<BlockBuilderManager>();
+            if (!BlockBuilderManager)    BlockBuilderManager    = Object.FindObjectOfType<BlockBuilderManager>();
             
-            if (!BlockManager)     BlockManager        = Object.FindObjectOfType<BlockManager>();
-            if (!BlockDataManager) BlockDataManager    = Object.FindObjectOfType<GridBlockDataManager>();
-
+            if (!BlockManager)           BlockManager           = Object.FindObjectOfType<BlockManager>();
+            if (!BlockDataManager)       BlockDataManager       = Object.FindObjectOfType<GridBlockDataManager>();
+            if (!BlockEditorManager)     BlockEditorManager     = Object.FindObjectOfType<BlockEditorManager>();
+            
             if (!GridElementManager)     GridElementManager     = Object.FindObjectOfType<GridElementManager>();
             if (!GridElementDataManager) GridElementDataManager = Object.FindObjectOfType<GridElementDataManager>();
+        }
+
+        public static void Clean()
+        {
+            IsInit = false;
             
-            if (!BlockEditorManager)  BlockEditorManager  = Object.FindObjectOfType<BlockEditorManager>();
+            BlockBuilderManager    = null;
+            BlockManager           = null;
+            BlockDataManager       = null;
+            BlockEditorManager     = null;
+            GridElementManager     = null;
+            GridElementDataManager = null;
         }
 
         private static GameObject GetBlockParent()

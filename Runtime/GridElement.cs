@@ -11,10 +11,16 @@ namespace MugCup_BlockBuilder
 		[field: SerializeField] public Vector3Int NodeGridPosition  { get; private set; }
 		[field: SerializeField] public Vector3    NodeWorldPosition { get; private set; }
 
+		[SerializeField] private BoxCollider BoxCollider;
 		[SerializeField] private BoxCollider InsideBoxCollider;
 		[SerializeField] private BoxCollider OutsideBoxCollider;
 
 		[SerializeField] private bool ShowGizmos;
+
+		public void SetShowGizmos(bool _value)
+		{
+			ShowGizmos = _value;
+		}
 
 		private void OnValidate()
 		{
@@ -59,13 +65,9 @@ namespace MugCup_BlockBuilder
 			    
 		        _point.SetBitMask   ();
 		        _point.SetCornerMesh();
-		        
-		        Debug.Log(_point.NodeGridPosition);
 		    }
 
-		    InsideBoxCollider .enabled = false;
-		    OutsideBoxCollider.enabled = true;
-
+		    BoxCollider.enabled = true;
 		}
 		
 		public void Disable()
@@ -79,10 +81,8 @@ namespace MugCup_BlockBuilder
 		        _point.SetBitMask   ();
 		        _point.SetCornerMesh();
 		    }
-		    
-		    InsideBoxCollider .enabled = true;
-		    OutsideBoxCollider.enabled = false;
 
+		    BoxCollider.enabled = false;
 		}
 
 		private void OnDrawGizmos()

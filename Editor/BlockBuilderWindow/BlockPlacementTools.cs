@@ -34,7 +34,6 @@ namespace MugCup_BlockBuilder.Editor
                     {
                         if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                         {
-                           
                             var _object = _hit.collider.gameObject;
                             
                             if (_object.TryGetComponent<GridNode>(out var _nodeBase))
@@ -53,6 +52,7 @@ namespace MugCup_BlockBuilder.Editor
                     break;
             }
         }
+        
         private static void PlaceBlockElement(Event _currentEvent, Ray _ray)
         {
             switch (_currentEvent.type)

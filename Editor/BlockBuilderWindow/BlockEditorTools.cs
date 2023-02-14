@@ -73,5 +73,74 @@ namespace MugCup_BlockBuilder.Editor
                     break;
             }
         }
+        
+        public static void UpdateMarchingCubeEditMode(Event _currentEvent, Ray _ray)
+        {
+            switch (BBEditorManager.InterfaceSetting.BuildToolTabSelection)
+            {
+                case 0: /*Add Block*/
+                    
+                    switch (_currentEvent.type)
+                    {
+                        case EventType.MouseDown:
+                            
+                            if (_currentEvent.button == 0)
+                            {
+                                Debug.Log("Mouse Down");
+                                
+                                if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                                {
+                                    Debug.Log("Ray case hit");
+                                    
+                                    var _selectedFace = BlockFaceUtil.GetSelectedFace(_hit);
+                                    
+                                    Debug.Log(_selectedFace);
+                                    
+                                    if (_hit.collider.TryGetComponent<GridElement>(out var _gridElement))
+                                    {
+                                        Debug.Log("Found Grid Element");
+                                        
+                                        if (_selectedFace == NormalFace.PosY)
+                                        {
+                                            Vector3 _targetPos = _hit.collider.transform.position;
+                                            var _pos  = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                                            var _node = BBEditorManager.GridElementDataManager.GridElementData.GetNodeUp(_pos);
+                                            
+                                            _node.Enable();
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            break;
+                        
+                        case EventType.MouseMove:
+                            break;
+                    }
+                    break;
+                
+                case 1: /*Subtract Block*/
+                    
+                    // if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
+                    // {
+                    //     Debug.Log($"<color=yellow>[Info]:</color> <color=orange>Left Mouse Button Clicked.</color>");
+                    //     
+                    //     if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                    //     {
+                    //         var _object = _hit.collider.gameObject;
+                    //
+                    //         if (_object.TryGetComponent<Block>(out var _block))
+                    //         {
+                    //             BBEditorUtility.RecordGridBlockManagerChanges(() =>
+                    //             {
+                    //                 BBEditorManager.BlockManager.RemoveBlock(_block);
+                    //                 BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Block>(_block.NodeGridPosition, CubeBlockSection.Middle);
+                    //             });
+                    //         }
+                    //     }
+                    // }
+                    break;
+            }
+        }
     }
 }

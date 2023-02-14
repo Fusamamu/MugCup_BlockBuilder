@@ -8,6 +8,8 @@ namespace MugCup_BlockBuilder
     public class Prototype : MonoBehaviour
     {
         public string Name;
+
+        public int BitMask;
         
         public Mesh MeshPrototype;
 
@@ -34,6 +36,11 @@ namespace MugCup_BlockBuilder
         [SerializeField] private bool ShowDebugText;
         [SerializeField] private bool ShowGizmosOnSelected;
 
+        public void SetBitMask(int _bit)
+        {
+            BitMask = _bit;
+        }
+
 #if UNITY_EDITOR
         public void TryUpdateData()
         {
@@ -47,7 +54,7 @@ namespace MugCup_BlockBuilder
             EditorUtility.SetDirty(this);
         }
 
-        public void CreatePrototype(bool _focusProjectWindow = false)
+        public PrototypeData CreatePrototype(bool _focusProjectWindow = false)
         {
             var _prototypeData = ScriptableObject.CreateInstance<PrototypeData>();
             _prototypeData.CopyData(this);
@@ -63,6 +70,8 @@ namespace MugCup_BlockBuilder
                 EditorUtility.FocusProjectWindow();
                 Selection.activeObject = _prototypeData;
             }
+
+            return _prototypeData;
         }
 #endif
         

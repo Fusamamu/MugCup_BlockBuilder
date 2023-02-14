@@ -52,6 +52,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
 
             displayCornerTileSetting = new AnimBool();
             displayCornerTileSetting.valueChanged.AddListener(Repaint);
+            
+            BBEditorManager.Initialize();
         }
 
         private void OnDisable()
@@ -89,19 +91,19 @@ namespace MugCup_BlockBuilder.Editor.GUI
                 $"that come with the package.", MessageType.None, true);
             
             EditorGUILayout.Space();
-            blockBuilderManager.SelectedBuildType = (BlockBuilderManager.BuildType  )EditorGUILayout.EnumPopup("Build Type", blockBuilderManager.SelectedBuildType);
+            //blockBuilderManager.SelectedBuildType = (BlockBuilderManager.BuildType  )EditorGUILayout.EnumPopup("Build Type", blockBuilderManager.SelectedBuildType);
             blockBuilderManager.Mode              = (BlockBuilderManager.ManagerMode)EditorGUILayout.EnumPopup("Mode Selection", blockBuilderManager.Mode);
 
-            displayCustomDataSetting.target = blockBuilderManager.Mode == BlockBuilderManager.ManagerMode.Custom;
+            displayCustomDataSetting.target = blockBuilderManager.Mode == BlockBuilderManager.ManagerMode.CUSTOM;
 
             if (EditorGUILayout.BeginFadeGroup(displayCustomDataSetting.faded))
             {
                 EditorGUILayout.Space();
                 EditorGUILayout.LabelField("Custom Grid Data Setting", EditorStyles.boldLabel);
 
-                switch (blockBuilderManager.SelectedBuildType)
+                switch (BBEditorManager.InterfaceSetting.SelectedBuildType)
                 {
-                    case BlockBuilderManager.BuildType.BLOBTILE:
+                    case InterfaceSetting.BuildType.BLOB_TILE:
                         gridBlockDataManager.SetGridDataSetting
                         (
                             (GridDataSettingSO)EditorGUILayout.ObjectField(gridBlockDataManager.GridDataSetting, typeof(GridDataSettingSO), true)
@@ -119,7 +121,8 @@ namespace MugCup_BlockBuilder.Editor.GUI
                             EditorGUILayout.HelpBox("Missing Custom Mesh Block Data Scriptable Object.", MessageType.Warning);
                         }
                         break;
-                    case BlockBuilderManager.BuildType.MARCHINGCUBE:
+                    
+                    case InterfaceSetting.BuildType.MARCHING_CUBE:
 
                         gridElementDataManager.SetGridDataSetting
                         (
@@ -150,7 +153,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             var _gridDataSetting = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>(DataPath.GridDataSettingPath     );
             var _meshDataSetting = AssetDatabase.LoadAssetAtPath<BlockMeshData>    (DataPath.DefaultMeshBlockDataPath);
 
-            if (blockBuilderManager.Mode == BlockBuilderManager.ManagerMode.Custom)
+            if (blockBuilderManager.Mode == BlockBuilderManager.ManagerMode.CUSTOM)
             {
                 _gridDataSetting = blockBuilderManager.BlockManager.GridBlockDataManager.GridDataSetting;
             }
@@ -168,9 +171,9 @@ namespace MugCup_BlockBuilder.Editor.GUI
             DisplayInAdjacentTwoColumns("Unit Column", _gridDataSetting.UnitColumn.ToString(), "Column", _gridDataSetting.Column.ToString());
             DisplayInAdjacentTwoColumns("Unit Height", _gridDataSetting.UnitHeight.ToString(), "Height", _gridDataSetting.Height.ToString());
 
-         
 
-            displayBlobTileSetting.target = blockBuilderManager.SelectedBuildType == BlockBuilderManager.BuildType.BLOBTILE;
+
+            displayBlobTileSetting.target = BBEditorManager.InterfaceSetting.SelectedBuildType == InterfaceSetting.BuildType.BLOB_TILE;
             
             if (EditorGUILayout.BeginFadeGroup(displayBlobTileSetting.faded))
             {
@@ -187,7 +190,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             EditorGUILayout.EndFadeGroup();
             
             
-            displayCornerTileSetting.target = blockBuilderManager.SelectedBuildType == BlockBuilderManager.BuildType.MARCHINGCUBE;
+            displayCornerTileSetting.target = BBEditorManager.InterfaceSetting.SelectedBuildType == InterfaceSetting.BuildType.MARCHING_CUBE;
             
             if (EditorGUILayout.BeginFadeGroup(displayCornerTileSetting.faded))
             {

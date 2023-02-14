@@ -14,19 +14,12 @@ namespace MugCup_BlockBuilder
 		[SerializeField] private BoxCollider InsideBoxCollider;
 		[SerializeField] private BoxCollider OutsideBoxCollider;
 
-		[SerializeField] private Renderer Renderer;
-		[SerializeField] private Material ActiveMaterial;
-		[SerializeField] private Material InactiveMaterial;
+		[SerializeField] private bool ShowGizmos;
 
 		private void OnValidate()
 		{
 			if (!Application.isPlaying)
 			{
-				if (Renderer == null)
-				{
-					Renderer = GetComponent<Renderer>();
-				}
-				
 				if (IsEnable)
 					Enable();
 				else
@@ -73,7 +66,6 @@ namespace MugCup_BlockBuilder
 		    InsideBoxCollider .enabled = false;
 		    OutsideBoxCollider.enabled = true;
 
-		    Renderer.material = ActiveMaterial;
 		}
 		
 		public void Disable()
@@ -91,11 +83,20 @@ namespace MugCup_BlockBuilder
 		    InsideBoxCollider .enabled = true;
 		    OutsideBoxCollider.enabled = false;
 
-		    Renderer.material = InactiveMaterial;
+		}
+
+		private void OnDrawGizmos()
+		{
+			if(!ShowGizmos) return;
+			
+			Gizmos.color = IsEnable ? Color.green : Color.red;
+			Gizmos.DrawCube(transform.position, Vector3.one / 10);
 		}
 
 		private void OnDrawGizmosSelected()
 		{
+			if(!ShowGizmos) return;
+			
 			Gizmos.color = Color.red;
 
 			foreach (var _point in VolumePoints)

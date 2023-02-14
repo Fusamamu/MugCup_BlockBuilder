@@ -8,6 +8,8 @@ namespace MugCup_BlockBuilder
     public class PrototypeData : ScriptableObject
     {
         public string Name;
+
+        public int BitMask;
         
         public Mesh MeshPrototype;
 
@@ -32,6 +34,8 @@ namespace MugCup_BlockBuilder
         public void CopyData(Prototype _prototype)
         {
             Name = _prototype.Name;
+
+            BitMask = _prototype.BitMask;
 
             MeshPrototype = _prototype.MeshPrototype;
             RotationIndex = _prototype.RotationIndex;

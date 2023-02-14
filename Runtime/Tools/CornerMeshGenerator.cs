@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BlockBuilder.Core.Scriptable;
 using UnityEditor;
 using UnityEngine;
 
@@ -40,6 +41,8 @@ namespace MugCup_BlockBuilder.Runtime
 
         [SerializeField] private bool CreateMeshAsset;
         [SerializeField] private bool CreatePrefabAsset;
+        [SerializeField] private bool CreatePrototypeAsset;
+        [SerializeField] private bool CreateCornerMeshData;
 
         private const string targetSavePath          = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Meshes/Corner Meshes/GeneratedCornerMesh/";
         private const string volumePointPrefabFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Prefabs/VolumePoints";
@@ -48,6 +51,7 @@ namespace MugCup_BlockBuilder.Runtime
         [SerializeField] private int ZInterval = 2;
 
         [SerializeField] public List<GameObject> AllGeneratedMeshes = new List<GameObject>();
+        [SerializeField] public List<PrototypeData> AllPrototypeData = new List<PrototypeData>();
 
         public List<Prototype> AllPrototypes => AllGeneratedMeshes.Select(_o => _o.GetComponent<Prototype>()).Where(_p => _p != null).ToList();
 
@@ -143,6 +147,8 @@ namespace MugCup_BlockBuilder.Runtime
                 { 0b_0011_0011, CM_0011_0011 },
             };
 
+            AllPrototypeData = new List<PrototypeData>();
+
             var _j = 0;
             foreach (var _kvp in _bitMeshLut)
             {
@@ -157,6 +163,32 @@ namespace MugCup_BlockBuilder.Runtime
                 }
 
                 _j++;
+            }
+
+            if (CreateCornerMeshData)
+            {
+                var _cornerMeshData = ScriptableObject.CreateInstance<CornerMeshData>();
+                
+                var _targetFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/CornerMeshData";
+                var _fileName     = $"NewCornerMeshData.asset";
+                
+                AssetDatabase.CreateAsset(_cornerMeshData, _targetFolder + "/" + _fileName);
+                AssetDatabase.SaveAssets();
+                
+                foreach (var _prototype in AllPrototypeData)
+                {
+                    _cornerMeshData.AddPrototypeData(_prototype.BitMask, _prototype);
+                }
+            }
+        }
+
+        public void AddPrototypeDataIntoCornerMeshData()
+        {
+            var _cornerMeshData = AssetDatabase.LoadAssetAtPath<CornerMeshData>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/CornerMeshData/NewCornerMeshData.asset");
+            
+            foreach (var _prototype in AllPrototypeData)
+            {
+                _cornerMeshData.AddPrototypeData(_prototype.BitMask, _prototype);
             }
         }
 
@@ -183,6 +215,15 @@ namespace MugCup_BlockBuilder.Runtime
 
                 if(CreatePrefabAsset)
                     SaveAsPrefab(_newVolumePoint, _meshName);
+
+                var _prototype = _newVolumePoint.AddComponent<Prototype>();
+                if (CreatePrototypeAsset)
+                {
+                    _prototype.TryUpdateData();
+                    _prototype.SetBitMask(_bit);
+                    
+                    AllPrototypeData.Add(_prototype.CreatePrototype());
+                }
 
                 _bit = ShiftBit(_bit);
                 
@@ -238,7 +279,6 @@ namespace MugCup_BlockBuilder.Runtime
             _renderer   = _gameObject.AddComponent<MeshRenderer>();
             
             _gameObject.AddComponent<VolumePoint>();
-            _gameObject.AddComponent<Prototype>();
 
             _meshFilter.sharedMesh = _mesh;
             _renderer  .material   = DefaultMaterial;

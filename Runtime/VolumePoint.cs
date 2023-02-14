@@ -109,8 +109,8 @@ namespace MugCup_BlockBuilder
         
         public void SetCornerMesh()
         {
-	        var _mesh = CornerMeshData.GetCornerMesh(BitMask);
-
+	        var _mesh = CornerMeshData.GetPrototypeMesh(BitMask);
+	        
 	        if (_mesh != null)
 	        {
 		        Mesh.mesh = _mesh;

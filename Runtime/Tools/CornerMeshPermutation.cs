@@ -107,7 +107,7 @@ namespace MugCup_BlockBuilder.Runtime.Tools
             }
         }
 
-        private List<int> GetBitMaskPermutation(int _maxPermutation)
+        public static List<int> GetBitMaskPermutation(int _maxPermutation)
         {
             var _bits = new List<int>();
             

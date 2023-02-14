@@ -27,11 +27,13 @@ namespace MugCup_BlockBuilder.Runtime.Core
 	[Serializable]
 	public class BlockBuilderManager : Singleton<BlockBuilderManager>
 	{
-		public enum ManagerMode { Default, Custom }
-		public enum BuildType   { BLOBTILE, MARCHINGCUBE }
-
-		public ManagerMode Mode = ManagerMode.Default;
-		public BuildType SelectedBuildType = BuildType.BLOBTILE;
+		public enum ManagerMode
+		{
+			DEFAULT, 
+			CUSTOM
+		}
+		
+		public ManagerMode Mode = ManagerMode.DEFAULT;
 
 		[field: SerializeField] public BlockManager       BlockManager       { get; private set; }
 		[field: SerializeField] public GridElementManager GridElementManager { get; private set; }
@@ -89,19 +91,5 @@ namespace MugCup_BlockBuilder.Runtime.Core
 			
 			_managers.ToList().ForEach(Debug.LogWarning);
 		}
-		
-		//Not using?
-		// private void AddRequiredComponents()
-		// {
-		// 	gameObject.AddComponent<InputManager>         ();
-		// 	gameObject.AddComponent<GridBlockSelection>   ();
-		// 	
-		// 	gameObject.AddComponent<BlockEditorManager>   ();
-		// 	gameObject.AddComponent<BlockSelectionManager>();
-		// 	
-		// 	gameObject.AddComponent<PointerVisualizer>    ();
-		//
-		// 	gameObject.AddComponent<StateManager>();//Testing//
-		// }
 	}
 }

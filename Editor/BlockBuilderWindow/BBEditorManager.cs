@@ -20,9 +20,14 @@ namespace MugCup_BlockBuilder.Editor
         public static GridElementDataManager GridElementDataManager;
 
         public static BlockEditorManager   BlockEditorManager;
+
+        public static bool IsInit;
         
         public static void Initialize()
         {
+            if(IsInit) return;
+            IsInit = true;
+            
             LoadBlockBuilderManager();
             
             InterfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset"       );

@@ -16,10 +16,16 @@ namespace MugCup_BlockBuilder
 		[SerializeField] private BoxCollider OutsideBoxCollider;
 
 		[SerializeField] private bool ShowGizmos;
+		[SerializeField] private bool ShowPivot;
 
 		public void SetShowGizmos(bool _value)
 		{
 			ShowGizmos = _value;
+		}
+
+		public void SetShowPivot(bool _value)
+		{
+			ShowPivot = _value;
 		}
 
 		private void OnValidate()
@@ -88,9 +94,12 @@ namespace MugCup_BlockBuilder
 		private void OnDrawGizmos()
 		{
 			if(!ShowGizmos) return;
-			
-			Gizmos.color = IsEnable ? Color.green : Color.red;
-			Gizmos.DrawCube(transform.position, Vector3.one / 10);
+
+			if (ShowPivot)
+			{
+				Gizmos.color = IsEnable ? Color.green : Color.red;
+				Gizmos.DrawCube(transform.position, Vector3.one / 10);
+			}
 		}
 
 		private void OnDrawGizmosSelected()

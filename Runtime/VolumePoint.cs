@@ -117,6 +117,11 @@ namespace MugCup_BlockBuilder
 	        }
         }
 
+        public void SetBitMask(int _bit)
+        {
+	        BitMask = _bit;
+        }
+
         public void SetBitMask()
         { 
 	        BitMask = 0b_0000_0000;

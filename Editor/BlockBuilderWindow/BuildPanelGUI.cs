@@ -17,7 +17,11 @@ namespace MugCup_BlockBuilder
         private static InterfaceSetting   interfaceSetting;
         private static GridDataSettingSO  gridDataSettingSo;
 
-        private static bool showGridElementGizmos;
+        private static bool showGizmos;
+        private static bool showTilePivot;
+        private static bool showCornerPivot;
+        private static bool showBoundBox;
+        
         private static int gridLevel;
         
         private static bool blockGeneratorFoldout;
@@ -201,16 +205,35 @@ namespace MugCup_BlockBuilder
                 {
                     EditorGUILayout.LabelField("Configuration", EditorStyles.boldLabel);
                       
-                    showGridElementGizmos = EditorGUILayout.Toggle("Display gizmos", showGridElementGizmos);
+                    showGizmos            = EditorGUILayout.Toggle("Display gizmos"   , showGizmos);
+                    showTilePivot         = EditorGUILayout.Toggle("Show Tile Pivot", showTilePivot);
+                    showCornerPivot       = EditorGUILayout.Toggle("Show Corner Pivot", showCornerPivot);
+                    showBoundBox          = EditorGUILayout.Toggle("Show Bound Box"   , showBoundBox);
 
                     var _allGridElements = BBEditorManager.GridElementDataManager.GridElementData.GridNodes;
-
                     if (_allGridElements is { Length: > 0 })
                     {
                         foreach (var _element in _allGridElements)
                         {
                             if(_element == null) continue;
-                            _element.SetShowGizmos(showGridElementGizmos);
+                            _element.SetShowGizmos(showGizmos);
+                            _element.SetShowPivot (showTilePivot);
+                        }
+                    }
+
+                    var _allVolumePoints = BBEditorManager.GridElementDataManager.VolumePointData.GridNodes;
+                    if (_allVolumePoints is { Length: > 0 })
+                    {
+                        foreach (var _element in _allVolumePoints)
+                        {
+                            if(_element == null) continue;
+                            
+                            if (_element.TryGetComponent<Prototype>(out var _prototype))
+                            {
+                                _prototype.SetShowGizmos  (showGizmos);
+                                _prototype.SetShowPivot   (showCornerPivot);
+                                _prototype.SetShowBoundBox(showBoundBox);
+                            }
                         }
                     }
 
@@ -390,7 +413,7 @@ namespace MugCup_BlockBuilder
                 
             }
             
-            UnityEngine.GUI.backgroundColor = Color.white;
+            GUI.backgroundColor = Color.white;
 
             
             // var _cube = Resources.Load<GameObject>("Prefabs/Towers/Tower_Castle");

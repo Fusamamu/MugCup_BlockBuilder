@@ -33,6 +33,8 @@ namespace MugCup_BlockBuilder
         
         [Header("Debug Setting")]
         [SerializeField] private bool ShowGizmos;
+        [SerializeField] private bool ShowPivot;
+        [SerializeField] private bool ShowBoundBox;
         [SerializeField] private bool ShowDebugText;
         [SerializeField] private bool ShowGizmosOnSelected;
 
@@ -54,22 +56,31 @@ namespace MugCup_BlockBuilder
             EditorUtility.SetDirty(this);
         }
 
-        public PrototypeData CreatePrototype(bool _focusProjectWindow = false)
+        // public PrototypeData CreatePrototype(bool _focusProjectWindow = false)
+        // {
+        //     var _prototypeData = ScriptableObject.CreateInstance<PrototypeData>();
+        //     _prototypeData.CopyData(this);
+        //
+        //     var _targetFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/Prototypes";
+        //     var _fileName     = $"{Name}.asset";
+        //
+        //     AssetDatabase.CreateAsset(_prototypeData, _targetFolder + "/" + _fileName);
+        //     AssetDatabase.SaveAssets();
+        //
+        //     if (_focusProjectWindow)
+        //     {
+        //         EditorUtility.FocusProjectWindow();
+        //         Selection.activeObject = _prototypeData;
+        //     }
+        //
+        //     return _prototypeData;
+        // }
+        
+        
+        public PrototypeData CreatePrototype()
         {
             var _prototypeData = ScriptableObject.CreateInstance<PrototypeData>();
             _prototypeData.CopyData(this);
-
-            var _targetFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/Prototypes";
-            var _fileName     = $"{Name}.asset";
-
-            AssetDatabase.CreateAsset(_prototypeData, _targetFolder + "/" + _fileName);
-            AssetDatabase.SaveAssets();
-
-            if (_focusProjectWindow)
-            {
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = _prototypeData;
-            }
 
             return _prototypeData;
         }
@@ -78,6 +89,16 @@ namespace MugCup_BlockBuilder
         public void SetShowGizmos(bool _value)
         {
             ShowGizmos = _value;
+        }
+
+        public void SetShowPivot(bool _value)
+        {
+            ShowPivot = _value;
+        }
+
+        public void SetShowBoundBox(bool _value)
+        {
+            ShowBoundBox = _value;
         }
 
         public void SetShowGizmosOnSelected(bool _value)
@@ -93,12 +114,20 @@ namespace MugCup_BlockBuilder
         private void OnDrawGizmos()
         {
             if(ShowGizmosOnSelected || !ShowGizmos) return;
-            
+                
             var _center = transform.position;
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(_center, 0.05f);
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireCube(_center, Vector3.one);
+
+            if (ShowPivot)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(_center, 0.05f);
+            }
+
+            if (ShowBoundBox)
+            {
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireCube(_center, Vector3.one);
+            }
             
             if(!ShowDebugText) return;
 	        

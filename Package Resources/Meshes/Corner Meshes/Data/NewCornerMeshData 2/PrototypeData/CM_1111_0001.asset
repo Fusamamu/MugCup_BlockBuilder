@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d77446bc2a34efdb3ab4d8532c6e1d, type: 3}
+  m_Name: CM_1111_0001
+  m_EditorClassIdentifier: 
+  Name: CM_1111_0001
+  BitMask: 241
+  MeshPrototype: {fileID: 4300000, guid: 1cba532de484049f1a1cf169a22a9dc9, type: 2}
+  RotationIndex: 0
+  PosXSocket: PosX
+  NegXSocket: NegX
+  PosZSocket: PosZ
+  NegZSocket: NegZ
+  PosYSocket: PosY
+  NegYSocket: NegY
+  PosXNeighbors: []
+  NegXNeighbors: []
+  PosZNeighbors: []
+  NegZNeighbors: []
+  PosYNeighbors: []
+  NegYNeighbors: []

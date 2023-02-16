@@ -82,7 +82,6 @@ namespace MugCup_BlockBuilder
             switch (BBEditorManager.InterfaceSetting.CurrentMainTapSelection)
             {
                 case 0: /*Build Mode*/
-                    HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
 
                     switch (BBEditorManager.InterfaceSetting.SelectedBuildType)     
                     {
@@ -110,6 +109,8 @@ namespace MugCup_BlockBuilder
         private static void UpdateBlobTileEditMode()
         {
             if(BBEditorManager.InterfaceSetting.CurrentEditMode == InterfaceSetting.EditMode.NONE) return;
+            
+            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
             
             Event _currentEvent = Event.current; 
             Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);
@@ -143,6 +144,8 @@ namespace MugCup_BlockBuilder
         private static void UpdateMarchingCubeEditMode()
         {
             if(BBEditorManager.InterfaceSetting.CurrentEditMode == InterfaceSetting.EditMode.NONE) return;
+            
+            HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
             
             Event _currentEvent = Event.current; 
             Ray _ray = HandleUtility.GUIPointToWorldRay (Event.current.mousePosition);

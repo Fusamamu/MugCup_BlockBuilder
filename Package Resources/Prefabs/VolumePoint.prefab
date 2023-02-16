@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3140037161032207958}
-  m_Mesh: {fileID: 4711208715938537054, guid: 4ff01ffebf1d3477fb521c025c6ecb4f, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &3500241775261806467
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
   <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
-  CornerMeshData: {fileID: 11400000, guid: 68d8f2fa72ca04aa7817808d4d7a5f11, type: 2}
+  CornerMeshData: {fileID: 11400000, guid: b8fa7181acda04a1a96a65c3c0c54147, type: 2}
   Coord: {x: 0, y: 0, z: 0}
   BitMask: 0
   AdjacentGridElements:
@@ -152,6 +152,8 @@ MonoBehaviour:
   NegZNeighbors: []
   PosYNeighbors: []
   NegYNeighbors: []
-  ShowGizmos: 0
+  ShowGizmos: 1
+  ShowPivot: 0
+  ShowBoundBox: 0
   ShowDebugText: 0
   ShowGizmosOnSelected: 0

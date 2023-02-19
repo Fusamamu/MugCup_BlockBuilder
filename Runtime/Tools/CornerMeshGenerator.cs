@@ -43,6 +43,13 @@ namespace MugCup_BlockBuilder.Runtime
 
         [SerializeField] private MeshFilter CM_0111_0111;
         [SerializeField] private MeshFilter CM_0111_0001;
+
+        [SerializeField] private MeshFilter CM_0111_0011;
+        [SerializeField] private MeshFilter CM_1111_0101;
+
+        [SerializeField] private MeshFilter CM_0101_0001;
+        [SerializeField] private MeshFilter CM_0101_0101;
+        [SerializeField] private MeshFilter CM_0111_0101;
         
         [SerializeField] private Material DefaultMaterial;
 
@@ -138,6 +145,13 @@ namespace MugCup_BlockBuilder.Runtime
                 
                 { 0b_0111_0111, CM_0111_0111 },
                 { 0b_0111_0001, CM_0111_0001 },
+                
+                { 0b_0111_0011, CM_0111_0011 },
+                { 0b_1111_0101, CM_1111_0101 },
+                
+                { 0b_0101_0001, CM_0101_0001 },
+                { 0b_0101_0101, CM_0101_0101 },
+                { 0b_0111_0101, CM_0111_0101 },
             };
 
             generatedMeshTracker.Clear();

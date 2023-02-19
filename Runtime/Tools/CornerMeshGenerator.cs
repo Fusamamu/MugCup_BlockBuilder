@@ -61,8 +61,8 @@ namespace MugCup_BlockBuilder.Runtime
 
         [SerializeField] public List<GameObject>    AllVolumePointObjects;
         [SerializeField] public List<Mesh>          AllGeneratedMeshes;
-        [SerializeField] public List<Prototype>     AllPrototypes;
-        [SerializeField] public List<PrototypeData> AllPrototypeData;
+        [SerializeField] public List<ModulePrototype>     AllPrototypes;
+        [SerializeField] public List<Module> AllPrototypeData;
 
         private Dictionary<int, bool> generatedMeshTracker = new Dictionary<int, bool>();
 
@@ -97,8 +97,8 @@ namespace MugCup_BlockBuilder.Runtime
         {
             AllVolumePointObjects = new List<GameObject>();
             AllGeneratedMeshes    = new List<Mesh>();
-            AllPrototypes         = new List<Prototype>();
-            AllPrototypeData      = new List<PrototypeData>();
+            AllPrototypes         = new List<ModulePrototype>();
+            AllPrototypeData      = new List<Module>();
         }
 
         public void UpdatePrototypesData()
@@ -400,7 +400,7 @@ namespace MugCup_BlockBuilder.Runtime
             out MeshFilter _meshFilter, 
             out MeshRenderer _renderer,
             out VolumePoint _volumePoint,
-            out Prototype _prototype)
+            out ModulePrototype _modulePrototype)
         {
             var _gameObject = new GameObject(_name);
                 
@@ -408,7 +408,7 @@ namespace MugCup_BlockBuilder.Runtime
             _renderer   = _gameObject.AddComponent<MeshRenderer>();
             
             _volumePoint = _gameObject.AddComponent<VolumePoint>();
-            _prototype   = _gameObject.AddComponent<Prototype>();
+            _modulePrototype   = _gameObject.AddComponent<ModulePrototype>();
         
             _meshFilter.sharedMesh = _mesh;
             _renderer  .material   = DefaultMaterial;

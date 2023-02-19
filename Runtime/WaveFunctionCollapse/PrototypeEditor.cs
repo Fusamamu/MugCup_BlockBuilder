@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
-    [CustomEditor(typeof(Prototype))]
+    [CustomEditor(typeof(ModulePrototype))]
     public class PrototypeEditor : Editor
     {
-        private Prototype prototype;
+        private ModulePrototype modulePrototype;
 
         private void OnEnable()
         {
-            prototype = (Prototype)target;
+            modulePrototype = (ModulePrototype)target;
         }
 
         public override void OnInspectorGUI()
@@ -23,12 +23,12 @@ namespace MugCup_BlockBuilder
 
             if (GUILayout.Button("Try Update Data"))
             {
-                prototype.TryUpdateData();
+                modulePrototype.TryUpdateData();
             }
             
             if (GUILayout.Button("Create Prototype Data Object"))
             {
-                prototype.CreatePrototype();
+                modulePrototype.CreatePrototype();
             }
         }
     }

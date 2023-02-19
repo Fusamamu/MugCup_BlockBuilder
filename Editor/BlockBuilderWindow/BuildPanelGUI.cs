@@ -228,7 +228,7 @@ namespace MugCup_BlockBuilder
                         {
                             if(_element == null) continue;
                             
-                            if (_element.TryGetComponent<Prototype>(out var _prototype))
+                            if (_element.TryGetComponent<ModulePrototype>(out var _prototype))
                             {
                                 _prototype.SetShowGizmos  (showGizmos);
                                 _prototype.SetShowPivot   (showCornerPivot);

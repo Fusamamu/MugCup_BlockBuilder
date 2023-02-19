@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
-    public class Prototype : MonoBehaviour
+    public class ModulePrototype : MonoBehaviour
     {
         public string Name;
 
@@ -77,9 +77,9 @@ namespace MugCup_BlockBuilder
         // }
         
         
-        public PrototypeData CreatePrototype()
+        public Module CreatePrototype()
         {
-            var _prototypeData = ScriptableObject.CreateInstance<PrototypeData>();
+            var _prototypeData = ScriptableObject.CreateInstance<Module>();
             _prototypeData.CopyData(this);
 
             return _prototypeData;

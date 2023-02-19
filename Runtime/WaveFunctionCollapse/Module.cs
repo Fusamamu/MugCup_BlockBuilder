@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
+    //Naming more like Module??
     [CreateAssetMenu(fileName = "PrototypeData", menuName = "ScriptableObjects/PrototypeDataObject", order = 8)]
-    public class PrototypeData : ScriptableObject
+    public class Module : ScriptableObject
     {
         public string Name;
 
@@ -31,28 +32,28 @@ namespace MugCup_BlockBuilder
         public List<string> PosYNeighbors = new List<string>();
         public List<string> NegYNeighbors = new List<string>();
 
-        public void CopyData(Prototype _prototype)
+        public void CopyData(ModulePrototype _modulePrototype)
         {
-            Name = _prototype.Name;
+            Name = _modulePrototype.Name;
 
-            BitMask = _prototype.BitMask;
+            BitMask = _modulePrototype.BitMask;
 
-            MeshPrototype = _prototype.MeshPrototype;
-            RotationIndex = _prototype.RotationIndex;
+            MeshPrototype = _modulePrototype.MeshPrototype;
+            RotationIndex = _modulePrototype.RotationIndex;
 
-            PosXSocket = _prototype.PosXSocket;
-            NegXSocket = _prototype.NegXSocket;
-            PosZSocket = _prototype.PosZSocket;
-            NegZSocket = _prototype.NegZSocket;
-            PosYSocket = _prototype.PosYSocket;
-            NegYSocket = _prototype.NegYSocket;
+            PosXSocket = _modulePrototype.PosXSocket;
+            NegXSocket = _modulePrototype.NegXSocket;
+            PosZSocket = _modulePrototype.PosZSocket;
+            NegZSocket = _modulePrototype.NegZSocket;
+            PosYSocket = _modulePrototype.PosYSocket;
+            NegYSocket = _modulePrototype.NegYSocket;
             
-            PosXNeighbors = _prototype.PosXNeighbors;
-            NegXNeighbors = _prototype.NegZNeighbors;
-            PosZNeighbors = _prototype.PosZNeighbors;
-            NegZNeighbors = _prototype.NegZNeighbors;
-            PosYNeighbors = _prototype.PosYNeighbors;
-            NegYNeighbors = _prototype.NegYNeighbors;
+            PosXNeighbors = _modulePrototype.PosXNeighbors;
+            NegXNeighbors = _modulePrototype.NegZNeighbors;
+            PosZNeighbors = _modulePrototype.PosZNeighbors;
+            NegZNeighbors = _modulePrototype.NegZNeighbors;
+            PosYNeighbors = _modulePrototype.PosYNeighbors;
+            NegYNeighbors = _modulePrototype.NegYNeighbors;
         }
     }
 }

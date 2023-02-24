@@ -8,7 +8,7 @@ using UnityEngine;
 namespace MugCup_BlockBuilder
 {
     [CustomEditor(typeof(ModulePrototype))]
-    public class PrototypeEditor : Editor
+    public class ModulePrototypeEditor : Editor
     {
         private ModulePrototype modulePrototype;
 
@@ -28,7 +28,7 @@ namespace MugCup_BlockBuilder
             
             if (GUILayout.Button("Create Prototype Data Object"))
             {
-                modulePrototype.CreatePrototype();
+                modulePrototype.CreateModule();
             }
         }
     }

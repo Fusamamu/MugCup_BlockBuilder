@@ -327,14 +327,14 @@ namespace MugCup_BlockBuilder.Runtime
             {
                 _prototype.TryUpdateData();
 
-                var _prototypeData = _prototype.CreatePrototype();
+                var _module = _prototype.CreateModule();
                 
                 var _fileName = $"{_prototype.name}.asset";
                 
-                AssetDatabase.CreateAsset(_prototypeData, $"{_targetFolderPath}/{_fileName}");
+                AssetDatabase.CreateAsset(_module, $"{_targetFolderPath}/{_fileName}");
                 AssetDatabase.SaveAssets();
                 
-                AllPrototypeData.Add(_prototypeData);
+                AllPrototypeData.Add(_module);
             }
         }
 
@@ -407,8 +407,8 @@ namespace MugCup_BlockBuilder.Runtime
             _meshFilter = _gameObject.AddComponent<MeshFilter>();
             _renderer   = _gameObject.AddComponent<MeshRenderer>();
             
-            _volumePoint = _gameObject.AddComponent<VolumePoint>();
-            _modulePrototype   = _gameObject.AddComponent<ModulePrototype>();
+            _volumePoint     = _gameObject.AddComponent<VolumePoint>();
+            _modulePrototype = _gameObject.AddComponent<ModulePrototype>();
         
             _meshFilter.sharedMesh = _mesh;
             _renderer  .material   = DefaultMaterial;

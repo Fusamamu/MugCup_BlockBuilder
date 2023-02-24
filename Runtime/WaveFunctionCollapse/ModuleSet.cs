@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace MugCup_BlockBuilder
@@ -14,6 +15,18 @@ namespace MugCup_BlockBuilder
         public bool IsReadOnly { get; }
         
         private const int bitsPerItem = 64;
+        
+        public ModuleSet(int _allModuleCount, bool _initializedFull = false) 
+        {
+            Data = new long[_allModuleCount / bitsPerItem + (_allModuleCount % bitsPerItem == 0 ? 0 : 1)];
+            
+            if (_initializedFull) 
+            {
+                for (var _i = 0; _i < Data.Length; _i++) {
+                    Data[_i] = ~0;
+                }
+            }
+        }
         
         public void Add(Module _module)
         {

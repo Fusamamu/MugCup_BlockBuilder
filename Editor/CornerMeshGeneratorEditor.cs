@@ -26,7 +26,6 @@ namespace MugCup_BlockBuilder.Editor
         private void OnEnable()
         {
             cornerMeshGenerator = (CornerMeshGenerator)target;
-            
         }
 
         public override void OnInspectorGUI()
@@ -69,9 +68,13 @@ namespace MugCup_BlockBuilder.Editor
                 Directory.CreateDirectory(_generatedMeshFolderPath);
                 Directory.CreateDirectory(_prototypeDataFolderPath);
                 
-                cornerMeshGenerator.SaveAllGeneratedMeshes(_generatedMeshFolderPath);
-                cornerMeshGenerator.SavePrototypes        (_prototypeDataFolderPath);
-                cornerMeshGenerator.SaveCornerMeshData    (_targetPath);
+                cornerMeshGenerator.SaveAllGeneratedMeshes  (_generatedMeshFolderPath);
+                cornerMeshGenerator.SaveModules             (_prototypeDataFolderPath);
+                cornerMeshGenerator.SaveCornerMeshData      (_targetPath);
+                
+                cornerMeshGenerator
+                    .StoreModulesPossibleNeighbors()
+                    .SaveCornerMeshModuleData(_targetPath);
                 
                 AssetDatabase.Refresh();
             }

@@ -7,6 +7,8 @@ namespace MugCup_BlockBuilder
 {
     public class ModulePrototype : MonoBehaviour
     {
+        public int Index;
+        
         public string Name;
 
         public int BitMask;

@@ -59,10 +59,10 @@ namespace MugCup_BlockBuilder.Runtime
         [SerializeField] private int XInterval = 2;
         [SerializeField] private int ZInterval = 2;
 
-        [SerializeField] public List<GameObject>    AllVolumePointObjects;
-        [SerializeField] public List<Mesh>          AllGeneratedMeshes;
-        [SerializeField] public List<ModulePrototype>     AllPrototypes;
-        [SerializeField] public List<Module> AllPrototypeData;
+        [SerializeField] public List<GameObject>      AllVolumePointObjects;
+        [SerializeField] public List<Mesh>            AllGeneratedMeshes;
+        [SerializeField] public List<ModulePrototype> AllPrototypes;
+        [SerializeField] public List<Module>          AllModules;
 
         private Dictionary<int, bool> generatedMeshTracker = new Dictionary<int, bool>();
 
@@ -84,7 +84,7 @@ namespace MugCup_BlockBuilder.Runtime
         {
             var _cornerMeshData = AssetDatabase.LoadAssetAtPath<CornerMeshData>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/CornerMeshData/NewCornerMeshData.asset");
             
-            foreach (var _prototype in AllPrototypeData)
+            foreach (var _prototype in AllModules)
             {
                 _cornerMeshData.AddPrototypeData(_prototype.BitMask, _prototype);
             }
@@ -98,7 +98,7 @@ namespace MugCup_BlockBuilder.Runtime
             AllVolumePointObjects = new List<GameObject>();
             AllGeneratedMeshes    = new List<Mesh>();
             AllPrototypes         = new List<ModulePrototype>();
-            AllPrototypeData      = new List<Module>();
+            AllModules            = new List<Module>();
         }
 
         public void UpdatePrototypesData()
@@ -196,6 +196,13 @@ namespace MugCup_BlockBuilder.Runtime
                     _volumePoints[_i].transform.position += new Vector3(_i * XInterval, 0, _j * ZInterval);
             
                 _j++;
+            }
+
+            var _index = 0;
+            foreach (var _prototype in AllPrototypes)
+            {
+                _prototype.Index = _index;
+                _index++;
             }
         }
 
@@ -321,8 +328,10 @@ namespace MugCup_BlockBuilder.Runtime
             Debug.Log($"Save new volume point : {_success}");
         }
 
-        public void SavePrototypes(string _targetFolderPath)
+        public void SaveModules(string _targetFolderPath)
         {
+            var _index = 0;
+            
             foreach (var _prototype in AllPrototypes)
             {
                 _prototype.TryUpdateData();
@@ -334,8 +343,13 @@ namespace MugCup_BlockBuilder.Runtime
                 AssetDatabase.CreateAsset(_module, $"{_targetFolderPath}/{_fileName}");
                 AssetDatabase.SaveAssets();
                 
-                AllPrototypeData.Add(_module);
+                AllModules.Add(_module);
+                
+                EditorUtility.DisplayProgressBar("Creating module prototypes...", _module.Name, (float)_index/ AllModules.Count);
+                _index++;
             }
+            
+            EditorUtility.ClearProgressBar();
         }
 
         public void SaveCornerMeshData(string _targetFolderPath)
@@ -347,12 +361,35 @@ namespace MugCup_BlockBuilder.Runtime
             AssetDatabase.CreateAsset(_cornerMeshData, $"{_targetFolderPath}/{_fileName}");
             AssetDatabase.SaveAssets();
             
-            foreach (var _prototype in AllPrototypeData)
+            foreach (var _module in AllModules)
             {
-                _cornerMeshData.AddPrototypeData(_prototype.BitMask, _prototype);
+                _cornerMeshData.AddPrototypeData(_module.BitMask, _module);
             }
             
             EditorUtility.SetDirty(_cornerMeshData);
+        }
+
+        public CornerMeshGenerator StoreModulesPossibleNeighbors()
+        {
+            foreach (var _module in AllModules)
+            {
+                _module.StorePossibleNeighbors(AllModules);
+            }
+            return this;
+        }
+        
+        public void SaveCornerMeshModuleData(string _targetFolderPath)
+        {
+            var _cornerMeshModuleData = ScriptableObject.CreateInstance<CornerMeshModuleData>();
+            
+            var _fileName = $"CornerMeshModuleData.asset";
+            
+            AssetDatabase.CreateAsset(_cornerMeshModuleData, $"{_targetFolderPath}/{_fileName}");
+            AssetDatabase.SaveAssets();
+            
+            _cornerMeshModuleData.Modules = AllModules.ToArray();
+            
+            EditorUtility.SetDirty(_cornerMeshModuleData);
         }
 
         private void RotateMesh(Mesh _mesh, Vector3 _pivot, Vector3 _angle)

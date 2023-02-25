@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -28,6 +29,8 @@ namespace MugCup_BlockBuilder
         [SerializeField] private bool ShowBoundBox;
         [SerializeField] private bool ShowDebugText;
         [SerializeField] private bool ShowGizmosOnSelected;
+        [SerializeField] private bool ShowFaceBits;
+        [SerializeField] private bool ShowBitInBinary;
 
         public void SetBitMask(int _bit)
         {
@@ -43,6 +46,8 @@ namespace MugCup_BlockBuilder
             {
                 MeshPrototype = _meshFilter.sharedMesh;
             }
+            
+            FaceDetails.UpdateFaceBits(BitMask);
             
             EditorUtility.SetDirty(this);
         }
@@ -114,6 +119,22 @@ namespace MugCup_BlockBuilder
             };
 
             Handles.Label(_center + Vector3.up,  gameObject.name, _guiStyle);
+            
+            Handles.Label(_center + Vector3.up * 1.3f, $"{Convert.ToString(BitMask, 2).PadLeft(8, '0').Insert(4, "_")}", _guiStyle);
+
+            if (ShowFaceBits)
+            {
+                foreach (var _kvp in FaceDetails.Faces)
+                {
+                    var _moduleFace = _kvp.Key;
+                    var _face       = _kvp.Value;
+
+                    var _bitText = ShowBitInBinary ?
+                        BitUtil.Get4BitTextFormat(_face.FaceBit) : $"[{_face.FaceBit}]";
+                    
+                    Handles.Label(_center + Orientations.Rotations[_moduleFace] * Vector3.forward / 2f, _bitText, style);
+                }
+            }
         }
 
         private static GUIStyle style;
@@ -138,7 +159,7 @@ namespace MugCup_BlockBuilder
                 var _moduleFace = _kvp.Key;
                 var _face       = _kvp.Value;
                 
-                Handles.Label(_center + Orientations.Rotations[_moduleFace] * Vector3.forward / 2f, _face.ToString(), style);
+                //Handles.Label(_center + Orientations.Rotations[_moduleFace] * Vector3.forward / 2f, _face.ToString(), style);
             }
         }
 #endif

@@ -42,6 +42,16 @@ namespace MugCup_BlockBuilder
             };
         }
 
+        public void UpdateFaceBits(int _bit)
+        {
+            Forward.SetBit(BitUtil.GetForwardFaceBit(_bit));
+            Right  .SetBit(BitUtil.GetRightFaceBit  (_bit));
+            Back   .SetBit(BitUtil.GetBackFaceBit   (_bit));
+            Left   .SetBit(BitUtil.GetLeftFaceBit   (_bit));
+            Up     .SetBit(BitUtil.GetUpFaceBit     (_bit));
+            Down   .SetBit(BitUtil.GetDownFaceBit   (_bit));
+        }
+
         public void RotateCounterClockWise()
         {
             var _previousForward = new HorizontalFaceDetails(Forward);

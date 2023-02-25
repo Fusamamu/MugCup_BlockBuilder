@@ -15,8 +15,8 @@ namespace MugCup_BlockBuilder.Editor
     {
         private CornerMeshGenerator cornerMeshGenerator;
 
-        [SerializeField] private bool ShowGizmos;
-        [SerializeField] private bool ShowDebugText;
+        private static bool showGizmos;
+        private static bool showDebugText;
 
         private const string TargetFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Meshes/Corner Meshes/Data";
         private const string NewCornerMeshDataFolder = "NewCornerMeshData";
@@ -120,11 +120,16 @@ namespace MugCup_BlockBuilder.Editor
                 File.WriteAllText(Application.dataPath + "/GeneratedText/AllBitPermutation.txt", _text);
             }
 
-            ShowGizmos    = EditorGUILayout.Toggle("Show Gizmos"    , ShowGizmos   );
-            ShowDebugText = EditorGUILayout.Toggle("Show Debug Text", ShowDebugText);
+            EditorGUI.BeginChangeCheck();
             
-            cornerMeshGenerator.SetShowGizmos   (ShowGizmos);
-            cornerMeshGenerator.SetShowDebugText(ShowDebugText);
+            showGizmos    = EditorGUILayout.Toggle("Show Gizmos"    , showGizmos   );
+            showDebugText = EditorGUILayout.Toggle("Show Debug Text", showDebugText);
+            
+            if (EditorGUI.EndChangeCheck())
+            {
+                cornerMeshGenerator.SetShowGizmos   (showGizmos);
+                cornerMeshGenerator.SetShowDebugText(showDebugText);
+            }
 
             testBit = EditorGUILayout.IntField("Test Bit", testBit);
 

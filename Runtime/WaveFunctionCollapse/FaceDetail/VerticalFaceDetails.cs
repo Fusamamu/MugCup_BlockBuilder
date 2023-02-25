@@ -9,12 +9,19 @@ namespace MugCup_BlockBuilder
     [Serializable]
     public class VerticalFaceDetails : IFaceDetails, IEquatable<VerticalFaceDetails>
     {
+        [field: SerializeField] public short FaceBit { get; private set; }
+        
         [field: SerializeField] public bool Walkable { get; private set; }
         [field: SerializeField] public int Connector { get; private set; }
         
         [field: SerializeField] public bool Invariant { get; private set; }
         
         [field: Range(0, 3),SerializeField] public int Rotation  { get; private set; }
+        
+        public void SetBit(short _bit)
+        {
+            FaceBit = _bit;
+        }
 
         public void ResetConnector()
         {

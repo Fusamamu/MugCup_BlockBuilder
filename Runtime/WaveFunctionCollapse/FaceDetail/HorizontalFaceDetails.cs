@@ -8,6 +8,8 @@ namespace MugCup_BlockBuilder
     [Serializable]
     public class HorizontalFaceDetails : IFaceDetails, IEquatable<HorizontalFaceDetails>
     {
+        [field: SerializeField] public short FaceBit { get; private set; }
+        
         [field: SerializeField] public bool Walkable { get; private set; }
         [field: SerializeField] public int Connector { get; private set; }
         
@@ -25,6 +27,11 @@ namespace MugCup_BlockBuilder
             Connector = _face.Connector;
             Symmetric = _face.Symmetric;
             Flipped   = _face.Flipped;
+        }
+
+        public void SetBit(short _bit)
+        {
+            FaceBit = _bit;
         }
 
         public void ResetConnector()

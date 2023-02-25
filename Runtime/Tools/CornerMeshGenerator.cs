@@ -543,6 +543,7 @@ namespace MugCup_BlockBuilder.Runtime
                    _lowerNorthEastBit + _lowerNorthWestBit + _lowerSouthWestBit + _lowerSouthEastBit;
         }
         
+#if UNITY_EDITOR
         public void SetShowGizmos(bool _value)
         {
             foreach (var _prototype in AllPrototypes)
@@ -550,6 +551,8 @@ namespace MugCup_BlockBuilder.Runtime
                 _prototype.SetShowGizmos  (_value);
                 _prototype.SetShowPivot   (_value);
                 _prototype.SetShowBoundBox(_value);
+                
+                EditorUtility.SetDirty(_prototype);
             }
         }
 
@@ -558,5 +561,6 @@ namespace MugCup_BlockBuilder.Runtime
             foreach(var _prototype in AllPrototypes)
                 _prototype.SetShowDebugText(_value);
         }
+#endif
     }
 }

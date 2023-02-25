@@ -9,6 +9,8 @@ namespace MugCup_BlockBuilder.Runtime
 {
     public class CornerMeshGenerator : MonoBehaviour
     {
+        public BaseModuleSet BaseModuleSet = new BaseModuleSet();
+
         [SerializeField] private MeshFilter CM_1111_0000;
         
         [SerializeField] private MeshFilter CM_0000_0001;

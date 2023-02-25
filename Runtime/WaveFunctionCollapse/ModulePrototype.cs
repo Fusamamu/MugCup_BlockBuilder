@@ -20,37 +20,7 @@ namespace MugCup_BlockBuilder
         [Header("Socket")]
         public const int FaceCount = 6;
 
-        [Space(10)]
-        public HorizontalFaceDetails Forward;
-        public HorizontalFaceDetails Back;
-        public HorizontalFaceDetails Left;
-        public HorizontalFaceDetails Right;
-        public VerticalFaceDetails Up;
-        public VerticalFaceDetails Down;
-
-        public Dictionary<ModuleFace, IFaceDetails> Faces 
-        {
-            get
-            {
-                if (FaceMap == null || FaceMap.Count == 0)
-                {
-                    FaceMap = new Dictionary<ModuleFace, IFaceDetails>
-                    {
-                        { ModuleFace.FORWARD, Forward },
-                        { ModuleFace.BACK   , Back    },
-                        { ModuleFace.LEFT   , Left    },
-                        { ModuleFace.RIGHT  , Right   },
-                        { ModuleFace.UP     , Up      },
-                        { ModuleFace.DOWN   , Down    },
-                    };
-                }
-                
-                return FaceMap;
-            }
-        }
-
-        public Dictionary<ModuleFace, IFaceDetails> FaceMap = new Dictionary<ModuleFace, IFaceDetails>();
-
+        public FaceDetails FaceDetails = new FaceDetails();
 
         [Header("Debug Setting")]
         [SerializeField] private bool ShowGizmos;
@@ -76,26 +46,6 @@ namespace MugCup_BlockBuilder
             
             EditorUtility.SetDirty(this);
         }
-
-        // public PrototypeData CreatePrototype(bool _focusProjectWindow = false)
-        // {
-        //     var _prototypeData = ScriptableObject.CreateInstance<PrototypeData>();
-        //     _prototypeData.CopyData(this);
-        //
-        //     var _targetFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/Prototypes";
-        //     var _fileName     = $"{Name}.asset";
-        //
-        //     AssetDatabase.CreateAsset(_prototypeData, _targetFolder + "/" + _fileName);
-        //     AssetDatabase.SaveAssets();
-        //
-        //     if (_focusProjectWindow)
-        //     {
-        //         EditorUtility.FocusProjectWindow();
-        //         Selection.activeObject = _prototypeData;
-        //     }
-        //
-        //     return _prototypeData;
-        // }
         
         public Module CreateModule()
         {
@@ -107,16 +57,7 @@ namespace MugCup_BlockBuilder
         
         public void Reset() 
         {
-            Forward = new HorizontalFaceDetails();
-            Back    = new HorizontalFaceDetails();
-            Left    = new HorizontalFaceDetails();
-            Right   = new HorizontalFaceDetails();
-            Up      = new VerticalFaceDetails  ();
-            Down    = new VerticalFaceDetails  ();
-            
-            // foreach (var face in this.Faces) {
-            //     face.ExcludedNeighbours = new ModulePrototype[] { };
-            // }
+            FaceDetails.Reset();
         }
 #endif
         
@@ -145,7 +86,6 @@ namespace MugCup_BlockBuilder
             ShowDebugText = _value;
         }
         
-        
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {
@@ -166,13 +106,6 @@ namespace MugCup_BlockBuilder
             }
             
             if(!ShowDebugText) return;
-	        
-            // Handles.Label(_center + Vector3.right/2,   PosXSocket);
-            // Handles.Label(_center + Vector3.left/2,    NegXSocket);
-            // Handles.Label(_center + Vector3.forward/2, PosZSocket);
-            // Handles.Label(_center + Vector3.back/2,    NegZSocket);
-            // Handles.Label(_center + Vector3.up/2,      PosYSocket);
-            // Handles.Label(_center + Vector3.down/2,    NegYSocket);
 
             var _guiStyle = new GUIStyle
             {
@@ -200,7 +133,7 @@ namespace MugCup_BlockBuilder
 
             var _center = _modulePrototype.transform.position;
 
-            foreach (var _kvp in _modulePrototype.Faces)
+            foreach (var _kvp in _modulePrototype.FaceDetails.Faces)
             {
                 var _moduleFace = _kvp.Key;
                 var _face       = _kvp.Value;

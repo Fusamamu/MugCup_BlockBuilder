@@ -35,5 +35,30 @@ namespace MugCup_BlockBuilder
 
             rotations = vectors.ToDictionary(_x => _x.Key, _x => Quaternion.LookRotation(_x.Value));
         }
+        
+        public static bool IsHorizontal(ModuleFace _face)
+        {
+            return _face != ModuleFace.UP && _face != ModuleFace.DOWN;
+        }
+
+        public static ModuleFace GetOppositeFace(ModuleFace _face)
+        {
+            switch (_face)
+            {
+                case ModuleFace.FORWARD:
+                    return ModuleFace.BACK;
+                case ModuleFace.RIGHT:
+                    return ModuleFace.LEFT;
+                case ModuleFace.BACK:
+                    return ModuleFace.FORWARD;
+                case ModuleFace.LEFT:
+                    return ModuleFace.RIGHT;
+                case ModuleFace.UP:
+                    return ModuleFace.DOWN;
+                case ModuleFace.DOWN:
+                    return ModuleFace.UP;
+            }
+            return _face;
+        }
     }
 }

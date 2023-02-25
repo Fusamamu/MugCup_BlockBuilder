@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,7 +6,6 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
-    //Naming more like Module??
     [CreateAssetMenu(fileName = "PrototypeData", menuName = "ScriptableObjects/PrototypeDataObject", order = 8)]
     public class Module : ScriptableObject
     {
@@ -18,13 +18,8 @@ namespace MugCup_BlockBuilder
         public Mesh MeshPrototype;
 
         public int RotationIndex;
-        
-        public HorizontalFaceDetails Forward;
-        public HorizontalFaceDetails Back;
-        public HorizontalFaceDetails Left;
-        public HorizontalFaceDetails Right;
-        public VerticalFaceDetails Up;
-        public VerticalFaceDetails Down;
+
+        public FaceDetails FaceDetails = new FaceDetails();
         
         public ModuleSet[] PossibleNeighbors;
 
@@ -35,13 +30,7 @@ namespace MugCup_BlockBuilder
             BitMask       = _modulePrototype.BitMask;
             MeshPrototype = _modulePrototype.MeshPrototype;
             RotationIndex = _modulePrototype.RotationIndex;
-
-            Forward = _modulePrototype.Forward;
-            Back    = _modulePrototype.Back;
-            Left    = _modulePrototype.Left;
-            Right   = _modulePrototype.Right;
-            Up      = _modulePrototype.Up;
-            Down    = _modulePrototype.Down;
+            FaceDetails   = _modulePrototype.FaceDetails;
         }
 
         public void StorePossibleNeighbors(List<Module> _allModuleInScene)
@@ -49,24 +38,42 @@ namespace MugCup_BlockBuilder
             var _allModuleCount = _allModuleInScene.Count;
             
             PossibleNeighbors = new ModuleSet[6];
-            
-            for (var _dir = 0; _dir < 6; _dir++)
+
+            foreach (ModuleFace _face in Enum.GetValues(typeof(ModuleFace)))
             {
-                var _newModuleSet = new ModuleSet(_allModuleCount);
-
-                foreach (var _module in _allModuleInScene)
+                PossibleNeighbors[(int)_face] = new Func<ModuleSet>(() =>
                 {
-                    if (_module.IsFit(this))
-                        _newModuleSet.Add(_module);
-                }
+                    var _newModuleSet = new ModuleSet(_allModuleCount);
 
-                PossibleNeighbors[_dir] = _newModuleSet;
+                    foreach (var _otherModule in _allModuleInScene)
+                    {
+                        if (CheckFaceIsFit(_face, _otherModule))
+                            _newModuleSet.Add(_otherModule);
+                    }
+
+                    return _newModuleSet;
+                })();
             }
         }
 
-        public bool IsFit(Module _otherModule)
+        private bool CheckFaceIsFit(ModuleFace _face, Module _otherModule)
         {
-            return false;
+            var _oppositeFace = Orientations.GetOppositeFace(_face);
+            
+            if (Orientations.IsHorizontal(_face))
+            {
+                var _thisFace  =              FaceDetails.Faces[_face]         as HorizontalFaceDetails;
+                var _otherFace = _otherModule.FaceDetails.Faces[_oppositeFace] as HorizontalFaceDetails;
+
+                return _thisFace?.Equals(_otherFace) ?? false;
+            }
+            else
+            {
+                var _thisFace  =              FaceDetails.Faces[_face]         as VerticalFaceDetails;
+                var _otherFace = _otherModule.FaceDetails.Faces[_oppositeFace] as VerticalFaceDetails;
+
+                return _thisFace?.Equals(_otherFace) ?? false;
+            }
         }
     }
 }

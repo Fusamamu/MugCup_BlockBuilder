@@ -30,6 +30,11 @@ namespace MugCup_BlockBuilder
             {
                 modulePrototype.CreateModule();
             }
+
+            if (GUILayout.Button("Rotate Face Detail CCW"))
+            {
+                modulePrototype.FaceDetails.RotateCounterClockWise();
+            }
         }
     }
 }

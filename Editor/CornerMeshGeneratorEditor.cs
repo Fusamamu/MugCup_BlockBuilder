@@ -32,6 +32,11 @@ namespace MugCup_BlockBuilder.Editor
         {
             DrawDefaultInspector();
             
+            if (GUILayout.Button("Update Base Modules Names"))
+            {
+                cornerMeshGenerator.BaseModuleSet.UpdateNames();
+            }
+            
             if (GUILayout.Button("Generate Corner Meshes"))
             {
                 cornerMeshGenerator.GenerateCornerMeshes();

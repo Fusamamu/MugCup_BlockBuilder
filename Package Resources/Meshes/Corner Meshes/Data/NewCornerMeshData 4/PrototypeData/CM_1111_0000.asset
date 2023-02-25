@@ -17,4 +17,47 @@ MonoBehaviour:
   BitMask: 240
   MeshPrototype: {fileID: 4300000, guid: 0a5b3cb66481a467dba5149405d91081, type: 2}
   RotationIndex: 0
-  PossibleNeighbors: []
+  FaceDetails:
+    Forward:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Right:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Back:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Left:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Up:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      <Invariant>k__BackingField: 0
+      <Rotation>k__BackingField: 0
+    Down:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      <Invariant>k__BackingField: 0
+      <Rotation>k__BackingField: 0
+  PossibleNeighbors:
+  - Data: 
+  - Data: 00000000000000000000000000000000
+  - Data: 00000000000000000000000000000000
+  - Data: 00000000000000000000000000000000
+  - Data: 00000000000000000000000000000000
+  - Data: 00000000000000000000000000000000

@@ -40,14 +40,22 @@ namespace MugCup_BlockBuilder
             Symmetric = false;
             Flipped   = false;
         }
-
+        
         public bool Equals(HorizontalFaceDetails _other)
         {
             if (_other == null)
                 return false;
-           
-            return Connector == _other.Connector && (Symmetric || Flipped != _other.Flipped);
+
+            return FaceBit == BitUtil.FlipHorizontalFaceBIt(_other.FaceBit);
         }
+
+        // public bool Equals(HorizontalFaceDetails _other)
+        // {
+        //     if (_other == null)
+        //         return false;
+        //    
+        //     return Connector == _other.Connector && (Symmetric || Flipped != _other.Flipped);
+        // }
         
         public override string ToString() 
         {

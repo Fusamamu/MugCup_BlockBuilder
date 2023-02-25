@@ -36,14 +36,22 @@ namespace MugCup_BlockBuilder
             if (Rotation == 4)
                 Rotation = 0;
         }
-
+        
         public bool Equals(VerticalFaceDetails _other)
         {
             if (_other == null) 
                 return false;
 
-            return Connector == _other.Connector && Invariant;
+            return FaceBit == _other.FaceBit;
         }
+
+        // public bool Equals(VerticalFaceDetails _other)
+        // {
+        //     if (_other == null) 
+        //         return false;
+        //
+        //     return Connector == _other.Connector && Invariant;
+        // }
         
         public override string ToString() 
         {

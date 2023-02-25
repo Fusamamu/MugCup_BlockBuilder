@@ -23,6 +23,14 @@ namespace MugCup_BlockBuilder
 
         public FaceDetails FaceDetails = new FaceDetails();
 
+        public List<ModulePrototype> ForwardNeighbors = new List<ModulePrototype>();
+        public List<ModulePrototype> RightNeighbors   = new List<ModulePrototype>();
+        public List<ModulePrototype> BackNeighbors    = new List<ModulePrototype>();
+        public List<ModulePrototype> LeftNeighbors    = new List<ModulePrototype>();
+        public List<ModulePrototype> UpNeighbors      = new List<ModulePrototype>();
+        public List<ModulePrototype> DownNeighbors    = new List<ModulePrototype>();
+
+
         [Header("Debug Setting")]
         [SerializeField] private bool ShowGizmos;
         [SerializeField] private bool ShowPivot;
@@ -32,11 +40,17 @@ namespace MugCup_BlockBuilder
         [SerializeField] private bool ShowFaceBits;
         [SerializeField] private bool ShowBitInBinary;
 
-        public void SetBitMask(int _bit)
+        public ModulePrototype SetBitMask(int _bit)
         {
             BitMask = _bit;
+            return this;
         }
 
+        public ModulePrototype UpdateFaceBits()
+        {
+            FaceDetails.UpdateFaceBits(BitMask);
+            return this;
+        }
 #if UNITY_EDITOR
         public void TryUpdateData()
         {
@@ -46,8 +60,8 @@ namespace MugCup_BlockBuilder
             {
                 MeshPrototype = _meshFilter.sharedMesh;
             }
-            
-            FaceDetails.UpdateFaceBits(BitMask);
+
+            UpdateFaceBits();
             
             EditorUtility.SetDirty(this);
         }
@@ -66,6 +80,71 @@ namespace MugCup_BlockBuilder
         }
 #endif
         
+        public void StorePossibleNeighbors(List<ModulePrototype> _allModuleInScene)
+        {
+            foreach (ModuleFace _face in Enum.GetValues(typeof(ModuleFace)))
+            {
+                switch (_face)
+                {
+                    case ModuleFace.FORWARD:
+                        ForwardNeighbors = GetValidNeighbors(_face, _allModuleInScene);
+                        break;
+                    case ModuleFace.RIGHT:
+                        RightNeighbors   = GetValidNeighbors(_face, _allModuleInScene);
+                        break;
+                    case ModuleFace.BACK:
+                        BackNeighbors    = GetValidNeighbors(_face, _allModuleInScene);
+                        break;
+                    case ModuleFace.LEFT:
+                        LeftNeighbors    = GetValidNeighbors(_face, _allModuleInScene);
+                        break;
+                    case ModuleFace.UP:
+                        UpNeighbors      = GetValidNeighbors(_face, _allModuleInScene);
+                        break;
+                    case ModuleFace.DOWN:
+                        DownNeighbors    = GetValidNeighbors(_face, _allModuleInScene);
+                        break;
+                }
+            }
+        }
+
+        private List<ModulePrototype> GetValidNeighbors(ModuleFace _face, List<ModulePrototype> _allModuleInScene)
+        {
+            var _newModuleSet = new List<ModulePrototype>();
+                    
+            foreach (var _otherModule in _allModuleInScene)
+            {
+                if (CheckFaceIsFit(_face, _otherModule))
+                {
+                    _newModuleSet.Add(_otherModule);
+                }
+            }
+
+            return _newModuleSet;
+        }
+
+        private bool CheckFaceIsFit(ModuleFace _face, ModulePrototype _otherModule)
+        {
+            var _oppositeFace = Orientations.GetOppositeFace(_face);
+            
+            if (Orientations.IsHorizontal(_face))
+            {
+                var _thisFace  =              FaceDetails.Faces[_face]         as HorizontalFaceDetails;
+                var _otherFace = _otherModule.FaceDetails.Faces[_oppositeFace] as HorizontalFaceDetails;
+
+                return _thisFace?.Equals(_otherFace) ?? false;
+            }
+            else
+            {
+                var _thisFace  =              FaceDetails.Faces[_face]         as VerticalFaceDetails;
+                var _otherFace = _otherModule.FaceDetails.Faces[_oppositeFace] as VerticalFaceDetails;
+                
+                return _thisFace?.Equals(_otherFace) ?? false;
+            }
+        }
+
+        
+#region Set Gizmos Setting
         public void SetShowGizmos(bool _value)
         {
             ShowGizmos = _value;
@@ -90,6 +169,17 @@ namespace MugCup_BlockBuilder
         {
             ShowDebugText = _value;
         }
+
+        public void SetShowFaceBits(bool _value)
+        {
+            ShowFaceBits = _value;
+        }
+
+        public void SetShowBitInBinary(bool _value)
+        {
+            ShowBitInBinary = _value;
+        }
+#endregion
         
 #if UNITY_EDITOR
         private void OnDrawGizmos()

@@ -77,6 +77,16 @@ namespace MugCup_BlockBuilder
         {
             return (short)((_bit & 0b_1111_0000) >> 4);
         }
+
+        public static short FlipHorizontalFaceBIt(short _bit)
+        {
+            var _a = (_bit & 0b_0001) << 1;
+            var _b = (_bit & 0b_0010) >> 1;
+            var _c = (_bit & 0b_0100) << 1;
+            var _d = (_bit & 0b_1000) >> 1;
+             
+            return (short)(_a + _b + _c + _d);
+        }
         
         public static int ShiftBit(int _bit)
         {

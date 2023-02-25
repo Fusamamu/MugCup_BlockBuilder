@@ -17,6 +17,7 @@ namespace MugCup_BlockBuilder.Editor
 
         private static bool showGizmos;
         private static bool showDebugText;
+        private static bool showBitInBinary;
 
         private const string TargetFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Meshes/Corner Meshes/Data";
         private const string NewCornerMeshDataFolder = "NewCornerMeshData";
@@ -122,13 +123,15 @@ namespace MugCup_BlockBuilder.Editor
 
             EditorGUI.BeginChangeCheck();
             
-            showGizmos    = EditorGUILayout.Toggle("Show Gizmos"    , showGizmos   );
-            showDebugText = EditorGUILayout.Toggle("Show Debug Text", showDebugText);
+            showGizmos      = EditorGUILayout.Toggle("Show Gizmos"       , showGizmos     );
+            showDebugText   = EditorGUILayout.Toggle("Show Debug Text"   , showDebugText  );
+            showBitInBinary = EditorGUILayout.Toggle("Show Bit In Binary", showBitInBinary);
             
             if (EditorGUI.EndChangeCheck())
             {
-                cornerMeshGenerator.SetShowGizmos   (showGizmos);
-                cornerMeshGenerator.SetShowDebugText(showDebugText);
+                cornerMeshGenerator.SetShowGizmos     (showGizmos);
+                cornerMeshGenerator.SetShowDebugText  (showDebugText);
+                cornerMeshGenerator.SetShowBitInBinary(showBitInBinary);
             }
 
             testBit = EditorGUILayout.IntField("Test Bit", testBit);

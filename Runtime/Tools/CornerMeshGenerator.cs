@@ -88,7 +88,7 @@ namespace MugCup_BlockBuilder.Runtime
             
             foreach (var _prototype in AllModules)
             {
-                _cornerMeshData.AddPrototypeData(_prototype.BitMask, _prototype);
+                _cornerMeshData.AddModuleData(_prototype.BitMask, _prototype);
             }
             
             EditorUtility.SetDirty(_cornerMeshData);
@@ -200,6 +200,7 @@ namespace MugCup_BlockBuilder.Runtime
                 _j++;
             }
 
+            //init all index to module prototype
             var _index = 0;
             foreach (var _prototype in AllPrototypes)
             {
@@ -313,7 +314,8 @@ namespace MugCup_BlockBuilder.Runtime
 
             return _volumePoints;
         }
-
+ 
+#region Save Data Section
         public void SaveAllGeneratedMeshes(string _targetFolderPath)
         {
             if (AllGeneratedMeshes is { Count: > 0 })
@@ -374,7 +376,7 @@ namespace MugCup_BlockBuilder.Runtime
             
             foreach (var _module in AllModules)
             {
-                _cornerMeshData.AddPrototypeData(_module.BitMask, _module);
+                _cornerMeshData.AddModuleData(_module.BitMask, _module);
             }
             
             EditorUtility.SetDirty(_cornerMeshData);
@@ -402,6 +404,7 @@ namespace MugCup_BlockBuilder.Runtime
             
             EditorUtility.SetDirty(_cornerMeshModuleData);
         }
+#endregion
 
         private void RotateMesh(Mesh _mesh, Vector3 _pivot, Vector3 _angle)
         {

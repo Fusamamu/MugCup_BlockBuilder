@@ -12,19 +12,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d77446bc2a34efdb3ab4d8532c6e1d, type: 3}
   m_Name: CM_0010_0010
   m_EditorClassIdentifier: 
+  Index: 10
   Name: CM_0010_0010
   BitMask: 34
   MeshPrototype: {fileID: 4300000, guid: 67127605f45f1478186c2e3e14aa44fa, type: 2}
   RotationIndex: 0
-  PosXSocket: PosX
-  NegXSocket: NegX
-  PosZSocket: PosZ
-  NegZSocket: NegZ
-  PosYSocket: PosY
-  NegYSocket: NegY
-  PosXNeighbors: []
-  NegXNeighbors: []
-  PosZNeighbors: []
-  NegZNeighbors: []
-  PosYNeighbors: []
-  NegYNeighbors: []
+  FaceDetails:
+    Forward:
+      <FaceBit>k__BackingField: 6
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Right:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Back:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Left:
+      <FaceBit>k__BackingField: 9
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Up:
+      <FaceBit>k__BackingField: 2
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      <Invariant>k__BackingField: 0
+      <Rotation>k__BackingField: 0
+    Down:
+      <FaceBit>k__BackingField: 2
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      <Invariant>k__BackingField: 0
+      <Rotation>k__BackingField: 0
+  PossibleNeighbors: []

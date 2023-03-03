@@ -142,7 +142,6 @@ namespace MugCup_BlockBuilder
                 return _thisFace?.Equals(_otherFace) ?? false;
             }
         }
-
         
 #region Set Gizmos Setting
         public void SetShowGizmos(bool _value)

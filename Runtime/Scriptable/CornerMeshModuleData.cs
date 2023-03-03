@@ -9,12 +9,10 @@ namespace MugCup_BlockBuilder
     {
         public Module[] Modules;
         
-        
-        
-        
         public void OnBeforeSerialize()
         {
         }
+        
         public void OnAfterDeserialize()
         {
         }

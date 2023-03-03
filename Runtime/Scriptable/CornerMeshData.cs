@@ -266,7 +266,7 @@ namespace BlockBuilder.Core.Scriptable
         public Module P_1111_1110;
         public Module P_1111_1111;
 
-        public void AddPrototypeData(int _bit, Module _data)
+        public void AddModuleData(int _bit, Module _data)
         {
             if (_bit == BitTable.B_0000_0000) P_0000_0000 = _data;
             if (_bit == BitTable.B_0000_0001) P_0000_0001 = _data;

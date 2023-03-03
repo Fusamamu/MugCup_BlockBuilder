@@ -15,7 +15,7 @@ namespace MugCup_BlockBuilder
         public bool IsReadOnly { get; }
         
         private const int bitsPerItem = 64;
-        
+
         public ModuleSet(int _allModuleCount, bool _initializedFull = false) 
         {
             Data = new long[_allModuleCount / bitsPerItem + (_allModuleCount % bitsPerItem == 0 ? 0 : 1)];
@@ -31,9 +31,7 @@ namespace MugCup_BlockBuilder
         public void Add(Module _module)
         {
             if (_module == null)
-            {
                 return;
-            }
             
             int _i = _module.Index / bitsPerItem;
             
@@ -78,18 +76,15 @@ namespace MugCup_BlockBuilder
                 
                 for (var _j = 0; _j < bitsPerItem; _j++) 
                 {
-                    if ((_value & ((long)1 << _j)) != 0) 
+                    if ((_value & ((long)1 << _j)) != 0)
                     {
-                        //yield return ModuleData.Current[_index];
-                        yield break;
+                        yield return ModuleData.Data.Modules[_index];
                     }
                     
                     _index++;
                     
-                    // if (_index >= ModuleData.Current.Length) 
-                    // {
-                    //     yield break;
-                    // }
+                    if (_index >= ModuleData.Data.Modules.Length) 
+                        yield break;
                 }
             }
         }
@@ -111,6 +106,5 @@ namespace MugCup_BlockBuilder
         public void CopyTo(Module[] _array, int _arrayIndex)
         {
         }
-        
     }
 }

@@ -100,7 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
   <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
-  CornerMeshData: {fileID: 0}
+  CornerMeshData: {fileID: 11400000, guid: b8fa7181acda04a1a96a65c3c0c54147, type: 2}
   Coord: {x: 0, y: 0, z: 0}
   BitMask: 0
   AdjacentGridElements:
@@ -137,6 +137,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf21964b3c4a844bcb6710f95b28504e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ModuleSet:
+    Data: 
+  <CollapsedModule>k__BackingField: {fileID: 0}
+  <ModuleSlotData>k__BackingField: {fileID: 0}
   <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
   <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
 --- !u!114 &7277019213515775652

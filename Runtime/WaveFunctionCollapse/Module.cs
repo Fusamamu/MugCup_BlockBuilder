@@ -17,11 +17,14 @@ namespace MugCup_BlockBuilder
         
         public Mesh MeshPrototype;
 
+        public float Probability;
+
         public int RotationIndex;
 
         public FaceDetails FaceDetails = new FaceDetails();
         
         public ModuleSet[] PossibleNeighbors;
+        public Module[][] PossibleNeighborsArray;
 
         public void CopyData(ModulePrototype _modulePrototype)
         {
@@ -54,6 +57,8 @@ namespace MugCup_BlockBuilder
                     return _newModuleSet;
                 })();
             }
+
+            PossibleNeighborsArray = PossibleNeighbors.Select(_ms => _ms.ToArray()).ToArray();
         }
 
         private bool CheckFaceIsFit(ModuleFace _face, Module _otherModule)

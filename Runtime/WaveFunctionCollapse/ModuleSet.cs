@@ -13,7 +13,8 @@ namespace MugCup_BlockBuilder
         
         public int  Count      { get; }
         public bool IsReadOnly { get; }
-        
+
+        private float entropy;
         private const int bitsPerItem = 64;
 
         public ModuleSet(int _allModuleCount, bool _initializedFull = false) 
@@ -28,6 +29,44 @@ namespace MugCup_BlockBuilder
             }
         }
         
+        public ModuleSet(ModuleSet _source, Module _toRemoveModule = null)
+        {
+            Data = _source.Data.ToArray();
+            //entropy = source.Entropy;
+
+            if(_toRemoveModule)
+                Remove(_toRemoveModule);
+        }
+        
+        public bool ContainModule(Module _module)
+        {
+            return Contains(_module.Index);
+        }
+        
+        public bool Contains(int _index) 
+        {
+            int _i = _index / bitsPerItem;
+            
+            long _mask = (long)1 << (_index % bitsPerItem);
+            
+            return (Data[_i] & _mask) != 0;
+        }
+
+        public void Intersect(ModuleSet _moduleSet)
+        {
+            for (var _i = 0; _i < Data.Length; _i++)
+            {
+                long _current = Data[_i];
+                long _mask    = _moduleSet.Data[_i];
+                long _updated = _current & _mask;
+
+                if (_current != _updated)
+                    Data[_i] = _updated;
+            }
+        }
+
+        
+#region Add/Remove Modules
         public void Add(Module _module)
         {
             if (_module == null)
@@ -61,6 +100,35 @@ namespace MugCup_BlockBuilder
             } 
             return false;
         }
+        
+        public void Add(ModuleSet _moduleSet) 
+        {
+            for (var _i = 0; _i < Data.Length; _i++) 
+            {
+                long _current = Data[_i];
+                long _updated = _current | _moduleSet.Data[_i];
+            
+                if (_current != _updated) 
+                {
+                    Data[_i] = _updated;
+                }
+            }
+        }
+
+        public void Remove(ModuleSet _moduleSet) 
+        {
+            for (var _i = 0; _i < Data.Length; _i++) 
+            {
+                long _current = Data[_i];
+                long _updated = _current & ~_moduleSet.Data[_i];
+            
+                if (_current != _updated) 
+                {
+                    Data[_i] = _updated;
+                }
+            }
+        }
+#endregion
         
         public IEnumerator<Module> GetEnumerator()
         {

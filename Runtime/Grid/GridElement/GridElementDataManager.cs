@@ -38,9 +38,7 @@ namespace MugCup_BlockBuilder
         public GridElementDataManager GenerateGrid()
         {
             var _gridElementPrefab = AssetManager.AssetCollection.GridElement.gameObject;
-            
             GridElementParent = new GameObject("[Grid Elements]");
-            
             GridElementData.GridNodes = GridGenerator.GenerateGridBlocks<GridElement>(GridDataSetting.GridUnitSize, _gridElementPrefab, GridElementParent);
             
             return this;
@@ -49,12 +47,8 @@ namespace MugCup_BlockBuilder
         public GridElementDataManager GenerateVolumePoints()
         {
             var _volumePointPrefab = AssetManager.AssetCollection.VolumePoint.gameObject;
-            
             VolumePointParent = new GameObject("[Volume Points]");
-
             VolumePointData.GridNodes = GridGenerator.GenerateDualGrid<VolumePoint>(GridDataSetting.GridUnitSize, _volumePointPrefab, VolumePointParent);        
-            
-            // VolumePointData.GridNodes = VolumePointGenerator.GeneratedVolumePoints(GridDataSetting.GridUnitSize, 0.1f, VolumePointParent);
 
             foreach (var _element in GridElementData.ValidNodes)
             {
@@ -77,7 +71,12 @@ namespace MugCup_BlockBuilder
 
         public GridElementDataManager GenerateModuleSlots()
         {
+            var _moduleSlotPrefab = AssetManager.AssetCollection.VolumePoint.gameObject;
             ModuleSlotParent = new GameObject("[Module Slot Parent");
+            ModuleSlotData.GridNodes = GridGenerator.GenerateDualGrid<ModuleSlot>(GridDataSetting.GridUnitSize, _moduleSlotPrefab, ModuleSlotParent);     
+            
+            
+            
             return this;
         }
 

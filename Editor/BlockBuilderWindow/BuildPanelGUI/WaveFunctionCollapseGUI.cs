@@ -38,19 +38,14 @@ namespace MugCup_BlockBuilder
                             var _gridElementDataManager = BBEditorManager.GridElementDataManager;
                             Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
 
-                            _gridElementDataManager.UpdateModuleSlotData();
+                            _gridElementDataManager.GenerateModuleSlots();
                                     
                             PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
                         }
                         
                         if (GUILayout.Button("Clear", _generateButtonStyle))
                         {
-                            // var _gridElementDataManager = BBEditorManager.GridElementDataManager;
-                            // Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
-                            //
-                            // _gridElementDataManager.ClearVolumePoints();
-                            //
-                            // PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                           
                         }
                     }
                     EditorGUILayout.EndHorizontal();

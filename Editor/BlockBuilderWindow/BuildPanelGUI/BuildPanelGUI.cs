@@ -26,7 +26,9 @@ namespace MugCup_BlockBuilder
         
         private static bool blockGeneratorFoldout;
         private static bool gridElementGeneratorFoldout;
-        
+        //private static bool waveFunctionCollapseFoldout;
+        private static bool blockEditorFoldout;
+
         private static Vector2 scrollPosition;
         private static AnimBool displayBuilderMode;
         
@@ -40,13 +42,14 @@ namespace MugCup_BlockBuilder
             DisplayGridDataSettingSection();
             DisplayBlockGeneratorSection();
             DisplayGridElementGeneratorSection();
+            WaveFunctionCollapseGUI.Display();
             DisplayBlockEditorSection();
         }
 
         private static void DisplayGridDataSettingSection()
         {
             BBEditorManager.InterfaceSetting.MapSettingFoldout 
-                = BBEditorStyling.DrawHeader(Color.yellow, "Grid Data Setting", BBEditorManager.InterfaceSetting.MapSettingFoldout);
+                = BBEditorStyling.DrawHeader(Color.clear, "Grid Data Setting", BBEditorManager.InterfaceSetting.MapSettingFoldout);
 
             if (BBEditorManager.InterfaceSetting.MapSettingFoldout)
             {
@@ -88,7 +91,7 @@ namespace MugCup_BlockBuilder
 
         private static void DisplayBlockGeneratorSection()
         {
-            blockGeneratorFoldout = BBEditorStyling.DrawHeader(Color.cyan, "Blocks Generator", blockGeneratorFoldout);
+            blockGeneratorFoldout = BBEditorStyling.DrawHeader(Color.clear, "Blocks Generator", blockGeneratorFoldout);
 
             if (blockGeneratorFoldout)
             {
@@ -187,7 +190,7 @@ namespace MugCup_BlockBuilder
 
         private static void DisplayGridElementGeneratorSection()
         {
-            gridElementGeneratorFoldout = BBEditorStyling.DrawHeader(Color.black, "Grid Elements Generator", gridElementGeneratorFoldout);
+            gridElementGeneratorFoldout = BBEditorStyling.DrawHeader(Color.clear, "Grid Elements Generator", gridElementGeneratorFoldout);
 
             if (gridElementGeneratorFoldout)
             {
@@ -322,6 +325,32 @@ namespace MugCup_BlockBuilder
                         }
                     }
                     EditorGUILayout.EndHorizontal();
+                    
+                    // EditorGUILayout.BeginHorizontal();
+                    // {
+                    //     EditorGUILayout.LabelField("Module Slots");
+                    //             
+                    //     if (GUILayout.Button("Update", _generateButtonStyle))
+                    //     {
+                    //         var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                    //         Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+                    //
+                    //         _gridElementDataManager.UpdateModuleSlotData();
+                    //                 
+                    //         PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                    //     }
+                    //     
+                    //     if (GUILayout.Button("Clear", _generateButtonStyle))
+                    //     {
+                    //         // var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                    //         // Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+                    //         //
+                    //         // _gridElementDataManager.ClearVolumePoints();
+                    //         //
+                    //         // PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                    //     }
+                    // }
+                    // EditorGUILayout.EndHorizontal();
                 EditorGUILayout.EndVertical();
                 
                 EditorGUILayout.BeginHorizontal();
@@ -342,157 +371,226 @@ namespace MugCup_BlockBuilder
                 EditorGUILayout.Space();
             }
         }
+        
+        // private static void DisplayWaveFunctionCollapseSection()
+        // {
+        //     waveFunctionCollapseFoldout = BBEditorStyling.DrawHeader(Color.clear, "Wave Function Collapse Generator", waveFunctionCollapseFoldout);
+        //
+        //     if (waveFunctionCollapseFoldout)
+        //     {
+        //         var _generateButtonStyle = new GUIStyle(GUI.skin.button)
+        //         {
+        //             fixedWidth = 100,
+        //         };
+        //         
+        //         var _clearButtonStyle = new GUIStyle(GUI.skin.button)
+        //         {
+        //             fixedWidth = 100,
+        //         };
+        //         
+        //         EditorGUILayout.BeginVertical("GroupBox");
+        //             
+        //             EditorGUILayout.BeginHorizontal();
+        //             {
+        //                 EditorGUILayout.LabelField("Module Slots");
+        //                         
+        //                 if (GUILayout.Button("Update", _generateButtonStyle))
+        //                 {
+        //                     var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+        //                     Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+        //
+        //                     _gridElementDataManager.UpdateModuleSlotData();
+        //                             
+        //                     PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+        //                 }
+        //                 
+        //                 if (GUILayout.Button("Clear", _generateButtonStyle))
+        //                 {
+        //                     // var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+        //                     // Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+        //                     //
+        //                     // _gridElementDataManager.ClearVolumePoints();
+        //                     //
+        //                     // PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+        //                 }
+        //             }
+        //             EditorGUILayout.EndHorizontal();
+        //             
+        //         EditorGUILayout.EndVertical();
+        //         
+        //         EditorGUILayout.BeginHorizontal();
+        //         {
+        //             GUILayout.Space(15);
+        //             if(GUILayout.Button("Clear All", EditorStyles.miniButton, GUILayout.Width(80)))
+        //             {
+        //                 var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+        //                 Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+        //
+        //                 _gridElementDataManager.ClearGrid();
+        //                 _gridElementDataManager.ClearVolumePoints();
+        //                 
+        //                 PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+        //             }  
+        //         }
+        //         EditorGUILayout.EndHorizontal();
+        //         EditorGUILayout.Space();
+        //     }
+        // }
 
         private static void DisplayBlockEditorSection()
         {
-             
-            blockGeneratorFoldout = BBEditorStyling.DrawHeader(Color.magenta, "Blocks Editor", blockGeneratorFoldout);
+            blockEditorFoldout = BBEditorStyling.DrawHeader(Color.clear, "Blocks Editor", blockEditorFoldout);
 
-            EditorGUILayout.BeginVertical("GroupBox");
-            
-            EditorGUILayout.HelpBox("Select desired edit mode. Use add and remove tab below to start edit blocks", MessageType.Info);
-            
-            BBEditorManager.InterfaceSetting.CurrentEditMode = (InterfaceSetting.EditMode)EditorGUILayout.EnumPopup("Edit mode selection:", BBEditorManager.InterfaceSetting.CurrentEditMode);
-
-
-            EditorGUILayout.BeginVertical("GroupBox");
-            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true);
-
-            var _allAssets = Resources.LoadAll<GridNode>("Prefabs/Grass");
-            
-            var _previewWidth = 100f;
-            var _newRect = new Rect(0, 0, _previewWidth, _previewWidth);
-            
-            for (var _i = 0; _i < _allAssets.Length; _i++)
+            if (blockEditorFoldout)
             {
-                var _cube = _allAssets[_i].gameObject;
+                EditorGUILayout.BeginVertical("GroupBox");
                 
-                if(_cube == null) continue;
+                EditorGUILayout.HelpBox("Select desired edit mode. Use add and remove tab below to start edit blocks", MessageType.Info);
                 
-                _newRect.x = _i * (_previewWidth + 5);
+                BBEditorManager.InterfaceSetting.CurrentEditMode = (InterfaceSetting.EditMode)EditorGUILayout.EnumPopup("Edit mode selection:", BBEditorManager.InterfaceSetting.CurrentEditMode);
 
-                if (_i > 3)
-                {
-                    _newRect.x = (_i - 4) * (_previewWidth + 5);
-                    _newRect.y = _previewWidth + 20;
-                }
-                
-                var _tex = BlockPreviewEditor.CreatePreviewTexture(_newRect, _cube);
-            
-                if (_newRect.Contains(Event.current.mousePosition)) 
-                {
-                    EditorGUI.DrawPreviewTexture(_newRect, _tex);
-                    EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
-                    UnityEngine.GUI.backgroundColor = Color.blue;
 
-                    if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
-                    {
-                        BlockPlacementTools.SelectedIndex = _i;
-                        BlockPlacementTools.SelectedBlock = _cube;
-                    }
-                }
-                else
+                EditorGUILayout.BeginVertical("GroupBox");
+                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true);
+
+                var _allAssets = Resources.LoadAll<GridNode>("Prefabs/Grass");
+                
+                var _previewWidth = 100f;
+                var _newRect = new Rect(0, 0, _previewWidth, _previewWidth);
+                
+                for (var _i = 0; _i < _allAssets.Length; _i++)
                 {
-                    if (!BlockPlacementTools.IsSlotSelected(_i))
+                    var _cube = _allAssets[_i].gameObject;
+                    
+                    if(_cube == null) continue;
+                    
+                    _newRect.x = _i * (_previewWidth + 5);
+
+                    if (_i > 3)
                     {
-                        EditorGUI.DrawPreviewTexture(_newRect, _tex);
-                        UnityEngine.GUI.backgroundColor = Color.white;
+                        _newRect.x = (_i - 4) * (_previewWidth + 5);
+                        _newRect.y = _previewWidth + 20;
                     }
-                    else
+                    
+                    var _tex = BlockPreviewEditor.CreatePreviewTexture(_newRect, _cube);
+                
+                    if (_newRect.Contains(Event.current.mousePosition)) 
                     {
                         EditorGUI.DrawPreviewTexture(_newRect, _tex);
                         EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
                         UnityEngine.GUI.backgroundColor = Color.blue;
-                    }
-                }
 
-                var _labelRect = _newRect;
-                _labelRect.y += _previewWidth + 3f;
-                _labelRect.height = EditorGUIUtility.singleLineHeight;
-                EditorGUI.LabelField(_labelRect, _cube.name);
+                        if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+                        {
+                            BlockPlacementTools.SelectedIndex = _i;
+                            BlockPlacementTools.SelectedBlock = _cube;
+                        }
+                    }
+                    else
+                    {
+                        if (!BlockPlacementTools.IsSlotSelected(_i))
+                        {
+                            EditorGUI.DrawPreviewTexture(_newRect, _tex);
+                            UnityEngine.GUI.backgroundColor = Color.white;
+                        }
+                        else
+                        {
+                            EditorGUI.DrawPreviewTexture(_newRect, _tex);
+                            EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
+                            UnityEngine.GUI.backgroundColor = Color.blue;
+                        }
+                    }
+
+                    var _labelRect = _newRect;
+                    _labelRect.y += _previewWidth + 3f;
+                    _labelRect.height = EditorGUIUtility.singleLineHeight;
+                    EditorGUI.LabelField(_labelRect, _cube.name);
+                    
+                }
+                
+                GUI.backgroundColor = Color.white;
+
+                
+                // var _cube = Resources.Load<GameObject>("Prefabs/Towers/Tower_Castle");
+                // if(_cube == null)
+                //     Debug.LogWarning("Missing Cube");
+                //
+                // var _previewWidth = 100f;
+                // var _newRect = new Rect(0, 0, _previewWidth, _previewWidth);
+                //
+                // for (var _i = 0; _i < 10; _i++)
+                // {
+                //     _newRect.x = _i * (_previewWidth + 5);
+                //
+                //     if (_i > 3)
+                //     {
+                //         _newRect.x = (_i - 4) * (_previewWidth + 5);
+                //         _newRect.y = _previewWidth + 20;
+                //     }
+                //     
+                //     var _tex = BlockPreviewEditor.CreatePreviewTexture(_newRect, _cube);
+                //
+                //     if (_newRect.Contains(Event.current.mousePosition)) 
+                //     {
+                //         EditorGUI.DrawPreviewTexture(_newRect, _tex);
+                //         EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
+                //         UnityEngine.GUI.backgroundColor = Color.blue;
+                //
+                //         if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+                //         {
+                //             BlockPlacementTools.SelectedIndex = _i;
+                //             BlockPlacementTools.SelectedBlock = _cube;
+                //         }
+                //     }
+                //     else
+                //     {
+                //         if (!BlockPlacementTools.IsSlotSelected(_i))
+                //         {
+                //             EditorGUI.DrawPreviewTexture(_newRect, _tex);
+                //             UnityEngine.GUI.backgroundColor = Color.white;
+                //         }
+                //         else
+                //         {
+                //             EditorGUI.DrawPreviewTexture(_newRect, _tex);
+                //             EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
+                //             UnityEngine.GUI.backgroundColor = Color.blue;
+                //         }
+                //     }
+                //
+                //     var _labelRect = _newRect;
+                //     _labelRect.y += _previewWidth + 3f;
+                //     _labelRect.height = EditorGUIUtility.singleLineHeight;
+                //     EditorGUI.LabelField(_labelRect, _cube.name);
+                //     
+                // }
+                
+                EditorGUILayout.EndScrollView();
+                EditorGUILayout.EndVertical();
+                
+                BBResource.Initialized();
+                BBEditorManager.InterfaceSetting.CurrentEditMode 
+                    = (InterfaceSetting.EditMode)GUILayout.Toolbar((int)BBEditorManager.InterfaceSetting.CurrentEditMode, BBResource.Tabs, GUILayout.Height(30), GUILayout.Width(100));
+                
+                
+                EditorGUILayout.LabelField("Block Element Placement");
+                string[] _blockPlacementTools = { "Place Block Element", "Remove Block Element" };
+                BBEditorManager.InterfaceSetting.BlockPlacementToolTabSelection 
+                    = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.BlockPlacementToolTabSelection, _blockPlacementTools, GUILayout.Height(30));
+
+                EditorGUILayout.LabelField("Edit Blocks");
+                string[] _buildingToolTabs = { "Add Block", "Subtract Block" };
+                BBEditorManager.InterfaceSetting.BuildToolTabSelection 
+                    = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
+                
+                EditorGUILayout.LabelField("Edit Road Path Blocks");
+                string[] _pathBuildingToolTabs = { "Add Road Path", "Remove Road Path" };
+                BBEditorManager.InterfaceSetting.RoadBuildToolTabSelection 
+                    = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.RoadBuildToolTabSelection, _pathBuildingToolTabs, GUILayout.Height(30));
+                
+                EditorGUILayout.EndVertical();
                 
             }
-            
-            GUI.backgroundColor = Color.white;
 
-            
-            // var _cube = Resources.Load<GameObject>("Prefabs/Towers/Tower_Castle");
-            // if(_cube == null)
-            //     Debug.LogWarning("Missing Cube");
-            //
-            // var _previewWidth = 100f;
-            // var _newRect = new Rect(0, 0, _previewWidth, _previewWidth);
-            //
-            // for (var _i = 0; _i < 10; _i++)
-            // {
-            //     _newRect.x = _i * (_previewWidth + 5);
-            //
-            //     if (_i > 3)
-            //     {
-            //         _newRect.x = (_i - 4) * (_previewWidth + 5);
-            //         _newRect.y = _previewWidth + 20;
-            //     }
-            //     
-            //     var _tex = BlockPreviewEditor.CreatePreviewTexture(_newRect, _cube);
-            //
-            //     if (_newRect.Contains(Event.current.mousePosition)) 
-            //     {
-            //         EditorGUI.DrawPreviewTexture(_newRect, _tex);
-            //         EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
-            //         UnityEngine.GUI.backgroundColor = Color.blue;
-            //
-            //         if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
-            //         {
-            //             BlockPlacementTools.SelectedIndex = _i;
-            //             BlockPlacementTools.SelectedBlock = _cube;
-            //         }
-            //     }
-            //     else
-            //     {
-            //         if (!BlockPlacementTools.IsSlotSelected(_i))
-            //         {
-            //             EditorGUI.DrawPreviewTexture(_newRect, _tex);
-            //             UnityEngine.GUI.backgroundColor = Color.white;
-            //         }
-            //         else
-            //         {
-            //             EditorGUI.DrawPreviewTexture(_newRect, _tex);
-            //             EditorGUI.DrawRect(_newRect, new Color(1f, 1f, 1f, 0.5f));
-            //             UnityEngine.GUI.backgroundColor = Color.blue;
-            //         }
-            //     }
-            //
-            //     var _labelRect = _newRect;
-            //     _labelRect.y += _previewWidth + 3f;
-            //     _labelRect.height = EditorGUIUtility.singleLineHeight;
-            //     EditorGUI.LabelField(_labelRect, _cube.name);
-            //     
-            // }
-            
-            EditorGUILayout.EndScrollView();
-            EditorGUILayout.EndVertical();
-            
-            BBResource.Initialized();
-            BBEditorManager.InterfaceSetting.CurrentEditMode 
-                = (InterfaceSetting.EditMode)GUILayout.Toolbar((int)BBEditorManager.InterfaceSetting.CurrentEditMode, BBResource.Tabs, GUILayout.Height(30), GUILayout.Width(100));
-            
-            
-            EditorGUILayout.LabelField("Block Element Placement");
-            string[] _blockPlacementTools = { "Place Block Element", "Remove Block Element" };
-            BBEditorManager.InterfaceSetting.BlockPlacementToolTabSelection 
-                = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.BlockPlacementToolTabSelection, _blockPlacementTools, GUILayout.Height(30));
-
-            EditorGUILayout.LabelField("Edit Blocks");
-            string[] _buildingToolTabs = { "Add Block", "Subtract Block" };
-            BBEditorManager.InterfaceSetting.BuildToolTabSelection 
-                = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
-            
-            EditorGUILayout.LabelField("Edit Road Path Blocks");
-            string[] _pathBuildingToolTabs = { "Add Road Path", "Remove Road Path" };
-            BBEditorManager.InterfaceSetting.RoadBuildToolTabSelection 
-                = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.RoadBuildToolTabSelection, _pathBuildingToolTabs, GUILayout.Height(30));
-            
-            EditorGUILayout.EndVertical();
         }
         
         private static void DisplayBuilderModeSelectionInApplication()

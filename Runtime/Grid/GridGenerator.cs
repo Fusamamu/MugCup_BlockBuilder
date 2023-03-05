@@ -172,6 +172,44 @@ namespace BlockBuilder.Runtime.Core
 
              return _gridNodes;
         }
+        
+        public static T[] GenerateDualGrid<T>(Vector3Int _gridUnitSize, GameObject _nodePrefab, GameObject _parent) where T : Component, IGridCoord
+        {
+            int _rowUnit    = _gridUnitSize.x + 1;
+            int _columnUnit = _gridUnitSize.z + 1;
+            int _levelUnit  = _gridUnitSize.y + 1;
+            
+            var _dualGridNodes = new T[_rowUnit * _columnUnit * _levelUnit];
+            
+            for (var _y = 0; _y < _levelUnit; _y++)
+            {
+                for (var _x = 0; _x < _rowUnit; _x++)
+                {
+                    for (var _z = 0; _z < _columnUnit; _z++)
+                    {
+                        var _offset   = new Vector3(-0.5f, -0.5f, -0.5f);
+                        var _position = new Vector3(_x, _y, _z) + _offset;
+
+                        var _nodeObject = Object.Instantiate(_nodePrefab, _position, Quaternion.identity);
+
+                        if (_parent != null)
+                        {
+                            _nodeObject.transform.position += _parent.transform.position;
+                            _nodeObject.transform.SetParent(_parent.transform);
+                        }
+                        
+                        if (!_nodeObject.TryGetComponent<T>(out var _node))
+                            _node = _nodeObject.AddComponent<T>();
+                        
+                        _node.SetNodePosition(new Vector3Int(_x, _y, _z));
+                         
+                        _dualGridNodes[_z + (_gridUnitSize.x + 1) * (_x + (_gridUnitSize.z + 1) * _y)] = _node;
+                    }
+                }
+            }
+
+            return _dualGridNodes;
+        }
        
         public static void AddBlock(Vector3 _position, Transform _parent, GameObject _blockPrefab)
         {

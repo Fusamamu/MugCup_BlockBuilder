@@ -27,6 +27,12 @@ namespace MugCup_BlockBuilder
             ModuleSlotData = _moduleSlotData;
             return this;
         }
+
+        public ModuleSlot Initialized()
+        {
+            AvailableModuleSet = new ModuleSet(ModuleSlotData.CurrentModuleData.AllModuleCount, true);
+            return this;
+        }
         
         public void CollapseRandom() 
         {

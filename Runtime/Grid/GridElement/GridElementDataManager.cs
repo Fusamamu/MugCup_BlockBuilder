@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
+using UnityEditor;
 using UnityEngine;
 
 namespace MugCup_BlockBuilder
@@ -11,11 +12,13 @@ namespace MugCup_BlockBuilder
     {
         [field: SerializeField] public GridElementData GridElementData { get; private set; }
         [field: SerializeField] public VolumePointData VolumePointData { get; private set; }
+        [field: SerializeField] public ModuleSlotData  ModuleSlotData  { get; private set; }
         
         [field:Unity.Collections.ReadOnly, SerializeField] public GridDataSettingSO GridDataSetting { get; private set; }
 
         [Unity.Collections.ReadOnly, SerializeField] private GameObject GridElementParent;
         [Unity.Collections.ReadOnly, SerializeField] private GameObject VolumePointParent;
+        [Unity.Collections.ReadOnly, SerializeField] private GameObject ModuleSlotParent;
 
         public GridElementDataManager SetGridDataSetting(GridDataSettingSO _gridDataSetting)
         {
@@ -45,9 +48,13 @@ namespace MugCup_BlockBuilder
         
         public GridElementDataManager GenerateVolumePoints()
         {
+            var _volumePointPrefab = AssetManager.AssetCollection.VolumePoint.gameObject;
+            
             VolumePointParent = new GameObject("[Volume Points]");
-                    
-            VolumePointData.GridNodes = VolumePointGenerator.GeneratedVolumePoints(GridDataSetting.GridUnitSize, 0.1f, VolumePointParent);
+
+            VolumePointData.GridNodes = GridGenerator.GenerateDualGrid<VolumePoint>(GridDataSetting.GridUnitSize, _volumePointPrefab, VolumePointParent);        
+            
+            // VolumePointData.GridNodes = VolumePointGenerator.GeneratedVolumePoints(GridDataSetting.GridUnitSize, 0.1f, VolumePointParent);
 
             foreach (var _element in GridElementData.ValidNodes)
             {
@@ -62,8 +69,46 @@ namespace MugCup_BlockBuilder
                 if(_point == null) continue;
                 
                 _point.SetAdjacentBlocks(GridElementData.GridNodes, GridDataSetting.GridUnitSize);
+                _point.Init();
             }
             
+            return this;
+        }
+
+        public GridElementDataManager GenerateModuleSlots()
+        {
+            ModuleSlotParent = new GameObject("[Module Slot Parent");
+            return this;
+        }
+
+        public GridElementDataManager UpdateModuleSlotData()
+        {
+            ModuleSlotData.GridNodes = new ModuleSlot[VolumePointData.GridNodes.Length];
+
+            for (var _i = 0; _i < ModuleSlotData.GridNodes.Length; _i++)
+            {
+                var _volumePoint = VolumePointData.GridNodes[_i];
+                
+                if(_volumePoint == null) continue;
+
+                if (_volumePoint.TryGetComponent<ModuleSlot>(out var _slot))
+                {
+                    ModuleSlotData.GridNodes[_i] = _slot;
+
+                    _slot
+                        .SetModuleSlotData(ModuleSlotData)
+                        .Initialized();
+                    
+                    #if UNITY_EDITOR
+                    EditorUtility.SetDirty(_slot);
+                    #endif
+                }
+            }
+            
+            #if UNITY_EDITOR
+            EditorUtility.SetDirty(ModuleSlotData);
+            #endif
+       
             return this;
         }
 

@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 7458563524013073088}
   - component: {fileID: 4938557985771779237}
   - component: {fileID: 7288600626842189160}
+  - component: {fileID: 4009993644400162156}
+  - component: {fileID: 466524148}
   m_Layer: 0
   m_Name: '[---Block Manager---]'
   m_TagString: Untagged
@@ -53,7 +55,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Mode: 1
-  SelectedBuildType: 0
   <BlockManager>k__BackingField: {fileID: 6668422764112966310}
   <GridElementManager>k__BackingField: {fileID: 8552529509201367316}
 --- !u!114 &7342133537920494938
@@ -1141,7 +1142,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <GridElementData>k__BackingField: {fileID: 4938557985771779237}
   <VolumePointData>k__BackingField: {fileID: 7288600626842189160}
-  <GridDataSetting>k__BackingField: {fileID: 0}
+  <ModuleSlotData>k__BackingField: {fileID: 4009993644400162156}
+  <GridDataSetting>k__BackingField: {fileID: 11400000, guid: e8782ab07f7c046c09146999a9ad829b, type: 2}
   GridElementParent: {fileID: 0}
   VolumePointParent: {fileID: 0}
 --- !u!114 &4938557985771779237
@@ -1178,3 +1180,34 @@ MonoBehaviour:
   RowUnit: 0
   ColumnUnit: 0
   LevelUnit: 0
+--- !u!114 &4009993644400162156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611072854211523857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb9fc5d796f14f08b68a2aeba7cd838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GridNodes: []
+  GridSize: {x: 0, y: 0, z: 0}
+  RowUnit: 0
+  ColumnUnit: 0
+  LevelUnit: 0
+  <CurrentModuleData>k__BackingField: {fileID: 466524148}
+--- !u!114 &466524148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611072854211523857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5618bff10511e420a8618e1ae5462bbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CornerMeshModuleData: {fileID: 11400000, guid: 964a2a5df6b21411cb8f7848a40195f0, type: 2}

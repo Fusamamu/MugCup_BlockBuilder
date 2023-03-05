@@ -29,45 +29,6 @@ namespace MugCup_BlockBuilder
         {
             CornerMeshModuleData = _data;
         }
-
-        // public void CleanData()
-        // {
-        //     var _validModuleCount = CornerMeshModuleData.Modules.Count(_module => _module != null);
-        //
-        //     var _newData = new Module[_validModuleCount];
-        //
-        //     var _index = 0;
-        //     
-        //     foreach (var _module in CornerMeshModuleData.Modules)
-        //     {
-        //         if (_module == null)
-        //             continue;
-        //
-        //         _newData[_index] = _module;
-        //         
-        //         _index++;
-        //     }
-        //
-        //     CornerMeshModuleData.Modules = _newData;
-        // }
-        //
-        // public void ResetDataIndex()
-        // {
-        //     for (var _i = 0; _i < CornerMeshModuleData.Modules.Length; _i++)
-        //     {
-        //         CornerMeshModuleData.Modules[_i].Index = _i;
-        //     }
-        // }
-        
-        // public void StoreModulesPossibleNeighbors()
-        // {
-        //     var _modulesInScene = CornerMeshModuleData.Modules.Where(_module => _module != null).ToList();
-        //     
-        //     foreach (var _module in _modulesInScene)
-        //     {
-        //         _module.StorePossibleNeighbors(_modulesInScene);
-        //     }
-        // }
         
         private short[][] CreateInitialModuleHealth(Module[] _modules) 
         {

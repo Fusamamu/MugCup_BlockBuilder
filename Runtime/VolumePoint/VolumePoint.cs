@@ -28,7 +28,7 @@ namespace MugCup_BlockBuilder
 		    return this;
 	    }
 	    
-        [SerializeField] private Vector3Int Coord;
+        //[SerializeField] private Vector3Int Coord;
         
         [SerializeField] private int BitMask;
 
@@ -51,11 +51,9 @@ namespace MugCup_BlockBuilder
         [SerializeField] private bool ShowDebugText;
         [SerializeField] private bool ShowGizmosOnSelected;
         
-        public void Init(Vector3Int _coord)
+        public void Init()
         {
-	        Coord = _coord;
-	        
-			name = "CE_" + Coord.x +"_" + Coord.y +"_" + Coord.z;
+			name = "CE_" + NodeGridPosition.x +"_" + NodeGridPosition.y +"_" + NodeGridPosition.z;
 			
 	        Mesh     = GetComponent<MeshFilter>();
 	        Renderer = GetComponent<Renderer>();
@@ -72,9 +70,9 @@ namespace MugCup_BlockBuilder
 	        int _columnUnit = _gridUnitSize.z;
 	        int _levelUnit  = _gridUnitSize.y;
 
-	        var _x = Coord.x;
-	        var _y = Coord.y;
-	        var _z = Coord.z;
+	        var _x = NodeGridPosition.x;
+	        var _y = NodeGridPosition.y;
+	        var _z = NodeGridPosition.z;
 
 	        if (_y < _levelUnit)
 	        {

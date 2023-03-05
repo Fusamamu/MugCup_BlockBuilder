@@ -10,16 +10,13 @@ namespace MugCup_BlockBuilder
     [DisallowMultipleComponent]
     public class ModuleData : MonoBehaviour
     {
+        public int AllModuleCount => CornerMeshModuleData.Modules.Length;
+        
         public static CornerMeshModuleData Data;
 
         [SerializeField] private CornerMeshModuleData CornerMeshModuleData;
         
         public short[][] InitialModuleHealth { get; private set; }
-
-        private void Awake()
-        {
-            Initialized();
-        }
 
         public void Initialized()
         {
@@ -32,16 +29,45 @@ namespace MugCup_BlockBuilder
         {
             CornerMeshModuleData = _data;
         }
+
+        // public void CleanData()
+        // {
+        //     var _validModuleCount = CornerMeshModuleData.Modules.Count(_module => _module != null);
+        //
+        //     var _newData = new Module[_validModuleCount];
+        //
+        //     var _index = 0;
+        //     
+        //     foreach (var _module in CornerMeshModuleData.Modules)
+        //     {
+        //         if (_module == null)
+        //             continue;
+        //
+        //         _newData[_index] = _module;
+        //         
+        //         _index++;
+        //     }
+        //
+        //     CornerMeshModuleData.Modules = _newData;
+        // }
+        //
+        // public void ResetDataIndex()
+        // {
+        //     for (var _i = 0; _i < CornerMeshModuleData.Modules.Length; _i++)
+        //     {
+        //         CornerMeshModuleData.Modules[_i].Index = _i;
+        //     }
+        // }
         
-        public void StoreModulesPossibleNeighbors()
-        {
-            var _modulesInScene = CornerMeshModuleData.Modules.Where(_module => _module != null).ToList();
-            
-            foreach (var _module in _modulesInScene)
-            {
-                _module.StorePossibleNeighbors(_modulesInScene);
-            }
-        }
+        // public void StoreModulesPossibleNeighbors()
+        // {
+        //     var _modulesInScene = CornerMeshModuleData.Modules.Where(_module => _module != null).ToList();
+        //     
+        //     foreach (var _module in _modulesInScene)
+        //     {
+        //         _module.StorePossibleNeighbors(_modulesInScene);
+        //     }
+        // }
         
         private short[][] CreateInitialModuleHealth(Module[] _modules) 
         {
@@ -100,7 +126,47 @@ namespace MugCup_BlockBuilder
 
         public void DebugModuleHealth()
         {
+            var _info = $"[Initial Module Health]\n";
+
+            if (InitialModuleHealth == null)
+            {
+                _info = $"Initial Module Health Not Initialized";
+                EditorGUILayout.LabelField(_info);
+                return;
+            }
             
+            foreach (var _face in Enum.GetValues(typeof(ModuleFace)))
+            {
+                var _faceIndex = (int)_face;
+
+                _info += $"[Face] : {_face}\n";
+                _info += $"[Possible Modules Count] : {InitialModuleHealth[_faceIndex].Length}\n\n";
+
+                var _moduleCount = 0;
+                
+                foreach (var _neighbor in InitialModuleHealth[_faceIndex])
+                {
+                    _info += _neighbor;
+
+                    _moduleCount++;
+
+                    if (_moduleCount % 40 == 0)
+                    {
+                        _info += "\n";
+                        _moduleCount = 0;
+                    }
+                }
+
+                _info += "\n\n";
+            }
+            
+            GUIStyle _style = new GUIStyle
+            {
+                richText = true,
+                normal = { textColor = Color.white }
+            };
+
+            EditorGUILayout.LabelField(_info, _style);
         }
 #endif
     }

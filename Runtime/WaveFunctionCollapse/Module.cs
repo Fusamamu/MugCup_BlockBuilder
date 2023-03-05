@@ -18,6 +18,7 @@ namespace MugCup_BlockBuilder
         public Mesh MeshPrototype;
 
         public float Probability;
+        public float PLogP;
 
         public int RotationIndex;
 
@@ -25,6 +26,16 @@ namespace MugCup_BlockBuilder
         
         public ModuleSet[] PossibleNeighbors;
         public Module[][] PossibleNeighborsArray;
+
+        public void SetProbability(float _value)
+        {
+            Probability = _value;
+        }
+            
+        public void CalculatePLogP()
+        {
+            PLogP = Probability * Mathf.Log(Probability);
+        }
 
         public void CopyData(ModulePrototype _modulePrototype)
         {

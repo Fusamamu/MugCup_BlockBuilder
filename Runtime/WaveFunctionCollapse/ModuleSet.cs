@@ -9,6 +9,14 @@ namespace MugCup_BlockBuilder
     [Serializable]
     public class ModuleSet : ICollection<Module>
     {
+        public float Entropy 
+        {
+            get
+            {
+                return CalculateEntropy();
+            }
+        }
+        
         [SerializeField] private long[] Data;
         
         public int  Count      { get; }
@@ -64,7 +72,6 @@ namespace MugCup_BlockBuilder
                     Data[_i] = _updated;
             }
         }
-
         
 #region Add/Remove Modules
         public void Add(Module _module)
@@ -173,6 +180,20 @@ namespace MugCup_BlockBuilder
         
         public void CopyTo(Module[] _array, int _arrayIndex)
         {
+        }
+
+        private float CalculateEntropy()
+        {
+            float _total      = 0;
+            float _entropySum = 0;
+                
+            foreach (var _module in this) 
+            {
+                _total      += _module.Probability;
+                _entropySum += _module.PLogP;
+            }
+                
+            return -1f / _total * _entropySum + Mathf.Log(_total);
         }
     }
 }

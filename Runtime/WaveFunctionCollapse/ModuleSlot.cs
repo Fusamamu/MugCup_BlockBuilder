@@ -10,10 +10,9 @@ namespace MugCup_BlockBuilder
 {
     public class ModuleSlot : MonoBehaviour, IGridCoord
     {
-        [field: SerializeField] public Module CollapsedModule { get; private set; }
+        [field: ReadOnly, SerializeField] public ModuleSlotData ModuleSlotData { get; private set; }
         
-        [field: ReadOnly, SerializeField] 
-        public ModuleSlotData ModuleSlotData { get; private set; }
+        [field: SerializeField] public Module CollapsedModule { get; private set; }
         
         public bool IsCollapsed => CollapsedModule != null;
 
@@ -21,10 +20,41 @@ namespace MugCup_BlockBuilder
         
         public short[][] ModuleHealth;
 
+        private static readonly System.Random random = new System.Random();
+
         public ModuleSlot SetModuleSlotData(ModuleSlotData _moduleSlotData)
         {
             ModuleSlotData = _moduleSlotData;
             return this;
+        }
+        
+        public void CollapseRandom() 
+        {
+            if (!AvailableModuleSet.Any()) 
+            {
+               return;
+            }
+            
+            if (IsCollapsed) 
+            {
+                throw new Exception("Slot is already collapsed.");
+            }
+		
+            float _max  = AvailableModuleSet.Select(_module => _module.Probability).Sum();
+            float _roll = (float)(random.NextDouble() * _max);
+            
+            float _p = 0;
+            foreach (var _candidate in AvailableModuleSet) 
+            {
+                _p += _candidate.Probability;
+                if (_p >= _roll) 
+                {
+                    Collapse(_candidate);
+                    return;
+                }
+            } 
+            
+            Collapse(AvailableModuleSet.First());
         }
         
         public void Collapse(Module _module) 
@@ -38,35 +68,11 @@ namespace MugCup_BlockBuilder
             CollapsedModule = _module;
             
             RemoveModules(new ModuleSet(AvailableModuleSet, _toRemoveModule: _module));
-        }
-        
-        public void CollapseRandom() 
-        {
-            if (!AvailableModuleSet.Any()) 
-            {
-               // throw new CollapseFailedException(this);
-            }
             
-            if (IsCollapsed) 
-            {
-                throw new Exception("Slot is already collapsed.");
-            }
-		
-            // float max = this.Modules.Select(module => module.Prototype.Probability).Sum();
-            // float roll = (float)(InfiniteMap.Random.NextDouble() * max);
-            // float p = 0;
-            // foreach (var candidate in this.Modules) {
-            //     p += candidate.Prototype.Probability;
-            //     if (p >= roll) {
-            //         this.Collapse(candidate);
-            //         return;
-            //     }
-            // } 
-            
-            Collapse(AvailableModuleSet.First());
+            ModuleSlotData.NotifySlotCollapsed(this);
         }
 
-        private void RemoveModules(ModuleSet _toRemoveModules)
+        public void RemoveModules(ModuleSet _toRemoveModules, bool _recursive = true)
         {
             foreach(ModuleFace _face in Enum.GetValues(typeof(ModuleFace)))
             {
@@ -84,12 +90,20 @@ namespace MugCup_BlockBuilder
 
                     foreach (var _possibleModule in _possibleNeighbors)
                     {
+                        if (_neighbor.ModuleHealth[_oppositeFaceIndex][_possibleModule.Index] == 1 && _neighbor.AvailableModuleSet.Contains(_possibleModule)) 
+                        {
+                            ModuleSlotData.RemovalQueue[_neighbor.NodeGridPosition].Add(_possibleModule);
+                        }
+                        
                         _neighbor.ModuleHealth[_oppositeFaceIndex][_possibleModule.Index]--;
                     }
                 }
             }
 
             AvailableModuleSet.Remove(_toRemoveModules);
+
+            if (_recursive)
+                ModuleSlotData.FinishRemovalQueue();
         }
         
         

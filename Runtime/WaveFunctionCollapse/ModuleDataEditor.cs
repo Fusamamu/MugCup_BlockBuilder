@@ -21,24 +21,36 @@ namespace MugCup_BlockBuilder
         {
             DrawDefaultInspector();
 
-            if (GUILayout.Button("Store Modules Possible Neighbors"))
-            {
-                moduleData.StoreModulesPossibleNeighbors();
-                EditorUtility.SetDirty(moduleData);
-            }
+            // if (GUILayout.Button("Clean Module Data"))
+            // {
+            //     moduleData.CleanData();
+            //     EditorUtility.SetDirty(moduleData);
+            // }
+            //
+            // if (GUILayout.Button("Reset Module Data Index"))
+            // {
+            //     moduleData.ResetDataIndex();
+            //     EditorUtility.SetDirty(moduleData);
+            // }
+
+            // if (GUILayout.Button("Store Modules Possible Neighbors"))
+            // {
+            //     moduleData.StoreModulesPossibleNeighbors();
+            //     EditorUtility.SetDirty(moduleData);
+            // }
             
             if (GUILayout.Button("Try Initialize Module Data"))
             {
                 moduleData.Initialized();
             }
 
-            EditorGUILayout.BeginVertical("HelpBox");
-            
-            moduleData.DebugCornerMeshModuleData();
+            EditorGUILayout.BeginVertical("HelpBox", GUILayout.Height(600));
+
+                moduleData.DebugCornerMeshModuleData();
+                moduleData.DebugModuleHealth();
+
             
             EditorGUILayout.EndVertical();
-
-
         }
     }
 }

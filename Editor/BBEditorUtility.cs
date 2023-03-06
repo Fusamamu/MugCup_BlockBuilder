@@ -10,6 +10,13 @@ namespace MugCup_BlockBuilder.Editor
 {
 	public static class BBEditorUtility
 	{
+		// public static void VerticalLayout(string _style, Action _action)
+		// {
+		// 	EditorGUILayout.BeginVertical(_style);
+		// 	_action?.Invoke();
+		// 	EditorGUILayout.EndVertical();
+		// }
+		
 		public static void RecordGridBlockManagerChanges(Action _action)
 		{
 			var _gridBlockDataManager = BBEditorManager.BlockManager.GridBlockDataManager;

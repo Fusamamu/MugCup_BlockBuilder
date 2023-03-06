@@ -28,7 +28,7 @@ namespace MugCup_BlockBuilder
                 };
                 
                 EditorGUILayout.BeginVertical("GroupBox");
-                    
+                {
                     EditorGUILayout.BeginHorizontal();
                     {
                         EditorGUILayout.LabelField("Module Slots");
@@ -54,7 +54,12 @@ namespace MugCup_BlockBuilder
                         }
                     }
                     EditorGUILayout.EndHorizontal();
-                    
+
+                    if (GUILayout.Button("Start Collapse"))
+                    {
+                        BBEditorManager.GridElementDataManager.ModuleSlotData.CollapseAll();
+                    }
+                }
                 EditorGUILayout.EndVertical();
                 
                 EditorGUILayout.BeginHorizontal();

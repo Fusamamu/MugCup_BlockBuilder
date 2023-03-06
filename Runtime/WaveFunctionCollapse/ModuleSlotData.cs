@@ -19,12 +19,6 @@ namespace MugCup_BlockBuilder
 		public Queue<ModuleSlot> BuildQueue;
 		public QueueDictionary<Vector3Int, ModuleSet> RemovalQueue;
 
-		//Test
-		private void Awake()
-		{
-			Initialized();
-		}
-
 		public override void Initialized()
 		{
 			CurrentModuleData.Initialized();
@@ -52,6 +46,13 @@ namespace MugCup_BlockBuilder
 			}
 
 			return null;
+		}
+
+		public void CollapseAll()
+		{
+			var _targetPositions = GridNodes.Select(_node => _node.NodeGridPosition);
+			
+			Collapse(_targetPositions);
 		}
 
 		public void Collapse(IEnumerable<Vector3Int> _targets)

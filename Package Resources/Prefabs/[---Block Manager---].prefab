@@ -17,8 +17,9 @@ GameObject:
   - component: {fileID: 8552529509201367316}
   - component: {fileID: 7458563524013073088}
   - component: {fileID: 4938557985771779237}
-  - component: {fileID: 7288600626842189160}
+  - component: {fileID: 8015165734721009269}
   - component: {fileID: 4009993644400162156}
+  - component: {fileID: 7288600626842189160}
   - component: {fileID: 466524148}
   m_Layer: 0
   m_Name: '[---Block Manager---]'
@@ -1141,11 +1142,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <GridElementData>k__BackingField: {fileID: 4938557985771779237}
+  <DualGridElementData>k__BackingField: {fileID: 8015165734721009269}
   <VolumePointData>k__BackingField: {fileID: 7288600626842189160}
   <ModuleSlotData>k__BackingField: {fileID: 4009993644400162156}
   <GridDataSetting>k__BackingField: {fileID: 11400000, guid: e8782ab07f7c046c09146999a9ad829b, type: 2}
   GridElementParent: {fileID: 0}
+  DualGridElementParent: {fileID: 0}
   VolumePointParent: {fileID: 0}
+  ModuleSlotParent: {fileID: 0}
 --- !u!114 &4938557985771779237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1163,7 +1167,7 @@ MonoBehaviour:
   RowUnit: 0
   ColumnUnit: 0
   LevelUnit: 0
---- !u!114 &7288600626842189160
+--- !u!114 &8015165734721009269
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1172,7 +1176,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7611072854211523857}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d852d70a56fd4a69bbea1ba542bf62f, type: 3}
+  m_Script: {fileID: 11500000, guid: ef2fc1a299ad741e1a9a29365ab2e254, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   GridNodes: []
@@ -1198,6 +1202,23 @@ MonoBehaviour:
   ColumnUnit: 0
   LevelUnit: 0
   <CurrentModuleData>k__BackingField: {fileID: 466524148}
+--- !u!114 &7288600626842189160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7611072854211523857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d852d70a56fd4a69bbea1ba542bf62f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GridNodes: []
+  GridSize: {x: 0, y: 0, z: 0}
+  RowUnit: 0
+  ColumnUnit: 0
+  LevelUnit: 0
 --- !u!114 &466524148
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,6 +16,8 @@ MonoBehaviour:
   Name: CM_0010_0000
   BitMask: 32
   MeshPrototype: {fileID: 4300000, guid: 25febe5cd05ac4db4a228cbcc6667be8, type: 2}
+  Probability: 1
+  PLogP: 0
   RotationIndex: 0
   FaceDetails:
     Forward:
@@ -54,4 +56,10 @@ MonoBehaviour:
       <Connector>k__BackingField: 0
       <Invariant>k__BackingField: 0
       <Rotation>k__BackingField: 0
-  PossibleNeighbors: []
+  PossibleNeighbors:
+  - Data: 80400281000101000000882000000000
+  - Data: 32134104400400000040000000440400
+  - Data: 98992002200200000020000000220200
+  - Data: 20008280000001000000008080801001
+  - Data: 1e007878000000000000000000000000
+  - Data: 04440000000101010000104080800800

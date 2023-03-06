@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace MugCup_BlockBuilder
@@ -15,6 +16,7 @@ namespace MugCup_BlockBuilder
             foreach (var _module in Modules)
             {
                 _module.SetProbability(_value);
+                SetDirtyModule(_module);
             }
         }
 
@@ -23,6 +25,7 @@ namespace MugCup_BlockBuilder
             foreach (var _module in Modules)
             {
                 _module.CalculatePLogP();
+                SetDirtyModule(_module);
             }
         }
         
@@ -54,6 +57,7 @@ namespace MugCup_BlockBuilder
             for (var _i = 0; _i < Modules.Length; _i++)
             {
                 Modules[_i].Index = _i;
+                SetDirtyModule(Modules[_i]);
             }
         }
         
@@ -64,6 +68,7 @@ namespace MugCup_BlockBuilder
             foreach (var _module in _modulesInScene)
             {
                 _module.StorePossibleNeighbors(_modulesInScene);
+                SetDirtyModule(_module);
             }
         }
         
@@ -73,6 +78,13 @@ namespace MugCup_BlockBuilder
         
         public void OnAfterDeserialize()
         {
+        }
+
+        private void SetDirtyModule(Module _module)
+        {
+            #if UNITY_EDITOR
+            EditorUtility.SetDirty(_module);
+            #endif
         }
     }
 }

@@ -11,11 +11,12 @@ GameObject:
   - component: {fileID: 2366773020894794988}
   - component: {fileID: 1691009372243008329}
   - component: {fileID: 3500241775261806467}
-  - component: {fileID: 3566903991710205426}
+  - component: {fileID: 5687962756129630501}
   - component: {fileID: 5685821772674190554}
+  - component: {fileID: 3566903991710205426}
   - component: {fileID: 7277019213515775652}
   m_Layer: 0
-  m_Name: VolumePoint
+  m_Name: DualGridElement
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -86,6 +87,40 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5687962756129630501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3140037161032207958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d4dd421d82148d386d9151395bcb2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <ModuleSlot>k__BackingField: {fileID: 5685821772674190554}
+  <VolumePoint>k__BackingField: {fileID: 3566903991710205426}
+  <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
+  <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
+--- !u!114 &5685821772674190554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3140037161032207958}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf21964b3c4a844bcb6710f95b28504e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <ModuleSlotData>k__BackingField: {fileID: 0}
+  <CollapsedModule>k__BackingField: {fileID: 0}
+  AvailableModuleSet:
+    Data: 
+  <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
+  <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
 --- !u!114 &3566903991710205426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +136,6 @@ MonoBehaviour:
   <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
   <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
   CornerMeshData: {fileID: 11400000, guid: b8fa7181acda04a1a96a65c3c0c54147, type: 2}
-  Coord: {x: 0, y: 0, z: 0}
   BitMask: 0
   AdjacentGridElements:
   - {fileID: 0}
@@ -125,24 +159,6 @@ MonoBehaviour:
   ShowGizmos: 0
   ShowDebugText: 0
   ShowGizmosOnSelected: 0
---- !u!114 &5685821772674190554
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3140037161032207958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf21964b3c4a844bcb6710f95b28504e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ModuleSet:
-    Data: 
-  <CollapsedModule>k__BackingField: {fileID: 0}
-  <ModuleSlotData>k__BackingField: {fileID: 0}
-  <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
-  <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
 --- !u!114 &7277019213515775652
 MonoBehaviour:
   m_ObjectHideFlags: 0

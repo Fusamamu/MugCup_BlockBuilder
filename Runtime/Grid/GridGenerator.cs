@@ -6,6 +6,7 @@ using MugCup_BlockBuilder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
 using MugCup_PathFinder.Runtime;
+using UnityEditor;
 
 namespace BlockBuilder.Runtime.Core
 {
@@ -166,6 +167,10 @@ namespace BlockBuilder.Runtime.Core
                          _node.SetNodePosition(new Vector3Int(_x, _y, _z));
                          
                          _gridNodes[_z + _gridUnitSize.x * (_x + _gridUnitSize.z * _y)] = _node;
+                         
+                         #if UNITY_EDITOR
+                         EditorUtility.SetDirty(_node);
+                         #endif
                      }
                  }
              }
@@ -209,6 +214,32 @@ namespace BlockBuilder.Runtime.Core
             }
 
             return _dualGridNodes;
+        }
+        
+        public static T[] GetCornerNodes<T>(Vector3Int _nodeCoord, Vector3Int _gridUnitSize, T[] _points) where T : Component, IGridCoord
+        {
+            var _x = _nodeCoord.x;
+            var _y = _nodeCoord.y;
+            var _z = _nodeCoord.z;
+
+            var _arrayWidth  = _gridUnitSize.x + 1;
+            var _arrayHeight = _gridUnitSize.z + 1;
+            
+            var _swbPoint = _points[_z +     _arrayWidth * (_x +     _arrayHeight * _y)];
+            var _nwbPoint = _points[_z + 1 + _arrayWidth * (_x +     _arrayHeight * _y)];
+           
+            var _sebPoint = _points[_z +     _arrayWidth * (_x + 1 + _arrayHeight * _y)];
+            var _nebPoint = _points[_z + 1 + _arrayWidth * (_x + 1 + _arrayHeight * _y)];
+           
+            var _swtPoint = _points[_z +     _arrayWidth * (_x +     _arrayHeight * (_y + 1))];
+            var _nwtPoint = _points[_z + 1 + _arrayWidth * (_x +     _arrayHeight * (_y + 1))];
+            
+            var _setPoint = _points[_z +     _arrayWidth * (_x + 1 + _arrayHeight * (_y + 1))];
+            var _netPoint = _points[_z + 1 + _arrayWidth * (_x + 1 + _arrayHeight * (_y + 1))];
+
+            var _nodes = new [] { _swbPoint, _nwbPoint, _sebPoint, _nebPoint, _swtPoint, _nwtPoint, _setPoint, _netPoint };
+        
+            return _nodes;
         }
        
         public static void AddBlock(Vector3 _position, Transform _parent, GameObject _blockPrefab)

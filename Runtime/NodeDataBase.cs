@@ -96,7 +96,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         //Try to move to GridBuilder
         public void PopulateGridBlocksByLevel(int _level)
         {
-            var _blockPrefab  = AssetManager.AssetCollection.DefualtBlock.gameObject;
+            var _blockPrefab  = AssetManager.AssetCollection.DefaultBlock.gameObject;
             
             GridGenerator.PopulateGridBlocksByLevel<Block>(GridUnitNodes, GridUnitSize, _level, _blockPrefab);
 

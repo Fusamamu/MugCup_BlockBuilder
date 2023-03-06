@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 972c67e200ea349e7bebbdc4bb629979, type: 3}
   m_Name: DefaultAssetCollection
   m_EditorClassIdentifier: 
-  DefualtBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
+  DefaultBlock: {fileID: 8598432568191462370, guid: b4d94aa85ca4245a0beb68bf207bdb69, type: 3}
   GridElement: {fileID: 6612381298158132043, guid: 20ac5f085171641c9912516c65d6809d, type: 3}
-  VolumePoint: {fileID: 3566903991710205426, guid: 158afdaad05174fb995d323d444a1d4f, type: 3}
+  DualGridElement: {fileID: 5687962756129630501, guid: 158afdaad05174fb995d323d444a1d4f, type: 3}
   PathPointerVisualizer: {fileID: 6811948437484128512, guid: fcefea49bfc4b4dfc806838eca85de33, type: 3}

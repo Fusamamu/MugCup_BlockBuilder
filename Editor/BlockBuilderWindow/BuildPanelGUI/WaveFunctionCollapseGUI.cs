@@ -38,14 +38,19 @@ namespace MugCup_BlockBuilder
                             var _gridElementDataManager = BBEditorManager.GridElementDataManager;
                             Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
 
-                            _gridElementDataManager.GenerateModuleSlots();
+                            _gridElementDataManager.GenerateDualGrid();
                                     
                             PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
                         }
                         
                         if (GUILayout.Button("Clear", _generateButtonStyle))
                         {
-                           
+                            var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                            Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+
+                            _gridElementDataManager.ClearDualGridElements();
+                                    
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
                         }
                     }
                     EditorGUILayout.EndHorizontal();
@@ -61,7 +66,7 @@ namespace MugCup_BlockBuilder
                         Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
 
                         _gridElementDataManager.ClearGrid();
-                        _gridElementDataManager.ClearVolumePoints();
+                        _gridElementDataManager.ClearDualGridElements();
                         
                         PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
                     }  

@@ -11,10 +11,10 @@ namespace BlockBuilder.Runtime.Scriptable
 	[CreateAssetMenu(fileName = "AssetCollection", menuName = "ScriptableObjects/AssetCollectionObject", order = 4)]
 	public class AssetCollection : ScriptableObject
 	{
-		public Block       DefualtBlock;
-		public GridElement GridElement;
-		public VolumePoint VolumePoint;
-		public GameObject  PathPointerVisualizer;
+		public Block           DefaultBlock;
+		public GridElement     GridElement;
+		public DualGridElement DualGridElement;
+		public GameObject      PathPointerVisualizer;
 	}
 	
 }

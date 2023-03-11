@@ -10,7 +10,7 @@ namespace MugCup_BlockBuilder
 {
     public class ModuleSlot : MonoBehaviour, IGridCoord
     {
-        [field: ReadOnly, SerializeField] public ModuleSlotData ModuleSlotData { get; private set; }
+        [field: SerializeField] public ModuleSlotData MapModuleSlotData { get; private set; }
         
         [field: SerializeField] public Module CollapsedModule { get; private set; }
         
@@ -24,13 +24,13 @@ namespace MugCup_BlockBuilder
 
         public ModuleSlot SetModuleSlotData(ModuleSlotData _moduleSlotData)
         {
-            ModuleSlotData = _moduleSlotData;
+            MapModuleSlotData = _moduleSlotData;
             return this;
         }
 
         public ModuleSlot Initialized()
         {
-            AvailableModuleSet = new ModuleSet(ModuleSlotData.CurrentModuleData.AllModuleCount, true);
+            AvailableModuleSet = new ModuleSet(MapModuleSlotData.CurrentModuleData.AllModuleCount, true);
             return this;
         }
         
@@ -71,18 +71,24 @@ namespace MugCup_BlockBuilder
                 return;
             }
 
+            if (TryGetComponent<MeshFilter>(out var _meshFilter))
+            {
+                if(_module.MeshPrototype)
+                    _meshFilter.mesh = _module.MeshPrototype;
+            }
+
             CollapsedModule = _module;
             
             RemoveModules(new ModuleSet(AvailableModuleSet, _toRemoveModule: _module));
             
-            ModuleSlotData.NotifySlotCollapsed(this);
+            MapModuleSlotData.NotifySlotCollapsed(this);
         }
 
         public void RemoveModules(ModuleSet _toRemoveModules, bool _recursive = true)
         {
             foreach(ModuleFace _face in Enum.GetValues(typeof(ModuleFace)))
             {
-                var _neighbor = ModuleSlotData.GetNeighbor(NodeGridPosition, _face);
+                var _neighbor = MapModuleSlotData.GetNeighbor(NodeGridPosition, _face);
                 
                 if(_neighbor == null)
                     continue;
@@ -98,7 +104,7 @@ namespace MugCup_BlockBuilder
                     {
                         if (_neighbor.ModuleHealth[_oppositeFaceIndex][_possibleModule.Index] == 1 && _neighbor.AvailableModuleSet.Contains(_possibleModule)) 
                         {
-                            ModuleSlotData.RemovalQueue[_neighbor.NodeGridPosition].Add(_possibleModule);
+                            MapModuleSlotData.RemovalQueue[_neighbor.NodeGridPosition].Add(_possibleModule);
                         }
                         
                         _neighbor.ModuleHealth[_oppositeFaceIndex][_possibleModule.Index]--;
@@ -109,7 +115,7 @@ namespace MugCup_BlockBuilder
             AvailableModuleSet.Remove(_toRemoveModules);
 
             if (_recursive)
-                ModuleSlotData.FinishRemovalQueue();
+                MapModuleSlotData.FinishRemovalQueue();
         }
         
         

@@ -57,9 +57,14 @@ namespace MugCup_BlockBuilder
             DualGridElementParent = new GameObject("[Dual Grid Elements]");
             DualGridElementData.GridNodes = GridGenerator.GenerateDualGrid<DualGridElement>(GridDataSetting.GridUnitSize, _dualGridElementPrefab, DualGridElementParent);
             DualGridElementData.Initialized();
-
-            ModuleSlotData .GridNodes = DualGridElementData.GetModuleSlots ().ToArray();
-            VolumePointData.GridNodes = DualGridElementData.GetVolumePoints().ToArray();
+            
+            ModuleSlotData 
+                .SetGridSize(GridDataSetting.GridUnitSize)
+                .GridNodes = DualGridElementData.GetModuleSlots ().ToArray();
+            
+            VolumePointData
+                .SetGridSize(GridDataSetting.GridUnitSize)
+                .GridNodes = DualGridElementData.GetVolumePoints().ToArray();
             
             foreach (var _element in GridElementData.ValidNodes)
             {
@@ -84,6 +89,8 @@ namespace MugCup_BlockBuilder
                 EditorUtility.SetDirty(_point);
                 #endif
             }
+            
+            ModuleSlotData.Initialized();
             
             #if UNITY_EDITOR
             EditorUtility.SetDirty(DualGridElementData);

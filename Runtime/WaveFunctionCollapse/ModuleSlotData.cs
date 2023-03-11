@@ -7,6 +7,7 @@ using UnityEngine;
 
 using MugCup_Utilities;
 using MugCup_PathFinder.Runtime;
+using UnityEditor;
 
 namespace MugCup_BlockBuilder
 {
@@ -19,12 +20,28 @@ namespace MugCup_BlockBuilder
 		public Queue<ModuleSlot> BuildQueue;
 		public QueueDictionary<Vector3Int, ModuleSet> RemovalQueue;
 
+		[SerializeField] private int MaxIteration = 100;
+
 		public override void Initialized()
 		{
 			CurrentModuleData.Initialized();
 
 			BuildQueue   = new Queue<ModuleSlot>();
 			RemovalQueue = new QueueDictionary<Vector3Int, ModuleSet>(() => new ModuleSet(CurrentModuleData.AllModuleCount));
+
+			foreach (var _slot in GridNodes)
+			{
+				if(_slot == null) continue;
+				
+				_slot
+					.SetModuleSlotData(this)
+					.Initialized();
+				
+				#if UNITY_EDITOR
+				if (!Application.isPlaying)
+					EditorUtility.SetDirty(_slot);
+				#endif
+			}
 		}
 
 		public ModuleSlot GetNeighbor(Vector3Int _nodePos, ModuleFace _face)
@@ -71,7 +88,9 @@ namespace MugCup_BlockBuilder
 					}
 				}
 
-				while (workArea.Any())
+				int _i = 0;
+
+				while (workArea.Any() && _i < MaxIteration)
 				{
 					var _minEntropy = float.PositiveInfinity;
 
@@ -87,6 +106,8 @@ namespace MugCup_BlockBuilder
 							_minEntropy   = _entropy;
 						}
 					}
+					
+					_i++;
 
 					try
 					{
@@ -113,20 +134,20 @@ namespace MugCup_BlockBuilder
 		
 		public void FinishRemovalQueue() 
 		{
-			while (RemovalQueue.Any()) 
-			{
-				var _kvp = RemovalQueue.Dequeue();
-
-				var _nodePos           = _kvp.Key;
-				var _toRemoveModuleSet = _kvp.Value;
-
-				var _slot = GetNode(_nodePos);
-
-				if (!_slot.IsCollapsed)
-				{
-					_slot.RemoveModules(_toRemoveModuleSet, false);
-				}
-			}
+			// while (RemovalQueue.Any()) 
+			// {
+			// 	var _kvp = RemovalQueue.Dequeue();
+			//
+			// 	var _nodePos           = _kvp.Key;
+			// 	var _toRemoveModuleSet = _kvp.Value;
+			//
+			// 	var _slot = GetNode(_nodePos);
+			//
+			// 	if (!_slot.IsCollapsed)
+			// 	{
+			// 		_slot.RemoveModules(_toRemoveModuleSet, false);
+			// 	}
+			// }
 		}
 	}
 }

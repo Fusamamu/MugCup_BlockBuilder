@@ -57,6 +57,7 @@ namespace MugCup_BlockBuilder
 
                     if (GUILayout.Button("Start Collapse"))
                     {
+                        BBEditorManager.GridElementDataManager.ModuleSlotData.Initialized();
                         BBEditorManager.GridElementDataManager.ModuleSlotData.CollapseAll();
                     }
                 }

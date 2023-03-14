@@ -78,6 +78,8 @@ namespace MugCup_BlockBuilder.Runtime
             }
 
             ClearData();
+            
+            EditorUtility.SetDirty(this);
 #endif
         }
         

@@ -126,6 +126,23 @@ namespace MugCup_BlockBuilder
             return this;
         }
 
+        public GridElementDataManager ApplyMaterialToVolumePoints(Material _material)
+        {
+            foreach (var _point in VolumePointData.ValidNodes)
+            {
+                if (_point.TryGetComponent<MeshRenderer>(out var _meshRenderer))
+                {
+                    _meshRenderer.material = _material;
+                    
+                    #if UNITY_EDITOR
+                    EditorUtility.SetDirty(_point);
+                    #endif
+                }
+            }
+            
+            return this;
+        }
+
         public GridElementDataManager ClearGrid()
         {
             DestroyGridNodes(GridElementData);

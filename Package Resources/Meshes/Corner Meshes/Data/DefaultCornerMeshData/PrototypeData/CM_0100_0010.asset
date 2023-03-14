@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d77446bc2a34efdb3ab4d8532c6e1d, type: 3}
+  m_Name: CM_0100_0010
+  m_EditorClassIdentifier: 
+  Index: 14
+  Name: CM_0100_0010
+  BitMask: 66
+  MeshPrototype: {fileID: 4300000, guid: 0d01157320dd04dd19f9aee69e6761f2, type: 2}
+  Probability: 1
+  PLogP: 0
+  RotationIndex: 0
+  FaceDetails:
+    Forward:
+      <FaceBit>k__BackingField: 2
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Right:
+      <FaceBit>k__BackingField: 0
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Back:
+      <FaceBit>k__BackingField: 8
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Left:
+      <FaceBit>k__BackingField: 5
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      Symmetric: 0
+      Flipped: 0
+    Up:
+      <FaceBit>k__BackingField: 2
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      <Invariant>k__BackingField: 0
+      <Rotation>k__BackingField: 0
+    Down:
+      <FaceBit>k__BackingField: 4
+      <Walkable>k__BackingField: 0
+      <Connector>k__BackingField: 0
+      <Invariant>k__BackingField: 0
+      <Rotation>k__BackingField: 0
+  PossibleNeighbors:
+  - Data: 08001008101000000000000000010000
+  - Data: 32134104400400000040000000440400
+  - Data: 40000401010002000000000001012102
+  - Data: 00000000000000000000000000040000
+  - Data: 40240000101010000000000000090000
+  - Data: 08880000000202020000208000011100

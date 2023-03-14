@@ -18,8 +18,8 @@ MonoBehaviour:
   Row: 1
   Column: 1
   Height: 1
-  UnitRow: 10
-  UnitColumn: 10
+  UnitRow: 6
+  UnitColumn: 6
   UnitHeight: 5
   BlockWidth: 1
   BlockHeight: 1

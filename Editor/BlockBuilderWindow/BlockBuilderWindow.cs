@@ -63,6 +63,7 @@ namespace MugCup_BlockBuilder
                     BuildPanelGUI.Display();
                     break;
                 case 1:
+                    PaintPanelGUI.Display();
                     break;
                 case 2:
                     SettingPanelGUI.Display();

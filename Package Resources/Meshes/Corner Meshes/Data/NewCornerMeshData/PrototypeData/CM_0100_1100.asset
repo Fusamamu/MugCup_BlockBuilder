@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d77446bc2a34efdb3ab4d8532c6e1d, type: 3}
   m_Name: CM_0100_1100
   m_EditorClassIdentifier: 
-  Index: 37
+  Index: 39
   Name: CM_0100_1100
   BitMask: 76
-  MeshPrototype: {fileID: 4300000, guid: 9afdfaf1b27024224bc165cb76e3b8d6, type: 2}
-  Probability: 1
+  MeshPrototype: {fileID: 4300000, guid: 17d8bfda326914dd295d4976e9d8da7c, type: 2}
+  Probability: 0
   PLogP: 0
   RotationIndex: 0
   FaceDetails:
@@ -56,10 +56,4 @@ MonoBehaviour:
       <Connector>k__BackingField: 0
       <Invariant>k__BackingField: 0
       <Rotation>k__BackingField: 0
-  PossibleNeighbors:
-  - Data: 66268800880000000008000080880000
-  - Data: 08802020004000000000000000200000
-  - Data: 00000000001010101000000000080000
-  - Data: 00100000000000000020010015202202
-  - Data: 00000002000200200020000000000200
-  - Data: 08880000000202020000208000011100
+  PossibleNeighbors: []

@@ -30,13 +30,13 @@ namespace MugCup_BlockBuilder
 
 		private void OnValidate()
 		{
-			if (!Application.isPlaying)
-			{
-				if (IsEnable)
-					Enable();
-				else
-					Disable();
-			}
+			// if (!Application.isPlaying)
+			// {
+			// 	if (IsEnable)
+			// 		Enable();
+			// 	else
+			// 		Disable();
+			// }
 		}
 
 		public IGridCoord SetNodePosition(Vector3Int _nodePosition)

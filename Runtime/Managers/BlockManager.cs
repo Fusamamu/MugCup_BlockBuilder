@@ -38,17 +38,32 @@ namespace MugCup_BlockBuilder.Runtime
 			
 		}
 	    
-	    
 	    public void GenerateGrid()
 	    {
-		    GridBlockDataManager.GridNodeData.InitializeGridArray();
+		    GridBlockDataManager.ClearGrid();
 		    
-		    //Need fix!!!
-		    //CurrentGridBlockBlockData.GridNodeData.PopulateGridBlocksByLevel(0);
+		    GridBlockDataManager.GridNodeData.InitializeGridArray();
+
+		    GridBlockDataManager.GridNodeData.PopulateNodesByLevel(AssetManager.AssetCollection.DefaultBlock.gameObject, 0);
 		    
 		    GridBlockDataManager.InitializeBlocksData(this); 
 		     
 		    GridBlockDataManager.GridNodeData.ApplyAllNodes<Block>(UpdateMeshBlock);
+
+		    // var _count = GridBlockDataManager.GridNodeData.GridNodes.Where(_o => _o != null).ToList().Count;
+		    //
+		    // Debug.Log(_count);
+		    //
+		    // foreach (var _node in GridBlockDataManager.GridNodeData.GridNodes)
+		    // {
+			   //  if(_node == null) continue;
+		    //
+			   //  if (_node.TryGetComponent<Block>(out var _block))
+			   //  {
+				  //   UpdateMeshBlock(_block);
+			   //  }
+		    // }
+		    
 		    
 		    GridBlockDataManager.GridNodeData.ApplyAllNodes<Block>(_block => 
 		    {
@@ -113,8 +128,6 @@ namespace MugCup_BlockBuilder.Runtime
 	    
 	    private void UpdateMeshBlock<T>(T _block) where T : Block
 	    {
-		    Vector3Int _targetNodePos = _block.NodeGridPosition;
-
 		    int _bitMaskMiddleSection = _block.GetBitMaskMiddleSection();
 			
 		    BlockMeshInfo _blockMeshInfo = GridBlockDataManager
@@ -124,12 +137,15 @@ namespace MugCup_BlockBuilder.Runtime
 
 		    Block      _blockPrefab  = _blockMeshInfo.Prefab;
 		    Quaternion _rotation     = _blockMeshInfo.Rotation * _blockPrefab.transform.localRotation;
-			
+
 		    if (_blockPrefab == null)
 		    {
 			    _blockPrefab = GridBlockDataManager.BlockMeshData.GetDefaultBlock();
+			    Debug.LogWarning("Cannot find mesh data");
 		    }
 				
+		    Vector3Int _targetNodePos = _block.NodeGridPosition;
+		    
 		    RemoveBlock(_targetNodePos);
 		    AddBlock   (_blockPrefab, _targetNodePos, _rotation);
 	    }
@@ -225,6 +241,17 @@ namespace MugCup_BlockBuilder.Runtime
 		
 		public void DestroyBlockObject(Vector3Int _nodePos)
 		{
+			// var _node = GridBlockDataManager.GridNodeData.GetNode(_nodePos);
+			//
+			// if (_node.TryGetComponent<Block>(out var _blockToBeRemoved))
+			// {
+			// 	if(Application.isPlaying)
+			// 		Destroy(_blockToBeRemoved.gameObject);
+			// 	else
+			// 		DestroyImmediate(_blockToBeRemoved.gameObject);
+			// 	
+			// }
+			
 			var _blockToBeRemoved = GetBlockRef(_nodePos);
 			
 			if(Application.isPlaying)

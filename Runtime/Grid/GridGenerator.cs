@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BlockBuilder.Core;
+using MugCup_BlockBuilder;
 using MugCup_BlockBuilder.Runtime;
 using MugCup_BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Runtime.Core.Interfaces;
@@ -14,6 +15,23 @@ namespace BlockBuilder.Runtime.Core
     public static class GridGenerator
     {
         public static NormalFace SelectedFace;
+        
+        public static void PopulateGridBlocksByLevel(int _level)
+        {
+            var _blockPrefab  = AssetManager.AssetCollection.DefaultBlock.gameObject;
+            
+            // GridGenerator.PopulateGridBlocksByLevel<Block>(GridUnitNodes, GridUnitSize, _level, _blockPrefab);
+            //
+            // var _selectedBlockLevel = GetAllNodeBasesAtLevel<GridNode>(_level);
+            
+            // GridNodeData.GridNodes = GridUnitNodes;
+            // GridNodeData.GridSize  = GridUnitSize;
+            //
+            // if(!levelTable.ContainsKey(_level))
+            //     levelTable.Add(_level, _selectedBlockLevel);
+            // else
+            //     levelTable[_level] = _selectedBlockLevel;
+        }
         
         /// <summary>
         /// Create Blocks and Store in NodeBase Array 

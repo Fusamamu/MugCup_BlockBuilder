@@ -11,7 +11,6 @@ using Unity.Collections;
 
 namespace MugCup_BlockBuilder
 {
-    //Per stage / Per Scene / Save/Load Scene?
     public class GridBlockDataManager : MonoBehaviour
     {
         [field: SerializeField] public GridNodeData GridNodeData { get; private set; }
@@ -84,23 +83,48 @@ namespace MugCup_BlockBuilder
                 Debug.Log($"Cannot find any data. Fallback tos default setting in AssetDatabase.");
             }
             
-            //Need Fixe
+            //Need Fixed
             //InitializeGridUnitSize(_gridData); 
         }
        
         //Need Fix
         public void InitializeBlocksData(BlockManager _blockManager)
         {
-            // foreach (Block _block in AvailableNodes<Block>())
-            //     _block.InjectDependency(_blockManager);
-            //
-            // foreach (Block _block in AvailableNodes<Block>())
-            // {
-            //     if (_block == null) continue;
-            //     
-            //     _block.GetSurroundingBlocksReference();
-            //     _block.SetBitMask();
-            // }
+            foreach (var _node in GridNodeData.ValidNodes)
+            {
+                if (_node.TryGetComponent<Block>(out var _block))
+                {
+                    _block.InjectDependency(_blockManager);
+                }
+            }
+            
+            foreach (var _node in GridNodeData.ValidNodes)
+            {
+                if (_node.TryGetComponent<Block>(out var _block))
+                {
+                    _block.GetSurroundingBlocksReference();
+                    _block.SetBitMask();
+                }
+            }
+        }
+
+        public void ClearGrid()
+        {
+            if(GridNodeData.GridNodes == null) return;
+            
+            foreach (var _node in GridNodeData.GridNodes)
+            {
+                if(_node == null) continue;
+
+                if (Application.isPlaying)
+                {
+                    Destroy(_node.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(_node.gameObject);
+                }
+            }
         }
     }
 }

@@ -28,17 +28,6 @@ namespace MugCup_BlockBuilder
 			ShowPivot = _value;
 		}
 
-		private void OnValidate()
-		{
-			// if (!Application.isPlaying)
-			// {
-			// 	if (IsEnable)
-			// 		Enable();
-			// 	else
-			// 		Disable();
-			// }
-		}
-
 		public IGridCoord SetNodePosition(Vector3Int _nodePosition)
 		{
 			NodeGridPosition = _nodePosition;
@@ -55,10 +44,25 @@ namespace MugCup_BlockBuilder
 		[field: SerializeField] public bool IsEnable { get; private set; }
 
 		public VolumePoint[] VolumePoints = new VolumePoint[8];
+		
+		public VolumePoint UpperNorthEastVolumePoint;
+		public VolumePoint UpperNorthWestVolumePoint;
+		public VolumePoint UpperSouthWestVolumePoint;
+		public VolumePoint UpperSouthEastVolumePoint;
+		
+		public VolumePoint LowerNorthEastVolumePoint;
+		public VolumePoint LowerNorthWestVolumePoint;
+		public VolumePoint LowerSouthWestVolumePoint;
+		public VolumePoint LowerSouthEastVolumePoint;
         
 		public void SetVolumePoints(VolumePoint[] _volumePoints)
 		{
 		    VolumePoints = _volumePoints;
+
+		    UpperNorthEastVolumePoint = _volumePoints[7];
+		    UpperNorthWestVolumePoint = _volumePoints[5];
+		    UpperSouthWestVolumePoint = _volumePoints[4];
+		    UpperSouthEastVolumePoint = _volumePoints[6];
 		}
 		
 		public void Enable()

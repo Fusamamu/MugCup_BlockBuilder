@@ -15,6 +15,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         private void Start()
         {
+#if UNITY_EDITOR
             pointer = Visualizer.CreateBlockTypeV1Pointer();
             pointer.SetActive(false);
 
@@ -28,6 +29,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
                 var _hitPosition = ((GridBlockSelection)_o).HitPosition;
                 pointer.transform.position = _hitPosition;
             });
+#endif
         }
 
         public void ShowPointer() => pointer.SetActive(true );

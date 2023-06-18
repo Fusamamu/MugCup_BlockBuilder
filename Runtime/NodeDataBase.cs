@@ -14,6 +14,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         //For transfer old data to this 
         [field:SerializeField] public GridNodeData GridNodeData { get; private set; }
 
+#if UNITY_EDITOR
         private void OnValidate()
         {
             if(GridNodeData  == null) return;
@@ -24,9 +25,8 @@ namespace MugCup_BlockBuilder.Runtime.Core
             
             EditorUtility.SetDirty(GridNodeData);
         }
-        
+#endif
         //Will Clear node data below!!
-
 
         [field:SerializeField] public GridNode[][] MapNode       { get; private set; }
         [field:SerializeField] public GridNode[]   GridUnitNodes { get; private set; }
@@ -94,6 +94,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
         
         
         //Try to move to GridBuilder
+        #if UNITY_EDITOR
         public void PopulateGridBlocksByLevel(int _level)
         {
             var _blockPrefab  = AssetManager.AssetCollection.DefaultBlock.gameObject;
@@ -110,6 +111,7 @@ namespace MugCup_BlockBuilder.Runtime.Core
             else
                 levelTable[_level] = _selectedBlockLevel;
         }
+        #endif
         
         
         

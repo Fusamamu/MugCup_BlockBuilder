@@ -15,7 +15,9 @@ namespace MugCup_BlockBuilder.Runtime.Core
 
         public BlockEditState(bool _needsExitTime) : base(_needsExitTime)
         {
+            #if UNITY_EDITOR
             blockEditorManager = Object.FindObjectOfType<BlockEditorManager>();
+            #endif
         }
 
         public override void Init()

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -54,3 +55,4 @@ public class LoggerEditor : EditorWindow
 		Logger.SetChannels(loggerChannels);
 	}
 }
+#endif

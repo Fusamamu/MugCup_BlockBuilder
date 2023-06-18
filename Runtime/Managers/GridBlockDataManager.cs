@@ -74,6 +74,7 @@ namespace MugCup_BlockBuilder
 
         public void Initialized()
         {
+#if UNITY_EDITOR
             if (GridDataSetting == null || BlockMeshData == null)
             {
                 //These can be used for fallback. If cannot find anything
@@ -82,6 +83,7 @@ namespace MugCup_BlockBuilder
                 
                 Debug.Log($"Cannot find any data. Fallback tos default setting in AssetDatabase.");
             }
+#endif
             
             //Need Fixed
             //InitializeGridUnitSize(_gridData); 

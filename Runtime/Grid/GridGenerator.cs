@@ -18,7 +18,7 @@ namespace BlockBuilder.Runtime.Core
         
         public static void PopulateGridBlocksByLevel(int _level)
         {
-            var _blockPrefab  = AssetManager.AssetCollection.DefaultBlock.gameObject;
+            //var _blockPrefab  = AssetManager.AssetCollection.DefaultBlock.gameObject;
             
             // GridGenerator.PopulateGridBlocksByLevel<Block>(GridUnitNodes, GridUnitSize, _level, _blockPrefab);
             //

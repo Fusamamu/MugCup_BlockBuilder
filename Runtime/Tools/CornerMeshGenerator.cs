@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -107,8 +108,10 @@ namespace MugCup_BlockBuilder.Runtime
 
         public void UpdatePrototypesData()
         {
+#if UNITY_EDITOR
             foreach(var _prototype in AllPrototypes)
                 _prototype.TryUpdateData();
+#endif
         }
         
         public void GenerateCornerMeshes()
@@ -324,14 +327,17 @@ namespace MugCup_BlockBuilder.Runtime
             {
                 foreach (var _mesh in AllGeneratedMeshes)
                 {
+                    #if UNITY_EDITOR
                     AssetDatabase.CreateAsset(_mesh, $"{_targetFolderPath}/{_mesh.name}.asset");
                     AssetDatabase.SaveAssets();
+                    #endif
                 }
             }
         }
 
         private void SaveAsPrefab(GameObject _gameObject, string _meshName)
         {
+            #if UNITY_EDITOR
             if (!Directory.Exists(volumePointPrefabFolder)) return;
             
             var _localPath = volumePointPrefabFolder + "/" + _meshName + ".prefab";
@@ -341,10 +347,12 @@ namespace MugCup_BlockBuilder.Runtime
             PrefabUtility.SaveAsPrefabAsset(_gameObject, _localPath, out var _success);
 
             Debug.Log($"Save new volume point : {_success}");
+            #endif
         }
 
         public void SaveModules(string _targetFolderPath)
         {
+            #if UNITY_EDITOR
             var _index = 0;
             
             foreach (var _prototype in AllPrototypes)
@@ -365,10 +373,12 @@ namespace MugCup_BlockBuilder.Runtime
             }
             
             EditorUtility.ClearProgressBar();
+            #endif
         }
 
         public void SaveCornerMeshData(string _targetFolderPath)
         {
+            #if UNITY_EDITOR
             var _cornerMeshData = ScriptableObject.CreateInstance<CornerMeshData>();
             
             var _fileName = $"CornerMeshData.asset";
@@ -382,6 +392,7 @@ namespace MugCup_BlockBuilder.Runtime
             }
             
             EditorUtility.SetDirty(_cornerMeshData);
+            #endif
         }
 
         public CornerMeshGenerator StoreModulesPossibleNeighbors()
@@ -587,3 +598,4 @@ namespace MugCup_BlockBuilder.Runtime
 #endif
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -10,7 +11,6 @@ using BlockBuilder.Scriptable;
 using BlockBuilder.Runtime.Core;
 using MugCup_BlockBuilder.Editor;
 
-#if UNITY_EDITOR
 namespace MugCup_BlockBuilder
 {
     public class BlockBuilderWindow : EditorWindow

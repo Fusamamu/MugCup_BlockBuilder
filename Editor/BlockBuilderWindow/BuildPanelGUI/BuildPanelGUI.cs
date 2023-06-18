@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
-using MugCup_BlockBuilder.Editor;
 using MugCup_BlockBuilder.Runtime.Core;
-using MugCup_PathFinder.Runtime;
 using BlockBuilder.Scriptable;
 
 namespace MugCup_BlockBuilder
@@ -55,3 +52,4 @@ namespace MugCup_BlockBuilder
         }
     }
 }
+#endif

@@ -40,6 +40,7 @@ namespace MugCup_BlockBuilder.Runtime
 	    
 	    public void GenerateGrid()
 	    {
+#if UNITY_EDITOR
 		    GridBlockDataManager.ClearGrid();
 		    
 		    GridBlockDataManager.GridNodeData.InitializeGridArray();
@@ -76,6 +77,7 @@ namespace MugCup_BlockBuilder.Runtime
 		    //GroupBlocksToOwnLevel();
 		    // Need to add option whether to create text overlay
 		    // CreateTextOverlay  ();
+#endif
 	    }
 	    
 #region Update Surrounding Blocks

@@ -40,11 +40,11 @@ namespace MugCup_BlockBuilder
 
         public GridElementDataManager GenerateGrid()
         {
+            #if UNITY_EDITOR
             var _gridElementPrefab = AssetManager.AssetCollection.GridElement.gameObject;
             GridElementParent = new GameObject("[Grid Elements]");
             GridElementData.GridNodes = GridGenerator.GenerateGridBlocks<GridElement>(GridDataSetting.GridUnitSize, _gridElementPrefab, GridElementParent);
             
-            #if UNITY_EDITOR
             EditorUtility.SetDirty(GridElementData);
             #endif
             
@@ -52,7 +52,8 @@ namespace MugCup_BlockBuilder
         }
 
         public GridElementDataManager GenerateDualGrid()
-        {
+        { 
+#if UNITY_EDITOR
             var _dualGridElementPrefab = AssetManager.AssetCollection.DualGridElement.gameObject;
             DualGridElementParent = new GameObject("[Dual Grid Elements]");
             DualGridElementData.GridNodes = GridGenerator.GenerateDualGrid<DualGridElement>(GridDataSetting.GridUnitSize, _dualGridElementPrefab, DualGridElementParent);
@@ -92,17 +93,17 @@ namespace MugCup_BlockBuilder
             
             ModuleSlotData.Initialized();
             
-            #if UNITY_EDITOR
             EditorUtility.SetDirty(DualGridElementData);
             EditorUtility.SetDirty(ModuleSlotData);
             EditorUtility.SetDirty(VolumePointData);
-            #endif
+#endif
             
             return this;
         }
         
         public GridElementDataManager GenerateVolumePoints()
         {
+#if UNITY_EDITOR
             var _volumePointPrefab = AssetManager.AssetCollection.DualGridElement.gameObject;
             VolumePointParent = new GameObject("[Volume Points]");
             VolumePointData.GridNodes = GridGenerator.GenerateDualGrid<VolumePoint>(GridDataSetting.GridUnitSize, _volumePointPrefab, VolumePointParent);        
@@ -122,6 +123,7 @@ namespace MugCup_BlockBuilder
                 _point.SetAdjacentBlocks(GridElementData.GridNodes, GridDataSetting.GridUnitSize);
                 _point.Init();
             }
+#endif
             
             return this;
         }

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using BlockBuilder.Scriptable;
@@ -74,3 +75,4 @@ namespace MugCup_BlockBuilder.Editor
         }
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -262,3 +263,4 @@ namespace MugCup_BlockBuilder.Editor.GUI
         }
     }
 }
+#endif

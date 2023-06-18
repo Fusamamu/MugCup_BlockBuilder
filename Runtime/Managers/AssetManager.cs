@@ -1,11 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
-using BlockBuilder.Core;
-using BlockBuilder.Runtime.Core;
-using BlockBuilder.Runtime.Scriptable;
 using BlockBuilder.Scriptable;
+using BlockBuilder.Runtime.Scriptable;
 using MugCup_BlockBuilder.Runtime.Core;
 
 namespace MugCup_BlockBuilder
@@ -49,3 +45,4 @@ namespace MugCup_BlockBuilder
         }
     }
 }
+#endif

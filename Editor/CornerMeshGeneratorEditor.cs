@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -142,7 +143,6 @@ namespace MugCup_BlockBuilder.Editor
                 Debug.Log($"{Convert.ToString(testBit, 2).PadLeft(8, '0').Insert(4, "_")}");
             }
         }
-        
-        
     }
 }
+#endif

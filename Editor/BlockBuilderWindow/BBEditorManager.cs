@@ -11,6 +11,7 @@ namespace MugCup_BlockBuilder.Editor
     {
         public static InterfaceSetting   InterfaceSetting;
         public static GridDataSettingSO  GridDataSettingSo;
+        public static MapTextureDataSettingSO MapTextureDataSettingSo;
         
         public static BlockBuilderManager  BlockBuilderManager;
         
@@ -31,8 +32,9 @@ namespace MugCup_BlockBuilder.Editor
             
             LoadBlockBuilderManager();
             
-            InterfaceSetting  = AssetDatabase.LoadAssetAtPath<InterfaceSetting> ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset"       );
-            GridDataSettingSo = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
+            InterfaceSetting        = AssetDatabase.LoadAssetAtPath<InterfaceSetting>       ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/InterfaceSetting.asset"       );
+            GridDataSettingSo       = AssetDatabase.LoadAssetAtPath<GridDataSettingSO>      ("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/DefaultGridDataSetting.asset" );
+            MapTextureDataSettingSo = AssetDatabase.LoadAssetAtPath<MapTextureDataSettingSO>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/MapTextureDataSetting.asset"  );
         }
         
         private static void LoadBlockBuilderManager()

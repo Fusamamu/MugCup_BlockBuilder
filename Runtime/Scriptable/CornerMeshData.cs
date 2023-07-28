@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using MugCup_BlockBuilder;
 using UnityEngine;
 
-namespace BlockBuilder.Core.Scriptable
+namespace MugCup_BlockBuilder
 {
+    //TODO : Can merge into -> CornerMeshModuleData? 
     [CreateAssetMenu(fileName = "CornerMeshData", menuName = "ScriptableObjects/CornerMeshDataObject", order = 7)]
     public class CornerMeshData : ScriptableObject
     {

@@ -1,7 +1,5 @@
 #if UNITY_EDITOR
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEditor;
@@ -32,11 +30,6 @@ namespace MugCup_BlockBuilder.Editor
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
-            
-            if (GUILayout.Button("Update Base Modules Names"))
-            {
-                cornerMeshGenerator.BaseModuleSet.UpdateNames();
-            }
             
             if (GUILayout.Button("Generate Corner Meshes"))
             {
@@ -138,7 +131,7 @@ namespace MugCup_BlockBuilder.Editor
 
             if (GUILayout.Button("Mirror Bit"))
             {
-                testBit = cornerMeshGenerator.MirrorBitXAis(testBit);
+                testBit = BitUtil.MirrorBitXAis(testBit);
                 
                 Debug.Log($"{Convert.ToString(testBit, 2).PadLeft(8, '0').Insert(4, "_")}");
             }

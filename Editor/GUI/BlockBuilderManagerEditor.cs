@@ -93,7 +93,7 @@ namespace MugCup_BlockBuilder.Editor.GUI
             
             EditorGUILayout.Space();
             //blockBuilderManager.SelectedBuildType = (BlockBuilderManager.BuildType  )EditorGUILayout.EnumPopup("Build Type", blockBuilderManager.SelectedBuildType);
-            blockBuilderManager.Mode              = (BlockBuilderManager.ManagerMode)EditorGUILayout.EnumPopup("Mode Selection", blockBuilderManager.Mode);
+            blockBuilderManager.Mode = (BlockBuilderManager.ManagerMode)EditorGUILayout.EnumPopup("Mode Selection", blockBuilderManager.Mode);
 
             displayCustomDataSetting.target = blockBuilderManager.Mode == BlockBuilderManager.ManagerMode.CUSTOM;
 
@@ -172,8 +172,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
             DisplayInAdjacentTwoColumns("Unit Column", _gridDataSetting.UnitColumn.ToString(), "Column", _gridDataSetting.Column.ToString());
             DisplayInAdjacentTwoColumns("Unit Height", _gridDataSetting.UnitHeight.ToString(), "Height", _gridDataSetting.Height.ToString());
 
-
-
             displayBlobTileSetting.target = BBEditorManager.InterfaceSetting.SelectedBuildType == InterfaceSetting.BuildType.BLOB_TILE;
             
             if (EditorGUILayout.BeginFadeGroup(displayBlobTileSetting.faded))
@@ -190,7 +188,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
             }
             EditorGUILayout.EndFadeGroup();
             
-            
             displayCornerTileSetting.target = BBEditorManager.InterfaceSetting.SelectedBuildType == InterfaceSetting.BuildType.MARCHING_CUBE;
             
             if (EditorGUILayout.BeginFadeGroup(displayCornerTileSetting.faded))
@@ -200,9 +197,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
                
             }
             EditorGUILayout.EndFadeGroup();
-            
-           
-            
            
             EditorGUILayout.Space();    
             if (GUILayout.Button("Block Builder Window"))
@@ -227,7 +221,6 @@ namespace MugCup_BlockBuilder.Editor.GUI
                     EditorUtility.SetDirty(_block);
                 }
             }
-            
             
             EditorGUILayout.Space();
             if (gridElementManager == null)

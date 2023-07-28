@@ -72,7 +72,6 @@ namespace MugCup_BlockBuilder
 
                     EditorGUILayout.BeginHorizontal();
                     {
-                        
                         gridLevel = EditorGUILayout.IntField("Target Level", gridLevel);
                         
                         if (GUILayout.Button("Enable", _clearButtonStyle))
@@ -149,6 +148,56 @@ namespace MugCup_BlockBuilder
                             var _gridElementDataManager = BBEditorManager.GridElementDataManager;
                             Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
 
+                            _gridElementDataManager.ClearVolumePoints();
+                    
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                        }
+                    }
+                    EditorGUILayout.EndHorizontal();
+                    
+                    
+                    //Will Modify to use Terrain Texture
+                    EditorGUILayout.BeginHorizontal();
+                    {
+                        EditorGUILayout.LabelField("Use Terrain Texture");
+                                
+                        if (GUILayout.Button("Generate", _generateButtonStyle))
+                        {
+                            var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                            Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+
+                            _gridElementDataManager.Initialized();
+                            _gridElementDataManager.GenerateGrid();
+                            _gridElementDataManager.GenerateVolumePoints();
+                            
+                            var _allTargetPos = new List<Vector3Int>();
+                            
+                            for (var _i = 0; _i < BBEditorManager.MapTextureDataSettingSo.TerrainLevel - 1; _i++)
+                            {
+                                var _targetGridPos = TextureGenerator.GetSolidGridPosFromTexture(
+                                    BBEditorManager.MapTextureDataSettingSo.GeneratedTexture, _i,
+                                    BBEditorManager.MapTextureDataSettingSo.TerrainLevel);
+
+                                _allTargetPos.AddRange(_targetGridPos);
+                            }
+
+                            foreach (var _element in _gridElementDataManager.GridElementData.GridNodes)
+                            {
+                                if (_element == null) continue;
+                                
+                                if(_allTargetPos.Contains(_element.NodeGridPosition))
+                                    _element.Enable();
+                            }
+
+                            PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);
+                        }
+                        
+                        if (GUILayout.Button("Clear", _generateButtonStyle))
+                        {
+                            var _gridElementDataManager = BBEditorManager.GridElementDataManager;
+                            Undo.RecordObject(_gridElementDataManager, "GridElementDataManager Changed");
+
+                            _gridElementDataManager.ClearGrid();
                             _gridElementDataManager.ClearVolumePoints();
                     
                             PrefabUtility.RecordPrefabInstancePropertyModifications(_gridElementDataManager);

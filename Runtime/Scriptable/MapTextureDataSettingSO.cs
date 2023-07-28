@@ -7,6 +7,8 @@ namespace MugCup_BlockBuilder
     [CreateAssetMenu(fileName = "MapTextureDataSetting", menuName = "ScriptableObjects/MugCup Block Builder/Map Texture Data Setting", order = 2)]
     public class MapTextureDataSettingSO : ScriptableObject
     {
+        public bool UseTextureAsGridSizeSetting;
+        
         public Texture2D GeneratedTexture;
         
         public int TextureWidth  = 512;

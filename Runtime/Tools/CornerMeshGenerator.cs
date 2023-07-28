@@ -2,21 +2,30 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using BlockBuilder.Core.Scriptable;
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
+using BlockBuilder.Core.Scriptable;
 
 namespace MugCup_BlockBuilder.Runtime
 {
     public class CornerMeshGenerator : MonoBehaviour
     {
-        public BaseModuleSet BaseModuleSet = new BaseModuleSet();
+        //0 => Empty
+        //1 => Grass
+        //2 => Water
 
+       // public BaseModuleSet BaseModuleSet = new BaseModuleSet();
+
+        //TODO : Make this into Scriptable object => use BaseModuleSetSo instead
+        [Header("Section 1111_0000")]
         [SerializeField] private MeshFilter CM_1111_0000;
+        [SerializeField] private MeshFilter CM_1112_0000;
         
+        [Header("Section single corner")]
         [SerializeField] private MeshFilter CM_0000_0001;
         [SerializeField] private MeshFilter CM_0001_0000;
 
+        [Header("Section two corners")]
         [SerializeField] private MeshFilter CM_0001_0001;
         [SerializeField] private MeshFilter CM_0010_0001;
         [SerializeField] private MeshFilter CM_0101_0000;
@@ -24,12 +33,14 @@ namespace MugCup_BlockBuilder.Runtime
         [SerializeField] private MeshFilter CM_0000_0011;
         [SerializeField] private MeshFilter CM_0011_0000;
         
+        [Header("Section three corners")]
         [SerializeField] private MeshFilter CM_0000_0111;
         [SerializeField] private MeshFilter CM_0111_0000;
         
         [SerializeField] private MeshFilter CM_0001_0011;
         [SerializeField] private MeshFilter CM_0011_0001;
         
+        [Header("Section four corners")]
         [SerializeField] private MeshFilter CM_0001_1011;
         [SerializeField] private MeshFilter CM_1011_0001;
         
@@ -67,11 +78,10 @@ namespace MugCup_BlockBuilder.Runtime
         [SerializeField] public List<ModulePrototype> AllPrototypes;
         [SerializeField] public List<Module>          AllModules;
 
-        private Dictionary<int, bool> generatedMeshTracker = new Dictionary<int, bool>();
+        private readonly Dictionary<int, bool> generatedMeshTracker = new Dictionary<int, bool>();
 
         public void ClearGeneratedMeshes()
         {
-#if UNITY_EDITOR
             foreach (var _object in AllVolumePointObjects)
             {
                 if(!Application.isPlaying)
@@ -81,10 +91,8 @@ namespace MugCup_BlockBuilder.Runtime
             ClearData();
             
             EditorUtility.SetDirty(this);
-#endif
         }
         
-#if UNITY_EDITOR
         public void AddPrototypeDataIntoCornerMeshData()
         {
             var _cornerMeshData = AssetDatabase.LoadAssetAtPath<CornerMeshData>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/CornerMeshData/NewCornerMeshData.asset");
@@ -96,7 +104,6 @@ namespace MugCup_BlockBuilder.Runtime
             
             EditorUtility.SetDirty(_cornerMeshData);
         }
-#endif
 
         private void ClearData()
         {
@@ -108,10 +115,8 @@ namespace MugCup_BlockBuilder.Runtime
 
         public void UpdatePrototypesData()
         {
-#if UNITY_EDITOR
             foreach(var _prototype in AllPrototypes)
                 _prototype.TryUpdateData();
-#endif
         }
         
         public void GenerateCornerMeshes()
@@ -167,10 +172,13 @@ namespace MugCup_BlockBuilder.Runtime
 
             ClearData();
 
-            var _cornerMesh = GenerateCornerMesh(0b_1111_0000, CM_1111_0000);
-            _cornerMesh.transform.position += Vector3.back * ZInterval;
-
             var _j = 0;
+            
+            var _cornerMesh = GenerateCornerMesh(0b_1111_0000, CM_1111_0000);
+            _cornerMesh.transform.position +=  new Vector3(0, 0, 0);
+
+            _j++;
+            
             foreach (var _kvp in _bitMeshLut)
             {
                 var _bit        = _kvp.Key;
@@ -189,7 +197,7 @@ namespace MugCup_BlockBuilder.Runtime
                 var _bit        = _kvp.Key;
                 var _meshFilter = _kvp.Value;
                 
-                _bit = MirrorBitXAis(_bit);
+                _bit = BitUtil.MirrorBitXAis(_bit);
             
                 if (generatedMeshTracker.TryGetValue(_bit, out var _isGenerated))
                 {
@@ -268,7 +276,7 @@ namespace MugCup_BlockBuilder.Runtime
                 if (generatedMeshTracker.ContainsKey(_bit))
                     generatedMeshTracker[_bit] = true;
                
-                _bit = ShiftBit(_bit);
+                _bit = BitUtil.ShiftBit(_bit);
                 
                 _volumePoints.Add(_newMeshObject);
                 
@@ -308,7 +316,7 @@ namespace MugCup_BlockBuilder.Runtime
                 if (generatedMeshTracker.ContainsKey(_bit))
                     generatedMeshTracker[_bit] = true;
                
-                _bit = ShiftBit(_bit);
+                _bit = BitUtil.ShiftBit(_bit);
                 
                 _volumePoints.Add(_newMeshObject);
                 
@@ -327,17 +335,14 @@ namespace MugCup_BlockBuilder.Runtime
             {
                 foreach (var _mesh in AllGeneratedMeshes)
                 {
-                    #if UNITY_EDITOR
                     AssetDatabase.CreateAsset(_mesh, $"{_targetFolderPath}/{_mesh.name}.asset");
                     AssetDatabase.SaveAssets();
-                    #endif
                 }
             }
         }
 
         private void SaveAsPrefab(GameObject _gameObject, string _meshName)
         {
-            #if UNITY_EDITOR
             if (!Directory.Exists(volumePointPrefabFolder)) return;
             
             var _localPath = volumePointPrefabFolder + "/" + _meshName + ".prefab";
@@ -347,12 +352,10 @@ namespace MugCup_BlockBuilder.Runtime
             PrefabUtility.SaveAsPrefabAsset(_gameObject, _localPath, out var _success);
 
             Debug.Log($"Save new volume point : {_success}");
-            #endif
         }
 
         public void SaveModules(string _targetFolderPath)
         {
-            #if UNITY_EDITOR
             var _index = 0;
             
             foreach (var _prototype in AllPrototypes)
@@ -373,12 +376,10 @@ namespace MugCup_BlockBuilder.Runtime
             }
             
             EditorUtility.ClearProgressBar();
-            #endif
         }
 
         public void SaveCornerMeshData(string _targetFolderPath)
         {
-            #if UNITY_EDITOR
             var _cornerMeshData = ScriptableObject.CreateInstance<CornerMeshData>();
             
             var _fileName = $"CornerMeshData.asset";
@@ -392,7 +393,6 @@ namespace MugCup_BlockBuilder.Runtime
             }
             
             EditorUtility.SetDirty(_cornerMeshData);
-            #endif
         }
 
         public CornerMeshGenerator StoreModulesPossibleNeighbors()
@@ -418,8 +418,9 @@ namespace MugCup_BlockBuilder.Runtime
             EditorUtility.SetDirty(_cornerMeshModuleData);
         }
 #endregion
-
-        private void RotateMesh(Mesh _mesh, Vector3 _pivot, Vector3 _angle)
+        
+#region Mesh Modification
+        private static void RotateMesh(Mesh _mesh, Vector3 _pivot, Vector3 _angle)
         {
             var _vertices = new Vector3[_mesh.vertices.Length];
 
@@ -437,7 +438,7 @@ namespace MugCup_BlockBuilder.Runtime
             _mesh.RecalculateBounds();
         }
 
-        private void MirrorMeshXAxis(Mesh _mesh)
+        private static void MirrorMeshXAxis(Mesh _mesh)
         {
             var _vertices = new Vector3[_mesh.vertices.Length];
 
@@ -480,7 +481,7 @@ namespace MugCup_BlockBuilder.Runtime
             return _gameObject;
         }
 
-        private Mesh CloneMesh(Mesh _mesh)
+        public static Mesh CloneMesh(Mesh _mesh)
         {
             var _newMesh = new Mesh
             {
@@ -495,80 +496,13 @@ namespace MugCup_BlockBuilder.Runtime
             return _newMesh;
         }
         
-        public Vector3 RotatePointAroundPivot(Vector3 _point, Vector3 _pivot, Vector3 _angles)
+        public static Vector3 RotatePointAroundPivot(Vector3 _point, Vector3 _pivot, Vector3 _angles)
         {
             return Quaternion.Euler(_angles) * (_point - _pivot) + _pivot;
         }
-        
-        private int ShiftBit(int _bit)
-        {
-            var _upperBit = _bit & 0b_0000_1111;
-            var _lowerBit = _bit & 0b_1111_0000;
+#endregion
 
-            _upperBit <<= 1;
-
-            var _checkBit = _upperBit & (1 << 4);
-
-            if (_checkBit == 0b_0001_0000)
-            {
-                _upperBit -= 0b_0001_0000;
-                _upperBit += 0b_0000_0001;
-            }
-
-            _lowerBit <<= 1;
-
-            _checkBit = _lowerBit & 1 << 8;
-            
-            if (_checkBit == 0b_1_0000_0000)
-            {
-                _lowerBit -= 0b_1_0000_0000;
-                _lowerBit += 0b_0_0001_0000;
-            }
-
-            _bit = _upperBit | _lowerBit;
-
-            return _bit;
-        }
-
-        public int MirrorBitXAis(int _bit)
-        {
-            var _upperNorthEastBit = _bit & 0b_0000_0001;
-            var _upperNorthWestBit = _bit & 0b_0000_0010;
-
-            var _temp = _upperNorthEastBit;
-            
-            _upperNorthEastBit = _upperNorthWestBit >> 1;
-            _upperNorthWestBit = _temp << 1;
-
-            var _upperSouthWestBit = _bit & 0b_0000_0100;
-            var _upperSouthEastBit = _bit & 0b_0000_1000;
-            
-            _temp = _upperSouthWestBit;
-            
-            _upperSouthWestBit = _upperSouthEastBit >> 1;
-            _upperSouthEastBit = _temp << 1;
-            
-            var _lowerNorthEastBit = _bit & 0b_0001_0000;
-            var _lowerNorthWestBit = _bit & 0b_0010_0000;
-            
-            _temp = _lowerNorthEastBit;
-            
-            _lowerNorthEastBit = _lowerNorthWestBit >> 1;
-            _lowerNorthWestBit = _temp << 1;
-            
-            var _lowerSouthWestBit = _bit & 0b_0100_0000;
-            var _lowerSouthEastBit = _bit & 0b_1000_0000;
-            
-            _temp = _lowerSouthWestBit;
-            
-            _lowerSouthWestBit = _lowerSouthEastBit >> 1;
-            _lowerSouthEastBit = _temp << 1;
-
-            return _upperNorthEastBit + _upperNorthWestBit + _upperSouthWestBit + _upperSouthEastBit +
-                   _lowerNorthEastBit + _lowerNorthWestBit + _lowerSouthWestBit + _lowerSouthEastBit;
-        }
-        
-#if UNITY_EDITOR
+#region Gizmos
         public void SetShowGizmos(bool _value)
         {
             foreach (var _prototype in AllPrototypes)
@@ -595,7 +529,7 @@ namespace MugCup_BlockBuilder.Runtime
                 _prototype.SetShowBitInBinary(_value);
             }
         }
-#endif
+#endregion
     }
 }
 #endif

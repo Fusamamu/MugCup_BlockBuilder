@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEditor;
 using BlockBuilder.Runtime.Core;
 using BlockBuilder.Scriptable;
 using MugCup_PathFinder.Runtime;
-using UnityEditor;
-using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
@@ -40,14 +40,14 @@ namespace MugCup_BlockBuilder
 
         public GridElementDataManager GenerateGrid()
         {
-            #if UNITY_EDITOR
+            
+#if UNITY_EDITOR
             var _gridElementPrefab = AssetManager.AssetCollection.GridElement.gameObject;
             GridElementParent = new GameObject("[Grid Elements]");
             GridElementData.GridNodes = GridGenerator.GenerateGridBlocks<GridElement>(GridDataSetting.GridUnitSize, _gridElementPrefab, GridElementParent);
             
             EditorUtility.SetDirty(GridElementData);
-            #endif
-            
+#endif
             return this;
         }
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using MugCup_BlockBuilder.Editor;
 using UnityEditor;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Object = UnityEngine.Object;
 
 namespace MugCup_BlockBuilder
 {
@@ -32,8 +32,11 @@ namespace MugCup_BlockBuilder
                     
                 GUILayout.BeginVertical("GroupBox");
                     
-                GUILayout.BeginHorizontal();
+                if (BBEditorManager.MapTextureDataSettingSo.UseTextureAsGridSizeSetting)
+	                EditorGUILayout.HelpBox($"Grid data setting has been overriden by texture size.", MessageType.Info);
                 
+                GUILayout.BeginHorizontal();
+
                 var _rect = GUILayoutUtility.GetRect(1, EditorGUIUtility.singleLineHeight);
                 var _fieldRect = _rect;
                 _fieldRect.xMin = 150;
@@ -43,6 +46,17 @@ namespace MugCup_BlockBuilder
                 GUILayout.EndHorizontal();
                 
                 GUILayout.BeginHorizontal();
+
+                if (BBEditorManager.MapTextureDataSettingSo.UseTextureAsGridSizeSetting)
+                {
+	                if (BBEditorManager.MapTextureDataSettingSo.GeneratedTexture != null)
+	                {
+		                var _row    = BBEditorManager.MapTextureDataSettingSo.GeneratedTexture.height;
+		                var _column = BBEditorManager.MapTextureDataSettingSo.GeneratedTexture.width;
+		                var _height = BBEditorManager.MapTextureDataSettingSo.TerrainLevel + 3;
+		                BBEditorManager.GridDataSettingSo.GridUnitSize = new Vector3Int(_row, _height, _column);
+	                }
+                }
                     
                 var _rect1 = GUILayoutUtility.GetRect(1, EditorGUIUtility.singleLineHeight);
                 var _fieldRect1 = _rect1;
@@ -57,21 +71,22 @@ namespace MugCup_BlockBuilder
                         
                 GUILayout.EndVertical();
                 
-                
                 EditorGUILayout.LabelField("Terrain Map Generator");
+                
+                BBEditorManager.MapTextureDataSettingSo.UseTextureAsGridSizeSetting  = EditorGUILayout.Toggle("Use texture size as grid setting", BBEditorManager.MapTextureDataSettingSo.UseTextureAsGridSizeSetting);
                 
                 BBEditorManager.MapTextureDataSettingSo.TextureWidth  = EditorGUILayout.IntField("Width", BBEditorManager.MapTextureDataSettingSo.TextureWidth);
                 BBEditorManager.MapTextureDataSettingSo.TextureHeight = EditorGUILayout.IntField("Height", BBEditorManager.MapTextureDataSettingSo.TextureHeight);
                 
-                BBEditorManager.MapTextureDataSettingSo.TerrainLevel        = EditorGUILayout.IntField("Terrain Level", BBEditorManager.MapTextureDataSettingSo.TerrainLevel);
-                BBEditorManager.MapTextureDataSettingSo.NoiseScale          = EditorGUILayout.FloatField("Noise Scale", BBEditorManager.MapTextureDataSettingSo.NoiseScale);
-                BBEditorManager.MapTextureDataSettingSo.NoiseFrequency      = EditorGUILayout.FloatField("Noise Frequency", BBEditorManager.MapTextureDataSettingSo.NoiseFrequency);
+                BBEditorManager.MapTextureDataSettingSo.TerrainLevel        = EditorGUILayout.IntField  ("Terrain Level"       , BBEditorManager.MapTextureDataSettingSo.TerrainLevel       );
+                BBEditorManager.MapTextureDataSettingSo.NoiseScale          = EditorGUILayout.FloatField("Noise Scale"         , BBEditorManager.MapTextureDataSettingSo.NoiseScale         );
+                BBEditorManager.MapTextureDataSettingSo.NoiseFrequency      = EditorGUILayout.FloatField("Noise Frequency"     , BBEditorManager.MapTextureDataSettingSo.NoiseFrequency     );
                 BBEditorManager.MapTextureDataSettingSo.NoiseRedistribution = EditorGUILayout.FloatField("Noise Redistribution", BBEditorManager.MapTextureDataSettingSo.NoiseRedistribution);
-                BBEditorManager.MapTextureDataSettingSo.NoiseSeed           = EditorGUILayout.IntField("Noise Seed", BBEditorManager.MapTextureDataSettingSo.NoiseSeed);
+                BBEditorManager.MapTextureDataSettingSo.NoiseSeed           = EditorGUILayout.IntField  ("Noise Seed"          , BBEditorManager.MapTextureDataSettingSo.NoiseSeed          );
 
                 if (GUILayout.Button("Generate Texture"))
                 {
-	                BBEditorManager.MapTextureDataSettingSo.GeneratedTexture = GeneratePerlinNoiseTexture
+	                BBEditorManager.MapTextureDataSettingSo.GeneratedTexture = TextureGenerator.GeneratePerlinNoiseTexture
 	                (
 		                BBEditorManager.MapTextureDataSettingSo.TextureWidth, 
 		                BBEditorManager.MapTextureDataSettingSo.TextureHeight, 
@@ -89,91 +104,51 @@ namespace MugCup_BlockBuilder
 						SaveTextureAsAsset(BBEditorManager.MapTextureDataSettingSo.GeneratedTexture);
                 }
 
+                if (GUILayout.Button("Generate Block from Texture"))
+                {
+	                var _parent = new GameObject("Parent");
+
+	                for (var _i = 0; _i < BBEditorManager.MapTextureDataSettingSo.TerrainLevel - 1; _i++)
+	                {
+		                var _targetGridPos = TextureGenerator.GetSolidGridPosFromTexture(
+			                BBEditorManager.MapTextureDataSettingSo.GeneratedTexture, _i,
+			                BBEditorManager.MapTextureDataSettingSo.TerrainLevel);
+		                
+		                foreach (var _pos in _targetGridPos)
+		                {
+			                var _newBlock = Object.Instantiate(AssetManager.AssetCollection.DefaultBlock, _pos, Quaternion.identity, _parent.transform);
+		                }
+	                }
+                }
+
+                if (GUILayout.Button("Populate Tree on Terrain"))
+                {
+	                foreach (var _result in TextureGenerator.ReadGrayScaleFromTexture(BBEditorManager.MapTextureDataSettingSo.GeneratedTexture))
+	                {
+		                if (_result.Item2 > 0f)
+		                {
+			                //Object.Instantiate(AssetManager.AssetCollection.DefaultBlock, _pos, Quaternion.identity, _parent.transform);
+		                }
+	                }
+                }
+
                 if (BBEditorManager.MapTextureDataSettingSo.GeneratedTexture != null)
                 {
 	                EditorGUILayout.Space(10);
 	                EditorGUILayout.LabelField("Generated Texture:");
 
+	                //Need ability to change filter
 	                BBEditorManager.MapTextureDataSettingSo.GeneratedTexture.filterMode = FilterMode.Point;
 	                
 	                Rect _previewRect = GUILayoutUtility.GetAspectRect(BBEditorManager.MapTextureDataSettingSo.GeneratedTexture.width / (float)BBEditorManager.MapTextureDataSettingSo.GeneratedTexture.height);
 	                EditorGUI.DrawPreviewTexture(_previewRect, BBEditorManager.MapTextureDataSettingSo.GeneratedTexture);
                 }
                 
-                
-                
-                
-                
                 GUILayout.EndVertical();
             }
 
             Undo.RecordObject(BBEditorManager.GridDataSettingSo,"Undo");
         }
-		
-		private static Texture2D GeneratePerlinNoiseTexture(int _width, int _height, float _scale, float _frequency, float _redistribution, int _level, int _seed)
-		{
-			Texture2D _texture = new Texture2D(_width, _height);
-
-			Color32[] _pixels = new Color32[_width * _height];
-
-			Random.InitState(_seed); // Set the seed value for deterministic noise
-
-			for (int _y = 0; _y < _height; _y++)
-			{
-				for (int _x = 0; _x < _width; _x++)
-				{
-					float _xCoord = (float)_x / _width * _frequency * _scale;
-					float _yCoord = (float)_y / _height * _frequency * _scale;
-
-					float _sample = Mathf.PerlinNoise(_xCoord, _yCoord);
-
-					_sample = Mathf.Pow(_sample, _redistribution);
-
-					byte _grayscaleValue = GetQuantizedGrayscaleValue(_sample, _level);
-
-					_pixels[_y * _width + _x] = new Color32(_grayscaleValue, _grayscaleValue, _grayscaleValue, 255);
-				}
-			}
-
-			_texture.SetPixels32(_pixels);
-			_texture.Apply();
-
-			return _texture;
-		}
-		private static byte GetQuantizedGrayscaleValue(float _sample, int _levels)
-		{
-			// Quantize grayscale values based on the specified number of levels
-			byte[] _levelValues = new byte[_levels + 1];
-			
-			for (var _i = 0; _i <= _levels; _i++)
-				_levelValues[_i] = (byte)(255 * _i / _levels);
-
-			float _quantizedValue = Mathf.Floor(_sample * _levels);
-			byte _grayscaleValue = _levelValues[Mathf.FloorToInt(_quantizedValue)];
-
-			return _grayscaleValue;
-		}
-		
-		private static Texture2D GenerateGrayscaleTexture(int _width, int _height)
-		{
-			Texture2D texture = new Texture2D(_width, _height);
-
-			Color32[] pixels = new Color32[_width * _height];
-			
-			for (int y = 0; y < _height; y++)
-			{
-				for (int x = 0; x < _width; x++)
-				{
-					byte grayscaleValue = (byte)(255 * (x / (float)_width));
-					pixels[y * _width + x] = new Color32(grayscaleValue, grayscaleValue, grayscaleValue, 255);
-				}
-			}
-
-			texture.SetPixels32(pixels);
-			texture.Apply();
-
-			return texture;
-		}
 		
 		private static void SaveTextureAsAsset(Texture2D _texture)
 		{

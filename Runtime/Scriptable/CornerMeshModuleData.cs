@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
-    [CreateAssetMenu(fileName = "CornerMeshData", menuName = "ScriptableObjects/Wave Function Collapse/CornerMeshDataObject", order = 7)]
+    [CreateAssetMenu(fileName = "CornerMeshData", menuName = "ScriptableObjects/MugCup BlockBuilder/CornerMeshDataObject", order = 7)]
     public class CornerMeshModuleData : ScriptableObject, ISerializationCallbackReceiver
     {
         public Module[] Modules;

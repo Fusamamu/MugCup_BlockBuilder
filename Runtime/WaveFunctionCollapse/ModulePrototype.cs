@@ -6,22 +6,25 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
-    public class ModulePrototype : MonoBehaviour
+    public class ModulePrototype : MonoBehaviour, IModule
     {
-        public int Index;
+        [field: SerializeField] public string Name { get; private set; }
         
-        public string Name;
+        [field: SerializeField] public int Index    { get; set; }
+        [field: SerializeField] public int BitMask  { get; private set; }
+        [field: SerializeField] public int MetaData { get; private set; }
+        
+        [field: SerializeField] public Mesh MeshPrototype { get; private set; }
 
-        public int BitMask;
+        [field: SerializeField] public float Probability { get; private set; }
+        [field: SerializeField] public float PLogP       { get; private set; }
 
-        public Mesh MeshPrototype;
+        [field: SerializeField] public int RotationIndex { get; private set; }
 
-        public int RotationIndex;
-
+        [field: SerializeField] public FaceDetails FaceDetails { get; private set; } = new FaceDetails();
+        
         [Header("Socket")]
         public const int FaceCount = 6;
-
-        public FaceDetails FaceDetails = new FaceDetails();
 
         public List<ModulePrototype> ForwardNeighbors = new List<ModulePrototype>();
         public List<ModulePrototype> RightNeighbors   = new List<ModulePrototype>();
@@ -29,7 +32,6 @@ namespace MugCup_BlockBuilder
         public List<ModulePrototype> LeftNeighbors    = new List<ModulePrototype>();
         public List<ModulePrototype> UpNeighbors      = new List<ModulePrototype>();
         public List<ModulePrototype> DownNeighbors    = new List<ModulePrototype>();
-
 
         [Header("Debug Setting")]
         [SerializeField] private bool ShowGizmos;

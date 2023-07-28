@@ -6,23 +6,24 @@ using UnityEngine;
 
 namespace MugCup_BlockBuilder
 {
+    //Might need custom editor to display some extra info like bit into binary
     [CreateAssetMenu(fileName = "PrototypeData", menuName = "ScriptableObjects/PrototypeDataObject", order = 8)]
-    public class Module : ScriptableObject
+    public class Module : ScriptableObject, IModule
     {
-        public int Index;
+        [field: SerializeField] public string Name { get; private set; }
         
-        public string Name;
-
-        public int BitMask;
+        [field: SerializeField] public int Index    { get; set; }
+        [field: SerializeField] public int BitMask  { get; private set; }
+        [field: SerializeField] public int MetaData { get; private set; }
         
-        public Mesh MeshPrototype;
+        [field: SerializeField] public Mesh MeshPrototype { get; private set; }
 
-        public float Probability;
-        public float PLogP;
+        [field: SerializeField] public float Probability { get; private set; }
+        [field: SerializeField] public float PLogP       { get; private set; }
 
-        public int RotationIndex;
+        [field: SerializeField] public int RotationIndex { get; private set; }
 
-        public FaceDetails FaceDetails = new FaceDetails();
+        [field: SerializeField] public FaceDetails FaceDetails { get; private set; } = new FaceDetails();
         
         public ModuleSet[] PossibleNeighbors;
         public Module[][] PossibleNeighborsArray;
@@ -42,6 +43,7 @@ namespace MugCup_BlockBuilder
             Index         = _modulePrototype.Index;
             Name          = _modulePrototype.Name;
             BitMask       = _modulePrototype.BitMask;
+            MetaData      = _modulePrototype.MetaData;
             MeshPrototype = _modulePrototype.MeshPrototype;
             RotationIndex = _modulePrototype.RotationIndex;
             FaceDetails   = _modulePrototype.FaceDetails;

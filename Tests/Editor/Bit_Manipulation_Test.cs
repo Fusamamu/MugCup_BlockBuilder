@@ -113,7 +113,7 @@ public class Bit_Manipulation_Test : MonoBehaviour
     {
         var _metaData = 1234;
 
-        var _modifiedMetaData = BitUtil.ShiftDigitLeft(_metaData, _digitCount: 4);
+        var _modifiedMetaData = NumberUtil.ShiftDigitLeft(_metaData, _digitCount: 4);
         
         Assert.AreEqual(_modifiedMetaData, 2341);
     }
@@ -123,7 +123,7 @@ public class Bit_Manipulation_Test : MonoBehaviour
     {
         var _originDigit = 12345678;
 
-        var _result = BitUtil.SeparateDigit(_originDigit, _digitCount: 4);
+        var _result = NumberUtil.SeparateDigit(_originDigit, _digitCount: 4);
       
         Assert.AreEqual(_result.Item1, 1234);
         Assert.AreEqual(_result.Item2, 5678);
@@ -138,12 +138,12 @@ public class Bit_Manipulation_Test : MonoBehaviour
     {
         var _originDigit = 12345678;
 
-        var _result = BitUtil.SeparateDigit(_originDigit, _digitCount: 4);
+        var _result = NumberUtil.SeparateDigit(_originDigit, _digitCount: 4);
 
-        var _modifiedFirst4Digit = BitUtil.ShiftDigitLeft(_result.Item1 , _digitCount: 4);
-        var _modifiedLast4Digit  = BitUtil.ShiftDigitLeft(_result.Item2 , _digitCount: 4);
+        var _modifiedFirst4Digit = NumberUtil.ShiftDigitLeft(_result.Item1 , _digitCount: 4);
+        var _modifiedLast4Digit  = NumberUtil.ShiftDigitLeft(_result.Item2 , _digitCount: 4);
 
-        var _combinedDigit = BitUtil.CombineDigit(_modifiedFirst4Digit, _modifiedLast4Digit, _digitCount: 4);
+        var _combinedDigit = NumberUtil.CombineDigit(_modifiedFirst4Digit, _modifiedLast4Digit, _digitCount: 4);
 
         Assert.AreEqual(_combinedDigit, 23416785);
     }
@@ -154,7 +154,7 @@ public class Bit_Manipulation_Test : MonoBehaviour
         var _originDigit = 1234;
         var _expectDigit = 2143;
 
-        var _result = BitUtil.MirrorDigit(_originDigit);
+        var _result = NumberUtil.MirrorDigit(_originDigit);
 
         Assert.AreEqual(_result, _expectDigit);
     }
@@ -179,6 +179,63 @@ public class Bit_Manipulation_Test : MonoBehaviour
         Assert.AreEqual(_uniqueID, 1097);
         
         Debug.Log(_uniqueID);
+    }
+
+    [Test]
+    public void Shift_Char_in_MetaData_to_the_Left()
+    {
+        string _metaData = "1234";
+
+        var _result = NumberUtil.ShiftCharLeft(_metaData);
+        
+        Assert.AreEqual(_result, "2341");
+    }
+
+    [Test]
+    public void Split_8_String_Into_2_Substring()
+    {
+        string _metaData = "12345678";
+
+        var _result = NumberUtil.SeparateStringIfEven(_metaData);
+        
+        Assert.AreEqual(_result.Item1, "1234");
+        Assert.AreEqual(_result.Item2, "5678");
+    }
+    
+    [Test]
+    public void Split_String_n_ShiftToLeft_n_Combine_Together()
+    {
+        string _metaData = "12345678";
+        
+        var _result = NumberUtil.SeparateStringIfEven(_metaData);
+
+        var _modifiedFirstPart  = NumberUtil.ShiftCharLeft(_result.Item1);
+        var _modifiedSecondPart = NumberUtil.ShiftCharLeft(_result.Item2);
+
+        var _combinedString = _modifiedFirstPart + _modifiedSecondPart;
+
+        Assert.AreEqual(_combinedString, "23416785");
+    }
+    
+    [Test]
+    public void Mirror_4_Char()
+    {
+        var _originDigit = "1234";
+        var _expectDigit = "2143";
+
+        var _result = NumberUtil.MirrorChar(_originDigit);
+
+        Assert.AreEqual(_result, _expectDigit);
+    }
+
+    [Test]
+    public void Mirror_MetaData()
+    {
+        string _metaData = "12345678";
+        
+        var _result = NumberUtil.MirrorMetaData(_metaData);
+
+        Assert.AreEqual(_result, "21436587");
     }
 }
 

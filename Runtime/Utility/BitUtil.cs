@@ -164,57 +164,57 @@ namespace MugCup_BlockBuilder
                    _lowerNorthEastBit + _lowerNorthWestBit + _lowerSouthWestBit + _lowerSouthEastBit;
         }
 
-        public static int MirrorDigit(int _number)
-        {
-            var _a = SeparateDigit(_number, 2);
-
-            var _i = ShiftDigitLeft(_a.Item1, 2);
-            var _j = ShiftDigitLeft(_a.Item2, 2);
-
-            return CombineDigit(_i, _j, 2);
-        }
-
-        public static int ShiftDigitLeft(int _number, int _digitCount)
-        {
-            int _divider = (int)Mathf.Pow(10, _digitCount - 1);
-
-            int _firstDigit      = _number / _divider; // Extract the first digit
-            int _remainingDigits = _number % _divider; // Extract the remaining three digits
-        
-            return  _remainingDigits * 10 + _firstDigit; // Shift the number to the left
-        }
-        
-        public static (int, int) SeparateDigit(int _number, int _digitCount)
-        {
-            int _divider = (int)Mathf.Pow(10, _digitCount);
-            
-            int _firstFourDigits = _number / _divider; // Extract the first 4 digits
-            int _lastFourDigits  = _number % _divider; // Extract the last 4 digits
-
-            return (_firstFourDigits, _lastFourDigits);
-        }
-
-        public static int CombineDigit(int _first, int _second, int _digitCount)
-        {
-            int _modifier = (int)Mathf.Pow(10, _digitCount);
-            
-            return  _first * _modifier + _second;
-        }        
-        
-        public static int RearrangeFourDigitNumber(int number)
-        {
-            // Convert the integer to a string
-            string numberStr = number.ToString();
-
-            // Rearrange the characters (digits) in the string
-            char[] charArray = numberStr.ToCharArray();
-            Array.Sort(charArray);
-
-            // Convert the rearranged character array back to an integer
-            string rearrangedNumberStr = new string(charArray);
-            int rearrangedNumber = int.Parse(rearrangedNumberStr);
-
-            return rearrangedNumber;
-        }
+        // public static int MirrorDigit(int _number)
+        // {
+        //     var _a = SeparateDigit(_number, 2);
+        //
+        //     var _i = ShiftDigitLeft(_a.Item1, 2);
+        //     var _j = ShiftDigitLeft(_a.Item2, 2);
+        //
+        //     return CombineDigit(_i, _j, 2);
+        // }
+        //
+        // public static int ShiftDigitLeft(int _number, int _digitCount)
+        // {
+        //     int _divider = (int)Mathf.Pow(10, _digitCount - 1);
+        //
+        //     int _firstDigit      = _number / _divider; // Extract the first digit
+        //     int _remainingDigits = _number % _divider; // Extract the remaining three digits
+        //
+        //     return  _remainingDigits * 10 + _firstDigit; // Shift the number to the left
+        // }
+        //
+        // public static (int, int) SeparateDigit(int _number, int _digitCount)
+        // {
+        //     int _divider = (int)Mathf.Pow(10, _digitCount);
+        //     
+        //     int _firstFourDigits = _number / _divider; // Extract the first 4 digits
+        //     int _lastFourDigits  = _number % _divider; // Extract the last 4 digits
+        //
+        //     return (_firstFourDigits, _lastFourDigits);
+        // }
+        //
+        // public static int CombineDigit(int _first, int _second, int _digitCount)
+        // {
+        //     int _modifier = (int)Mathf.Pow(10, _digitCount);
+        //     
+        //     return  _first * _modifier + _second;
+        // }        
+        //
+        // public static int RearrangeFourDigitNumber(int number)
+        // {
+        //     // Convert the integer to a string
+        //     string numberStr = number.ToString();
+        //
+        //     // Rearrange the characters (digits) in the string
+        //     char[] charArray = numberStr.ToCharArray();
+        //     Array.Sort(charArray);
+        //
+        //     // Convert the rearranged character array back to an integer
+        //     string rearrangedNumberStr = new string(charArray);
+        //     int rearrangedNumber = int.Parse(rearrangedNumberStr);
+        //
+        //     return rearrangedNumber;
+        // }
     }
 }

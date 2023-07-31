@@ -53,6 +53,7 @@ namespace MugCup_BlockBuilder
             FaceDetails.UpdateFaceBits(BitMask);
             return this;
         }
+        
 #if UNITY_EDITOR
         public void TryUpdateData()
         {

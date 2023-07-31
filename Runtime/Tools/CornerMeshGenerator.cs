@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
 using BlockBuilder.Core.Scriptable;
@@ -10,60 +11,20 @@ namespace MugCup_BlockBuilder.Runtime
 {
     public class CornerMeshGenerator : MonoBehaviour
     {
-        //0 => Empty
-        //1 => Grass
-        //2 => Water
+        [Serializable]
+        public class CornerObjectData
+        {
+            public GameObject GameObject;
 
-       // public BaseModuleSet BaseModuleSet = new BaseModuleSet();
+            public Mesh         Mesh;
+            public MeshFilter   MeshFilter;
+            public MeshRenderer MeshRenderer;
 
-        //TODO : Make this into Scriptable object => use BaseModuleSetSo instead
-        [Header("Section 1111_0000")]
-        [SerializeField] private MeshFilter CM_1111_0000;
-        [SerializeField] private MeshFilter CM_1112_0000;
-        
-        [Header("Section single corner")]
-        [SerializeField] private MeshFilter CM_0000_0001;
-        [SerializeField] private MeshFilter CM_0001_0000;
+            public VolumePoint     VolumePoint;
+            public ModulePrototype ModulePrototype;
+        }
 
-        [Header("Section two corners")]
-        [SerializeField] private MeshFilter CM_0001_0001;
-        [SerializeField] private MeshFilter CM_0010_0001;
-        [SerializeField] private MeshFilter CM_0101_0000;
-        
-        [SerializeField] private MeshFilter CM_0000_0011;
-        [SerializeField] private MeshFilter CM_0011_0000;
-        
-        [Header("Section three corners")]
-        [SerializeField] private MeshFilter CM_0000_0111;
-        [SerializeField] private MeshFilter CM_0111_0000;
-        
-        [SerializeField] private MeshFilter CM_0001_0011;
-        [SerializeField] private MeshFilter CM_0011_0001;
-        
-        [Header("Section four corners")]
-        [SerializeField] private MeshFilter CM_0001_1011;
-        [SerializeField] private MeshFilter CM_1011_0001;
-        
-        [SerializeField] private MeshFilter CM_0001_1111;
-        [SerializeField] private MeshFilter CM_1111_0001;
-
-        [SerializeField] private MeshFilter CM_0011_1111;
-        [SerializeField] private MeshFilter CM_1111_0011;
-
-        [SerializeField] private MeshFilter CM_0111_1111;
-        [SerializeField] private MeshFilter CM_1111_0111;
-
-        [SerializeField] private MeshFilter CM_0011_0011;
-
-        [SerializeField] private MeshFilter CM_0111_0111;
-        [SerializeField] private MeshFilter CM_0111_0001;
-
-        [SerializeField] private MeshFilter CM_0111_0011;
-        [SerializeField] private MeshFilter CM_1111_0101;
-
-        [SerializeField] private MeshFilter CM_0101_0001;
-        [SerializeField] private MeshFilter CM_0101_0101;
-        [SerializeField] private MeshFilter CM_0111_0101;
+        public BaseModuleSetSo BaseModuleSetSo;
         
         [SerializeField] private Material DefaultMaterial;
 
@@ -73,19 +34,18 @@ namespace MugCup_BlockBuilder.Runtime
         [SerializeField] private int XInterval = 2;
         [SerializeField] private int ZInterval = 2;
 
-        [SerializeField] public List<GameObject>      AllVolumePointObjects;
-        [SerializeField] public List<Mesh>            AllGeneratedMeshes;
-        [SerializeField] public List<ModulePrototype> AllPrototypes;
-        [SerializeField] public List<Module>          AllModules;
+        [SerializeField] private List<CornerObjectData> AllCornerObjectData = new List<CornerObjectData>();
+   
+        [SerializeField] public List<Module> AllModules;
 
-        private readonly Dictionary<int, bool> generatedMeshTracker = new Dictionary<int, bool>();
+        private readonly HashSet<string> generatedCornerDataTracker = new HashSet<string>();
 
         public void ClearGeneratedMeshes()
         {
-            foreach (var _object in AllVolumePointObjects)
+            foreach (var _cornerObjectData in AllCornerObjectData)
             {
-                if(!Application.isPlaying)
-                    DestroyImmediate(_object);
+                if (!Application.isPlaying)
+                    DestroyImmediate(_cornerObjectData.GameObject);
             }
 
             ClearData();
@@ -93,160 +53,154 @@ namespace MugCup_BlockBuilder.Runtime
             EditorUtility.SetDirty(this);
         }
         
+        private void ClearData()
+        {
+            AllCornerObjectData = new List<CornerObjectData>();
+            AllModules = new List<Module>();
+            
+            generatedCornerDataTracker.Clear();
+        }
+        
         public void AddPrototypeDataIntoCornerMeshData()
         {
             var _cornerMeshData = AssetDatabase.LoadAssetAtPath<CornerMeshData>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/CornerMeshData/NewCornerMeshData.asset");
-            
+          
             foreach (var _prototype in AllModules)
-            {
                 _cornerMeshData.AddModuleData(_prototype.BitMask, _prototype);
-            }
             
             EditorUtility.SetDirty(_cornerMeshData);
         }
 
-        private void ClearData()
-        {
-            AllVolumePointObjects = new List<GameObject>();
-            AllGeneratedMeshes    = new List<Mesh>();
-            AllPrototypes         = new List<ModulePrototype>();
-            AllModules            = new List<Module>();
-        }
-
         public void UpdatePrototypesData()
         {
-            foreach(var _prototype in AllPrototypes)
-                _prototype.TryUpdateData();
+            foreach (var _cornerObjectData in AllCornerObjectData)
+                _cornerObjectData.ModulePrototype.TryUpdateData();
         }
         
         public void GenerateCornerMeshes()
         {
-            var _bitMeshLut = new Dictionary<int, MeshFilter>()
-            {
-                //{ 0b_1111_0000, CM_1111_0000 },
-                
-                { 0b_0000_0001, CM_0000_0001 },
-                { 0b_0001_0000, CM_0001_0000 },
-                
-                { 0b_0001_0001, CM_0001_0001 },
-                { 0b_0010_0001, CM_0010_0001 },
-                { 0b_0101_0000, CM_0101_0000 },
-                
-                { 0b_0000_0011, CM_0000_0011 },
-                { 0b_0011_0000, CM_0011_0000 },
-                
-                { 0b_0000_0111, CM_0000_0111 },
-                { 0b_0111_0000, CM_0111_0000 },
-                
-                { 0b_0001_0011, CM_0001_0011 },
-                { 0b_0011_0001, CM_0011_0001 },
-                
-                { 0b_0001_1011, CM_0001_1011 },
-                { 0b_1011_0001, CM_1011_0001 },
-                
-                { 0b_0001_1111, CM_0001_1111 },
-                { 0b_1111_0001, CM_1111_0001 },
-                
-                { 0b_0011_1111, CM_0011_1111 },
-                { 0b_1111_0011, CM_1111_0011 },
-                
-                { 0b_0111_1111, CM_0111_1111 },
-                { 0b_1111_0111, CM_1111_0111 },
-                
-                { 0b_0011_0011, CM_0011_0011 },
-                
-                { 0b_0111_0111, CM_0111_0111 },
-                { 0b_0111_0001, CM_0111_0001 },
-                
-                { 0b_0111_0011, CM_0111_0011 },
-                { 0b_1111_0101, CM_1111_0101 },
-                
-                { 0b_0101_0001, CM_0101_0001 },
-                { 0b_0101_0101, CM_0101_0101 },
-                { 0b_0111_0101, CM_0111_0101 },
-            };
-
-            generatedMeshTracker.Clear();
-            for (var _i = 0; _i < 256; _i++)
-                generatedMeshTracker.Add(_i, false);
-
             ClearData();
 
-            var _j = 0;
-            
-            var _cornerMesh = GenerateCornerMesh(0b_1111_0000, CM_1111_0000);
-            _cornerMesh.transform.position +=  new Vector3(0, 0, 0);
+            var _baseModuleGroupTable = BaseModuleSetSo.GetBaseModuleGroupTable();
 
-            _j++;
+            var _zIntervalIndex = 0;
             
-            foreach (var _kvp in _bitMeshLut)
+            foreach (var _baseModuleGroup in _baseModuleGroupTable)
             {
-                var _bit        = _kvp.Key;
-                var _meshFilter = _kvp.Value;
-                
-                var _volumePoints = GenerateCornerMeshes_ByRotate_CounterClockwise(_bit, _meshFilter);
+                var _group          = _baseModuleGroup.Key;
+                var _baseModuleList = _baseModuleGroup.Value;
 
-                for (int _i = 0; _i < _volumePoints.Count; _i++)
-                    _volumePoints[_i].transform.position += new Vector3(_i * XInterval, 0, _j * ZInterval);
-
-                _j++;
-            }
-            
-            foreach (var _kvp in _bitMeshLut)
-            {
-                var _bit        = _kvp.Key;
-                var _meshFilter = _kvp.Value;
+                var _xIntervalIndex = 0;
                 
-                _bit = BitUtil.MirrorBitXAis(_bit);
-            
-                if (generatedMeshTracker.TryGetValue(_bit, out var _isGenerated))
+                foreach (var _baseModule in _baseModuleList)
                 {
-                    if(_isGenerated)
-                        continue; 
-                }
+                    if (_baseModule.MeshFilterPrototype == null)
+                        continue;
+
+                    var _bitMask    = _baseModule.BitMask;
+                    var _metaData   = _baseModule.MetaData;
+                    var _targetMesh = _baseModule.MeshFilterPrototype.sharedMesh;
+                    var _isFlip     = _baseModule.HasFlipXVariant;
+                    var _isRotated  = _baseModule.HasRotateVariant;
+                   
+                    var _meshName = NumberUtil.GetMetaDataName(_metaData);
                 
-                var _volumePoints = GenerateCornerMeshes_ByMirror_XAxis(_bit, _meshFilter);
-            
-                for (int _i = 0; _i < _volumePoints.Count; _i++)
-                    _volumePoints[_i].transform.position += new Vector3(_i * XInterval, 0, _j * ZInterval);
-            
-                _j++;
+                    var _cloneMesh = CloneMesh(_targetMesh);
+                    _cloneMesh.name = _meshName;
+                        
+                    var _targetPos = new Vector3(_xIntervalIndex * XInterval, 0, _zIntervalIndex * ZInterval);
+                        
+                    CreateNewCornerObjectData(_cloneMesh, _meshName, _bitMask, _targetPos);
+                        
+                    if(!generatedCornerDataTracker.Contains(_metaData))
+                        generatedCornerDataTracker.Add(_metaData);
+                        
+                    _xIntervalIndex++;
+
+                    for (var _i = 1; _i < 4; _i++)
+                    {
+                        _bitMask  = _isRotated ? BitUtil.ShiftBit(_bitMask) : _bitMask;
+                        //_metaData = _isFlip ? _metaData : _metaData;
+                        _metaData = _isRotated ? NumberUtil.ShiftMetaDataWhenRotated(_metaData) : _metaData;
+
+                        if (generatedCornerDataTracker.Contains(_metaData))
+                        {
+                            _xIntervalIndex++;
+                            continue;
+                        }
+                        
+                        _meshName = NumberUtil.GetMetaDataName(_metaData);
+                        
+                        _cloneMesh = CloneMesh(_targetMesh);
+                        _cloneMesh.name = _meshName;
+
+                        if (_isFlip)
+                            MirrorMeshXAxis(_cloneMesh);
+
+                        if (_isRotated)
+                            RotateMesh(_cloneMesh, _baseModule.MeshFilterPrototype.transform.position, new Vector3(0, _i * -90, 0));
+                        
+                        _targetPos = new Vector3(_xIntervalIndex * XInterval, 0, _zIntervalIndex * ZInterval);
+                        
+                        CreateNewCornerObjectData(_cloneMesh, _meshName, _bitMask, _targetPos);
+                        
+                        if(!generatedCornerDataTracker.Contains(_metaData))
+                            generatedCornerDataTracker.Add(_metaData);
+                        
+                        _xIntervalIndex++;
+                    }
+                }
+
+                _zIntervalIndex++;
             }
 
+            //This is for WFC will Refactor to somewhere else 
             //init all index to module prototype
-            var _index = 0;
-            foreach (var _prototype in AllPrototypes)
-            {
-                _prototype.Index = _index;
-                _index++;
-            }
-
-            foreach (var _prototype in AllPrototypes)
-            {
-                _prototype.StorePossibleNeighbors(AllPrototypes);
-            }
+            // var _index = 0;
+            // foreach (var _prototype in AllPrototypes)
+            // {
+            //     _prototype.Index = _index;
+            //     _index++;
+            // }
+            //
+            // foreach (var _prototype in AllPrototypes)
+            // {
+            //     _prototype.StorePossibleNeighbors(AllPrototypes);
+            // }
         }
 
-        private GameObject GenerateCornerMesh(int _bit, MeshFilter _sourceMesh)
+        private CornerObjectData CreateNewCornerObjectData(Mesh _mesh, string _name, int _bitMask, Vector3 _targetPos)
         {
-            var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
+            var _gameObject = new GameObject(_name)
+            {
+                transform = { position = _targetPos }
+            };
                 
-            var _cloneMesh = CloneMesh(_sourceMesh.sharedMesh);
-            _cloneMesh.name = _meshName;
+            var _meshFilter = _gameObject.AddComponent<MeshFilter>();
+            var _renderer   = _gameObject.AddComponent<MeshRenderer>();
+            
+            var _volumePoint     = _gameObject.AddComponent<VolumePoint>();
+            var _modulePrototype = _gameObject.AddComponent<ModulePrototype>();
+        
+            _meshFilter.sharedMesh = _mesh;
+            _renderer  .material   = DefaultMaterial;
+            
+            _volumePoint    .SetBitMask(_bitMask);
+            _modulePrototype.SetBitMask(_bitMask);
+            
+            var _cornerObjectData = new CornerObjectData
+            {
+                GameObject      = _gameObject,
+                Mesh            = _mesh,
+                MeshFilter      = _meshFilter,
+                MeshRenderer    = _renderer,
+                VolumePoint     = _volumePoint,
+                ModulePrototype = _modulePrototype
+            };
 
-            var _newMeshObject = CreateNewMesh(_cloneMesh, _meshName, out _, out _, out var _volumePoint, out var _prototype);
+            AllCornerObjectData.Add(_cornerObjectData);
 
-            _volumePoint.SetBitMask(_bit);
-            _prototype  .SetBitMask(_bit);
-
-            if (generatedMeshTracker.ContainsKey(_bit))
-                generatedMeshTracker[_bit] = true;
-               
-            AllVolumePointObjects.Add(_newMeshObject);
-            AllGeneratedMeshes   .Add(_cloneMesh);
-            AllPrototypes        .Add(_prototype);
-
-            return _newMeshObject;
+            return _cornerObjectData;
         }
 
         private List<GameObject> GenerateCornerMeshes_ByRotate_CounterClockwise(int _bit, MeshFilter _sourceMesh)
@@ -259,30 +213,30 @@ namespace MugCup_BlockBuilder.Runtime
                 var _yRot = _i * -90;
                 var _zRot = 0;
 
+                //--------------------------------//
                 var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
                 
                 var _cloneMesh = CloneMesh(_sourceMesh.sharedMesh);
                 _cloneMesh.name = _meshName;
+                //--------------------------------//
 
                 RotateMesh(_cloneMesh, _sourceMesh.transform.position, new Vector3(_xRot, _yRot, _zRot));
 
-                var _newMeshObject = CreateNewMesh(_cloneMesh, _meshName, out _, out _, out var _volumePoint, out var _prototype);
-
-                _volumePoint.SetBitMask(_bit);
-                _prototype
+                CornerObjectData _newMeshObject = null;
+                
+                _newMeshObject.VolumePoint.SetBitMask(_bit);
+                _newMeshObject.ModulePrototype
                     .SetBitMask(_bit)
                     .UpdateFaceBits();
-
-                if (generatedMeshTracker.ContainsKey(_bit))
-                    generatedMeshTracker[_bit] = true;
-               
+                
+                // if (generatedMeshTracker.ContainsKey(_bit))
+                //     generatedMeshTracker[_bit] = true;
+                
+                //-------------------------------//
                 _bit = BitUtil.ShiftBit(_bit);
+                //-------------------------------//
                 
-                _volumePoints.Add(_newMeshObject);
-                
-                AllVolumePointObjects.Add(_newMeshObject);
-                AllGeneratedMeshes   .Add(_cloneMesh);
-                AllPrototypes        .Add(_prototype);
+                _volumePoints.Add(_newMeshObject.GameObject);
             }
 
             return _volumePoints;
@@ -297,43 +251,42 @@ namespace MugCup_BlockBuilder.Runtime
                 var _xRot = 0;
                 var _yRot = _i * -90;
                 var _zRot = 0;
-
+        
                 var _meshName = $"CM_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}";
                 
                 var _cloneMesh = CloneMesh(_sourceMesh.sharedMesh);
                 _cloneMesh.name = _meshName;
-
+        
                 MirrorMeshXAxis(_cloneMesh);
                 RotateMesh(_cloneMesh, _sourceMesh.transform.position, new Vector3(_xRot, _yRot, _zRot));
 
-                var _newMeshObject = CreateNewMesh(_cloneMesh, _meshName, out _, out _, out var _volumePoint, out var _prototype);
-
-                _volumePoint.SetBitMask(_bit);
-                _prototype  
+                CornerObjectData _newMeshObject = null;
+        
+                _newMeshObject.VolumePoint.SetBitMask(_bit);
+                _newMeshObject.ModulePrototype  
                     .SetBitMask(_bit)
                     .UpdateFaceBits();
-
-                if (generatedMeshTracker.ContainsKey(_bit))
-                    generatedMeshTracker[_bit] = true;
+        
+                // if (generatedMeshTracker.ContainsKey(_bit))
+                //     generatedMeshTracker[_bit] = true;
                
                 _bit = BitUtil.ShiftBit(_bit);
                 
-                _volumePoints.Add(_newMeshObject);
-                
-                AllVolumePointObjects.Add(_newMeshObject);
-                AllGeneratedMeshes   .Add(_cloneMesh);
-                AllPrototypes        .Add(_prototype);
+                _volumePoints.Add(_newMeshObject.GameObject);
+             
             }
-
+        
             return _volumePoints;
         }
  
 #region Save Data Section
         public void SaveAllGeneratedMeshes(string _targetFolderPath)
         {
-            if (AllGeneratedMeshes is { Count: > 0 })
+            var _allGeneratedMeshes = AllCornerObjectData.Select(_o => _o.Mesh).ToList();
+            
+            if (_allGeneratedMeshes is { Count: > 0 })
             {
-                foreach (var _mesh in AllGeneratedMeshes)
+                foreach (var _mesh in _allGeneratedMeshes)
                 {
                     AssetDatabase.CreateAsset(_mesh, $"{_targetFolderPath}/{_mesh.name}.asset");
                     AssetDatabase.SaveAssets();
@@ -357,8 +310,10 @@ namespace MugCup_BlockBuilder.Runtime
         public void SaveModules(string _targetFolderPath)
         {
             var _index = 0;
+
+            var _allPrototypes = AllCornerObjectData.Select(_o => _o.ModulePrototype);
             
-            foreach (var _prototype in AllPrototypes)
+            foreach (var _prototype in _allPrototypes)
             {
                 _prototype.TryUpdateData();
 
@@ -460,28 +415,8 @@ namespace MugCup_BlockBuilder.Runtime
             _mesh.RecalculateNormals();
             _mesh.RecalculateBounds();
         }
-        
-        private GameObject CreateNewMesh(Mesh _mesh, string _name, 
-            out MeshFilter _meshFilter, 
-            out MeshRenderer _renderer,
-            out VolumePoint _volumePoint,
-            out ModulePrototype _modulePrototype)
-        {
-            var _gameObject = new GameObject(_name);
-                
-            _meshFilter = _gameObject.AddComponent<MeshFilter>();
-            _renderer   = _gameObject.AddComponent<MeshRenderer>();
-            
-            _volumePoint     = _gameObject.AddComponent<VolumePoint>();
-            _modulePrototype = _gameObject.AddComponent<ModulePrototype>();
-        
-            _meshFilter.sharedMesh = _mesh;
-            _renderer  .material   = DefaultMaterial;
-        
-            return _gameObject;
-        }
 
-        public static Mesh CloneMesh(Mesh _mesh)
+        private static Mesh CloneMesh(Mesh _mesh, bool _isRotated = false, bool _isFlip = false)
         {
             var _newMesh = new Mesh
             {
@@ -496,7 +431,7 @@ namespace MugCup_BlockBuilder.Runtime
             return _newMesh;
         }
         
-        public static Vector3 RotatePointAroundPivot(Vector3 _point, Vector3 _pivot, Vector3 _angles)
+        private static Vector3 RotatePointAroundPivot(Vector3 _point, Vector3 _pivot, Vector3 _angles)
         {
             return Quaternion.Euler(_angles) * (_point - _pivot) + _pivot;
         }
@@ -505,7 +440,9 @@ namespace MugCup_BlockBuilder.Runtime
 #region Gizmos
         public void SetShowGizmos(bool _value)
         {
-            foreach (var _prototype in AllPrototypes)
+            var _allPrototypes = AllCornerObjectData.Select(_o => _o.ModulePrototype);
+            
+            foreach (var _prototype in _allPrototypes)
             {
                 _prototype.SetShowGizmos  (_value);
                 _prototype.SetShowPivot   (_value);
@@ -518,13 +455,17 @@ namespace MugCup_BlockBuilder.Runtime
 
         public void SetShowDebugText(bool _value)
         {
-            foreach(var _prototype in AllPrototypes)
+            var _allPrototypes = AllCornerObjectData.Select(_o => _o.ModulePrototype);
+            
+            foreach(var _prototype in _allPrototypes)
                 _prototype.SetShowDebugText(_value);
         }
 
         public void SetShowBitInBinary(bool _value)
         {
-            foreach (var _prototype in AllPrototypes)
+            var _allPrototypes = AllCornerObjectData.Select(_o => _o.ModulePrototype);
+            
+            foreach (var _prototype in _allPrototypes)
             {
                 _prototype.SetShowBitInBinary(_value);
             }

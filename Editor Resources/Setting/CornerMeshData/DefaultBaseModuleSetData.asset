@@ -12,25 +12,353 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd074145b033c4f07b4285b45a2f31cb, type: 3}
   m_Name: DefaultBaseModuleSetData
   m_EditorClassIdentifier: 
-  BaseModules_1111_0000:
-  - Name: 
-    BitMask: 0
-    MetaData: 0
-    Prefab: {fileID: 0}
-    MeshFilterPrototype: {fileID: 0}
-  - Name: 
-    BitMask: 0
-    MetaData: 0
-    Prefab: {fileID: 0}
-    MeshFilterPrototype: {fileID: 0}
-  BaseModules:
-  - Name: 
-    BitMask: 0
-    MetaData: 0
-    Prefab: {fileID: 0}
-    MeshFilterPrototype: {fileID: 0}
-  - Name: 
-    BitMask: 0
-    MetaData: 0
-    Prefab: {fileID: 0}
-    MeshFilterPrototype: {fileID: 0}
+  BaseModuleGroups:
+  - BitMaskGroup: 11110000
+    HasRotateVariant: 0
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_1111_0000
+      BitMask: 240
+      ModuleID: 0
+      MetaData: 11110000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: a9d7d82242bf74cf0a3dadf4789fbc71,
+        type: 3}
+      HasRotateVariant: 0
+      HasFlipXVariant: 0
+    - Name: M_1112_0000
+      BitMask: 240
+      ModuleID: 0
+      MetaData: 11120000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 28ef1441c4f914df397e9a0117759fad,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00000001
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0000_0001
+      BitMask: 1
+      ModuleID: 0
+      MetaData: 00000001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 8a21cea23c1384605844742ae414673b,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00010000
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0001_0000
+      BitMask: 16
+      ModuleID: 0
+      MetaData: 00010000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 1a351558a7aa54e0f9fa60df8d849a72,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00010001
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0001_0001
+      BitMask: 17
+      ModuleID: 0
+      MetaData: 00010001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 04a04f3a5cb4c47c5860c1933db97f87,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00100001
+    HasRotateVariant: 1
+    HasFlipXVariant: 1
+    BaseModules:
+    - Name: M_0010_0001
+      BitMask: 33
+      ModuleID: 0
+      MetaData: 00100001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 1
+  - BitMaskGroup: 01010000
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0101_0000
+      BitMask: 80
+      ModuleID: 0
+      MetaData: 01010000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00000011
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0000_0011
+      BitMask: 3
+      ModuleID: 0
+      MetaData: 00000011
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00110000
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0011_0000
+      BitMask: 48
+      ModuleID: 0
+      MetaData: 00110000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00000111
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0000_0111
+      BitMask: 7
+      ModuleID: 0
+      MetaData: 00000111
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 01110000
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0111_0000
+      BitMask: 112
+      ModuleID: 0
+      MetaData: 01110000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00010011
+    HasRotateVariant: 1
+    HasFlipXVariant: 1
+    BaseModules:
+    - Name: M_0001_0011
+      BitMask: 19
+      ModuleID: 0
+      MetaData: 00010011
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 1
+  - BitMaskGroup: 00110001
+    HasRotateVariant: 1
+    HasFlipXVariant: 1
+    BaseModules:
+    - Name: M_0011_0001
+      BitMask: 49
+      ModuleID: 0
+      MetaData: 00110001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 1
+  - BitMaskGroup: 00011011
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0001_1011
+      BitMask: 27
+      ModuleID: 0
+      MetaData: 00011011
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 10110001
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_1011_0001
+      BitMask: 177
+      ModuleID: 0
+      MetaData: 10110001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00011111
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0001_1111
+      BitMask: 31
+      ModuleID: 0
+      MetaData: 00011111
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 11110001
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_1111_0001
+      BitMask: 241
+      ModuleID: 0
+      MetaData: 11110001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00111111
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0011_1111
+      BitMask: 63
+      ModuleID: 0
+      MetaData: 00111111
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 11110011
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_1111_0011
+      BitMask: 243
+      ModuleID: 0
+      MetaData: 11110011
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 01111111
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0111_1111
+      BitMask: 127
+      ModuleID: 0
+      MetaData: 01111111
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 11110111
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_1111_0111
+      BitMask: 247
+      ModuleID: 0
+      MetaData: 11110111
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 00110011
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0011_0011
+      BitMask: 51
+      ModuleID: 0
+      MetaData: 00110011
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 01110111
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0111_0111
+      BitMask: 119
+      ModuleID: 0
+      MetaData: 01110111
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 01110001
+    HasRotateVariant: 1
+    HasFlipXVariant: 1
+    BaseModules:
+    - Name: M_0111_0001
+      BitMask: 113
+      ModuleID: 0
+      MetaData: 01110001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 1
+  - BitMaskGroup: 01110011
+    HasRotateVariant: 1
+    HasFlipXVariant: 1
+    BaseModules:
+    - Name: M_0111_0011
+      BitMask: 115
+      ModuleID: 0
+      MetaData: 01110011
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 1
+  - BitMaskGroup: 11110101
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_1111_0101
+      BitMask: 245
+      ModuleID: 0
+      MetaData: 11110101
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 01010001
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0101_0001
+      BitMask: 81
+      ModuleID: 0
+      MetaData: 01010001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 01010101
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0101_0101
+      BitMask: 85
+      ModuleID: 0
+      MetaData: 01010101
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+  - BitMaskGroup: 01110101
+    HasRotateVariant: 1
+    HasFlipXVariant: 0
+    BaseModules:
+    - Name: M_0111_0101
+      BitMask: 117
+      ModuleID: 0
+      MetaData: 01110101
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: 0}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0

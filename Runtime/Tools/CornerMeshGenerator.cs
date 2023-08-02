@@ -97,57 +97,64 @@ namespace MugCup_BlockBuilder.Runtime
                     if (_baseModule.MeshFilterPrototype == null)
                         continue;
 
-                    var _bitMask    = _baseModule.BitMask;
-                    var _metaData   = _baseModule.MetaData;
                     var _targetMesh = _baseModule.MeshFilterPrototype.sharedMesh;
                     var _isFlip     = _baseModule.HasFlipXVariant;
                     var _isRotated  = _baseModule.HasRotateVariant;
-                   
-                    var _meshName = NumberUtil.GetMetaDataName(_metaData);
-                
-                    var _cloneMesh = CloneMesh(_targetMesh);
-                    _cloneMesh.name = _meshName;
-                        
-                    var _targetPos = new Vector3(_xIntervalIndex * XInterval, 0, _zIntervalIndex * ZInterval);
-                        
-                    CreateNewCornerObjectData(_cloneMesh, _meshName, _bitMask, _targetPos);
-                        
-                    if(!generatedCornerDataTracker.Contains(_metaData))
-                        generatedCornerDataTracker.Add(_metaData);
-                        
-                    _xIntervalIndex++;
 
-                    for (var _i = 1; _i < 4; _i++)
+                    for (var _index = 0; _index < (_isFlip ? 2 : 1); _index++)
                     {
-                        _bitMask  = _isRotated ? BitUtil.ShiftBit(_bitMask) : _bitMask;
-                        //_metaData = _isFlip ? _metaData : _metaData;
-                        _metaData = _isRotated ? NumberUtil.ShiftMetaDataWhenRotated(_metaData) : _metaData;
-
-                        if (generatedCornerDataTracker.Contains(_metaData))
-                        {
-                            _xIntervalIndex++;
-                            continue;
-                        }
+                        var _needFlip = _isFlip && _index == 1;
                         
-                        _meshName = NumberUtil.GetMetaDataName(_metaData);
+                        var _bitMask  = _needFlip ? BitUtil   .MirrorBitXAis (_baseModule.BitMask ) : _baseModule.BitMask ;
+                        var _metaData = _needFlip ? NumberUtil.MirrorMetaData(_baseModule.MetaData) : _baseModule.MetaData;
                         
-                        _cloneMesh = CloneMesh(_targetMesh);
+                        var _meshName   = NumberUtil.GetMetaDataName(_metaData);
+                        var _cloneMesh  = CloneMesh(_targetMesh);
                         _cloneMesh.name = _meshName;
-
-                        if (_isFlip)
+                        
+                        if(_needFlip)
                             MirrorMeshXAxis(_cloneMesh);
 
-                        if (_isRotated)
-                            RotateMesh(_cloneMesh, _baseModule.MeshFilterPrototype.transform.position, new Vector3(0, _i * -90, 0));
-                        
-                        _targetPos = new Vector3(_xIntervalIndex * XInterval, 0, _zIntervalIndex * ZInterval);
-                        
+                        var _targetPos = new Vector3(_xIntervalIndex * XInterval, 0, _zIntervalIndex * ZInterval);
                         CreateNewCornerObjectData(_cloneMesh, _meshName, _bitMask, _targetPos);
-                        
                         if(!generatedCornerDataTracker.Contains(_metaData))
                             generatedCornerDataTracker.Add(_metaData);
                         
                         _xIntervalIndex++;
+
+                        for (var _i = 1; _i < 4; _i++)
+                        {
+                            _bitMask  = _isRotated ? BitUtil   .ShiftBit                (_bitMask)  : _bitMask;
+                            _metaData = _isRotated ? NumberUtil.ShiftMetaDataWhenRotated(_metaData) : _metaData;
+
+                            if (generatedCornerDataTracker.Contains(_metaData))
+                            {
+                                _xIntervalIndex++;
+                                continue;
+                            }
+                            
+                            _meshName  = NumberUtil.GetMetaDataName(_metaData);
+                            _cloneMesh = CloneMesh(_targetMesh);
+                            _cloneMesh.name = _meshName;
+                            
+                            if(_needFlip)
+                                MirrorMeshXAxis(_cloneMesh);
+                            
+                            RotateMesh(_cloneMesh, _baseModule.MeshFilterPrototype.transform.position, new Vector3(0, _i * -90, 0));
+                            
+                            _targetPos = new Vector3(_xIntervalIndex * XInterval, 0, _zIntervalIndex * ZInterval);
+                            CreateNewCornerObjectData(_cloneMesh, _meshName, _bitMask, _targetPos);
+                            if(!generatedCornerDataTracker.Contains(_metaData))
+                                generatedCornerDataTracker.Add(_metaData);
+                            
+                            _xIntervalIndex++;
+                        }
+
+                        if (_isFlip && _index == 0)
+                        {
+                            _xIntervalIndex = 0;
+                            _zIntervalIndex++;
+                        }
                     }
                 }
 
@@ -186,7 +193,7 @@ namespace MugCup_BlockBuilder.Runtime
             _renderer  .material   = DefaultMaterial;
             
             _volumePoint    .SetBitMask(_bitMask);
-            _modulePrototype.SetBitMask(_bitMask);
+            _modulePrototype.SetBitMask(_bitMask).UpdateFaceBits();
             
             var _cornerObjectData = new CornerObjectData
             {

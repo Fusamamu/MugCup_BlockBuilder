@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using BlockBuilder.Core.Scriptable;
 using MugCup_BlockBuilder.Runtime;
 using MugCup_PathFinder.Runtime;
@@ -15,7 +16,12 @@ namespace MugCup_BlockBuilder
 	    [field: SerializeField] public Vector3    NodeWorldPosition { get; private set; }
 	    
 	    //Temp
-	    public CornerMeshData CornerMeshData;
+	    //TODO : Need a way to load cornermeshmoduledata 
+	    //Currently it is set directly in prefab in package
+	    public CornerMeshModuleData CornerMeshModuleData;
+
+	    //Temp
+	    private static Dictionary<int, Module> moduleTable = new Dictionary<int, Module>();
 
 	    public IGridCoord SetNodePosition(Vector3Int _nodePosition)
 	    {
@@ -27,10 +33,9 @@ namespace MugCup_BlockBuilder
 		    NodeWorldPosition = _worldPosition;
 		    return this;
 	    }
-	    
-        //[SerializeField] private Vector3Int Coord;
         
-        [SerializeField] private int BitMask;
+        [field: SerializeField] public int    BitMask  { get; private set; }
+        [field: SerializeField] public string MetaData { get; private set; }
 
         [SerializeField] private GridElement[] AdjacentGridElements = new GridElement[8];
 
@@ -107,11 +112,19 @@ namespace MugCup_BlockBuilder
         
         public void SetCornerMesh()
         {
-	        var _mesh = CornerMeshData.GetPrototypeMesh(BitMask);
-	        
-	        if (_mesh != null)
+	        var _metaTable = CornerMeshModuleData.GetMetaTable();
+	        if (_metaTable.TryGetValue(BitMask, out var _metaDict))
 	        {
-		        Mesh.mesh = _mesh;
+		        if (!_metaDict.TryGetValue(MetaData, out var _module))
+			        _module = _metaDict.Values.ToList().First();
+		        
+		        var _mesh = _module.MeshPrototype;
+		        if (_mesh)
+			        Mesh.mesh = _mesh;
+	        }
+	        else
+	        {
+		        Mesh.mesh = null;
 	        }
         }
 
@@ -120,8 +133,8 @@ namespace MugCup_BlockBuilder
 	        BitMask = _bit;
         }
 
-        public void SetBitMask()
-        { 
+        public void UpdateBitMask()
+        {
 	        BitMask = 0b_0000_0000;
 
 	        if (UpperNorthEastGridElement != null && UpperNorthEastGridElement.IsEnable)
@@ -165,6 +178,74 @@ namespace MugCup_BlockBuilder
 	        }
         }
 
+        public void SetMetaData(string _metaData)
+        {
+	        MetaData = _metaData;
+        }
+
+        public void UpdateMetaData()
+        {
+	        MetaData = "00000000";
+
+	        if (UpperNorthEastGridElement != null && UpperNorthEastGridElement.IsEnable)
+	        {
+		        //BitMask += 0b_0000_0001;
+
+		        var _metaType = UpperNorthEastGridElement.MetaType == '\0' ? '1' : UpperNorthEastGridElement.MetaType;
+		        MetaData = MetaDataUtil.ReplaceMetaTypeAt(_metaType, 7, MetaData);
+	        }
+	        
+	        if (UpperNorthWestGridElement != null && UpperNorthWestGridElement.IsEnable)
+	        {
+		        //BitMask += 0b_0000_0010;
+		        var _metaType = UpperNorthWestGridElement.MetaType == '\0' ? '1' : UpperNorthWestGridElement.MetaType;
+		        MetaData = MetaDataUtil.ReplaceMetaTypeAt(_metaType, 6, MetaData);
+	        }
+
+	        if (UpperSouthWestGridElement != null && UpperSouthWestGridElement.IsEnable)
+	        {
+		        //BitMask += 0b_0000_0100;
+		        var _metaType = UpperSouthWestGridElement.MetaType == '\0' ? '1' : UpperSouthWestGridElement.MetaType;
+		        MetaData = MetaDataUtil.ReplaceMetaTypeAt(_metaType, 5, MetaData);
+	        }
+	        
+	        if (UpperSouthEastGridElement != null && UpperSouthEastGridElement.IsEnable)
+	        {
+		        //BitMask += 0b_0000_1000;
+		        var _metaType = UpperSouthEastGridElement.MetaType == '\0' ? '1' : UpperSouthEastGridElement.MetaType;
+		        MetaData = MetaDataUtil.ReplaceMetaTypeAt(_metaType, 4, MetaData);
+	        }
+	        
+	        if (LowerNorthEastGridElement != null && LowerNorthEastGridElement.IsEnable)
+	        {
+		        //BitMask += 0b_0001_0000;
+		        var _metaType = LowerNorthEastGridElement.MetaType == '\0' ? '1' : LowerNorthEastGridElement.MetaType;
+		        MetaData = MetaDataUtil.ReplaceMetaTypeAt(_metaType, 3, MetaData);
+	        }
+	        
+	        if (LowerNorthWestGridElement != null && LowerNorthWestGridElement.IsEnable)
+	        {
+		        //BitMask += 0b_0010_0000;
+		        var _metaType = LowerNorthWestGridElement.MetaType == '\0' ? '1' : LowerNorthWestGridElement.MetaType;
+		        MetaData = MetaDataUtil.ReplaceMetaTypeAt(_metaType, 2, MetaData);
+	        }
+	        
+	        if (LowerSouthWestGridElement != null && LowerSouthWestGridElement.IsEnable)
+	        {
+		        //BitMask += 0b_0100_0000;
+		        var _metaType = LowerSouthWestGridElement.MetaType == '\0' ? '1' : LowerSouthWestGridElement.MetaType;
+		        MetaData = MetaDataUtil.ReplaceMetaTypeAt(_metaType, 1, MetaData);
+	        }
+	        
+	        if (LowerSouthEastGridElement != null && LowerSouthEastGridElement.IsEnable)
+	        {
+		        //BitMask += 0b_1000_0000;
+		        var _metaType = LowerSouthEastGridElement.MetaType == '\0' ? '1' : LowerSouthEastGridElement.MetaType;
+		        MetaData = MetaDataUtil.ReplaceMetaTypeAt(_metaType, 0, MetaData);
+	        }
+        }
+        
+#region Gizmos
         public void ToggleShowDebugText()
         {
 	        ShowDebugText = !ShowDebugText;
@@ -226,5 +307,6 @@ namespace MugCup_BlockBuilder
 	        //
 	        // Handles.Label(_center + Vector3.up /1.5f,  gameObject.name);
         }
+#endregion
     }
 }

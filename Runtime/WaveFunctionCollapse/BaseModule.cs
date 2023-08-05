@@ -32,13 +32,13 @@ namespace MugCup_BlockBuilder
 
         public void UpdateName()
         {
-            Name = NumberUtil.GetMetaDataName(MetaData);
+            Name = MetaDataUtil.GetMetaDataName(MetaData);
         }
 
         public void UpdateBitMask()
         {
-            var _stringBinary = NumberUtil.TurnMetaDataIntoBinaryStringFormat(MetaData);
-            BitMask = NumberUtil.BinaryStringToInt(_stringBinary);
+            var _stringBinary = MetaDataUtil.TurnMetaDataIntoBinaryStringFormat(MetaData);
+            BitMask = MetaDataUtil.BinaryStringToInt(_stringBinary);
         }
 
         public void UpdateModuleID()

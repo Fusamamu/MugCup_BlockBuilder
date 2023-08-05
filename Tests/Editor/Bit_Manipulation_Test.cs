@@ -186,7 +186,7 @@ public class Bit_Manipulation_Test : MonoBehaviour
     {
         string _metaData = "1234";
 
-        var _result = NumberUtil.ShiftCharLeft(_metaData);
+        var _result = MetaDataUtil.ShiftCharLeft(_metaData);
         
         Assert.AreEqual(_result, "2341");
     }
@@ -196,7 +196,7 @@ public class Bit_Manipulation_Test : MonoBehaviour
     {
         string _metaData = "12345678";
 
-        var _result = NumberUtil.SeparateStringIfEven(_metaData);
+        var _result = MetaDataUtil.SeparateStringIfEven(_metaData);
         
         Assert.AreEqual(_result.Item1, "1234");
         Assert.AreEqual(_result.Item2, "5678");
@@ -207,10 +207,10 @@ public class Bit_Manipulation_Test : MonoBehaviour
     {
         string _metaData = "12345678";
         
-        var _result = NumberUtil.SeparateStringIfEven(_metaData);
+        var _result = MetaDataUtil.SeparateStringIfEven(_metaData);
 
-        var _modifiedFirstPart  = NumberUtil.ShiftCharLeft(_result.Item1);
-        var _modifiedSecondPart = NumberUtil.ShiftCharLeft(_result.Item2);
+        var _modifiedFirstPart  = MetaDataUtil.ShiftCharLeft(_result.Item1);
+        var _modifiedSecondPart = MetaDataUtil.ShiftCharLeft(_result.Item2);
 
         var _combinedString = _modifiedFirstPart + _modifiedSecondPart;
 
@@ -223,7 +223,7 @@ public class Bit_Manipulation_Test : MonoBehaviour
         var _originDigit = "1234";
         var _expectDigit = "2143";
 
-        var _result = NumberUtil.MirrorChar(_originDigit);
+        var _result = MetaDataUtil.MirrorChar(_originDigit);
 
         Assert.AreEqual(_result, _expectDigit);
     }
@@ -233,7 +233,7 @@ public class Bit_Manipulation_Test : MonoBehaviour
     {
         string _metaData = "12345678";
         
-        var _result = NumberUtil.MirrorMetaData(_metaData);
+        var _result = MetaDataUtil.MirrorMetaData(_metaData);
 
         Assert.AreEqual(_result, "21436587");
     }

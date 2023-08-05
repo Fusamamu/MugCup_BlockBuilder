@@ -23,7 +23,7 @@ namespace MugCup_BlockBuilder
 
             if (GUILayout.Button("Update BitMask"))
             {
-                volumePoint.SetBitMask();
+                volumePoint.UpdateBitMask();
             }
         }
     }

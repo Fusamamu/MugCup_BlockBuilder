@@ -17,7 +17,7 @@ namespace MugCup_BlockBuilder.Editor
         private static bool showDebugText;
         private static bool showBitInBinary;
 
-        private const string TargetFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Meshes/Corner Meshes/Data";
+        private const string TargetFolder            = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Meshes/Corner Meshes/Data";
         private const string NewCornerMeshDataFolder = "NewCornerMeshData";
 
         private bool displayDebug;

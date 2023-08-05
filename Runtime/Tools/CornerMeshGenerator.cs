@@ -60,22 +60,6 @@ namespace MugCup_BlockBuilder.Runtime
             generatedCornerDataTracker.Clear();
         }
         
-        // public void AddPrototypeDataIntoCornerMeshData()
-        // {
-        //     var _cornerMeshData = AssetDatabase.LoadAssetAtPath<CornerMeshData>("Packages/com.mugcupp.mugcup-blockbuilder/Editor Resources/Setting/CornerMeshData/NewCornerMeshData.asset");
-        //   
-        //     foreach (var _prototype in AllModules)
-        //         _cornerMeshData.AddModuleData(_prototype.BitMask, _prototype);
-        //     
-        //     EditorUtility.SetDirty(_cornerMeshData);
-        // }
-
-        // public void UpdatePrototypesData()
-        // {
-        //     foreach (var _cornerObjectData in AllCornerObjectData)
-        //         _cornerObjectData.ModulePrototype.TryUpdateData();
-        // }
-        
         public void GenerateCornerMeshes()
         {
             ClearData();
@@ -105,9 +89,9 @@ namespace MugCup_BlockBuilder.Runtime
                         var _needFlip = _isFlip && _index == 1;
                         
                         var _bitMask  = _needFlip ? BitUtil   .MirrorBitXAis (_baseModule.BitMask ) : _baseModule.BitMask ;
-                        var _metaData = _needFlip ? NumberUtil.MirrorMetaData(_baseModule.MetaData) : _baseModule.MetaData;
+                        var _metaData = _needFlip ? MetaDataUtil.MirrorMetaData(_baseModule.MetaData) : _baseModule.MetaData;
                         
-                        var _meshName   = NumberUtil.GetMetaDataName(_metaData);
+                        var _meshName   = MetaDataUtil.GetMetaDataName(_metaData);
                         var _cloneMesh  = CloneMesh(_targetMesh);
                         _cloneMesh.name = _meshName;
                         
@@ -124,7 +108,7 @@ namespace MugCup_BlockBuilder.Runtime
                         for (var _i = 1; _i < 4; _i++)
                         {
                             _bitMask  = _isRotated ? BitUtil   .ShiftBit                (_bitMask)  : _bitMask;
-                            _metaData = _isRotated ? NumberUtil.ShiftMetaDataWhenRotated(_metaData) : _metaData;
+                            _metaData = _isRotated ? MetaDataUtil.ShiftMetaDataWhenRotated(_metaData) : _metaData;
 
                             if (generatedCornerDataTracker.Contains(_metaData))
                             {
@@ -132,7 +116,7 @@ namespace MugCup_BlockBuilder.Runtime
                                 continue;
                             }
                             
-                            _meshName  = NumberUtil.GetMetaDataName(_metaData);
+                            _meshName  = MetaDataUtil.GetMetaDataName(_metaData);
                             _cloneMesh = CloneMesh(_targetMesh);
                             _cloneMesh.name = _meshName;
                             
@@ -269,25 +253,7 @@ namespace MugCup_BlockBuilder.Runtime
             
             EditorUtility.ClearProgressBar();
         }
-
-        //TODO : WILL REMOVE THIS
-        // public void SaveCornerMeshData(string _targetFolderPath)
-        // {
-        //     var _cornerMeshData = ScriptableObject.CreateInstance<CornerMeshData>();
-        //     
-        //     var _fileName = $"CornerMeshData.asset";
-        //     
-        //     AssetDatabase.CreateAsset(_cornerMeshData, $"{_targetFolderPath}/{_fileName}");
-        //     AssetDatabase.SaveAssets();
-        //     
-        //     foreach (var _module in AllModules)
-        //     {
-        //         _cornerMeshData.AddModuleData(_module.BitMask, _module);
-        //     }
-        //     
-        //     EditorUtility.SetDirty(_cornerMeshData);
-        // }
-
+        
         public CornerMeshGenerator StoreModulesPossibleNeighbors()
         {
             foreach (var _module in AllModules)

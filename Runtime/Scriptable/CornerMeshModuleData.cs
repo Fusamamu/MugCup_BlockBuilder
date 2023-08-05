@@ -11,12 +11,58 @@ namespace MugCup_BlockBuilder
     {
         public Module[] Modules;
 
+        public Dictionary<int, Module> GetBitTable()
+        {
+            Dictionary<int, Module> _table = new();
+
+            foreach (var _module in Modules)
+            {
+                var _bitMask = _module.BitMask;
+                
+                if(!_table.ContainsKey(_bitMask))
+                    _table.Add(_bitMask, _module);
+            }
+
+            return _table;
+        }
+
+        public Dictionary<int, Dictionary<string, Module>> GetMetaTable()
+        {
+            Dictionary<int, Dictionary<string, Module>> _metaTable = new();
+
+            foreach (var _module in Modules)
+            {
+                var _bitMask  = _module.BitMask;
+                var _metaData = _module.MetaData;
+
+                if (!_metaTable.ContainsKey(_bitMask))
+                {
+                    Dictionary<string, Module> _metaDict = new() {
+                        { _metaData, _module }
+                    };
+                    
+                    _metaTable.Add(_bitMask, _metaDict);
+                }
+                else
+                {
+                    if (!_metaTable[_bitMask].ContainsKey(_metaData))
+                        _metaTable[_bitMask].Add(_metaData, _module);
+                    else
+                        Debug.LogWarning($"There are duplicate Meta data! : {_metaData}");
+                }
+            }
+
+            return _metaTable;
+        }
+
         public Dictionary<string, Module> GetModuleTable()
         {
             Dictionary<string, Module> _table = new();
 
             return _table;
         }
+        
+        
 
         //This is duplicate from CornerMeshData
         public Mesh GetCornerMesh(int _bitMask)

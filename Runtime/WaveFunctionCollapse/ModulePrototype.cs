@@ -73,20 +73,6 @@ namespace MugCup_BlockBuilder
         }
         
 #if UNITY_EDITOR
-        // public void TryUpdateData()
-        // {
-        //     Name = gameObject.name;
-        //     
-        //     if (gameObject.TryGetComponent<MeshFilter>(out var _meshFilter))
-        //     {
-        //         MeshPrototype = _meshFilter.sharedMesh;
-        //     }
-        //
-        //     UpdateFaceBits();
-        //     
-        //     EditorUtility.SetDirty(this);
-        // }
-        
         public Module CreateModule()
         {
             var _prototypeData = ScriptableObject.CreateInstance<Module>();

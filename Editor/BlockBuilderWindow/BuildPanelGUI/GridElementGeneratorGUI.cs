@@ -38,10 +38,10 @@ namespace MugCup_BlockBuilder
                 {
                     EditorGUILayout.LabelField("Configuration", EditorStyles.boldLabel);
                       
-                    showGizmos            = EditorGUILayout.Toggle("Display gizmos"   , showGizmos);
-                    showTilePivot         = EditorGUILayout.Toggle("Show Tile Pivot", showTilePivot);
+                    showGizmos            = EditorGUILayout.Toggle("Display gizmos"   , showGizmos     );
+                    showTilePivot         = EditorGUILayout.Toggle("Show Tile Pivot"  , showTilePivot  );
                     showCornerPivot       = EditorGUILayout.Toggle("Show Corner Pivot", showCornerPivot);
-                    showBoundBox          = EditorGUILayout.Toggle("Show Bound Box"   , showBoundBox);
+                    showBoundBox          = EditorGUILayout.Toggle("Show Bound Box"   , showBoundBox   );
 
                     var _allGridElements = BBEditorManager.GridElementDataManager.GridElementData.GridNodes;
                     if (_allGridElements is { Length: > 0 })

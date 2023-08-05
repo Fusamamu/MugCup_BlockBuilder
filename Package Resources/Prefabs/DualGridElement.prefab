@@ -135,8 +135,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <NodeGridPosition>k__BackingField: {x: 0, y: 0, z: 0}
   <NodeWorldPosition>k__BackingField: {x: 0, y: 0, z: 0}
-  CornerMeshData: {fileID: 11400000, guid: 5fc6d90266e2a47e1ba056d231fe0685, type: 2}
-  BitMask: 0
+  CornerMeshModuleData: {fileID: 11400000, guid: aba07500ef1e44758a76b893894ac5c6,
+    type: 2}
+  <BitMask>k__BackingField: 0
+  <MetaData>k__BackingField: 
   AdjacentGridElements:
   - {fileID: 0}
   - {fileID: 0}
@@ -171,12 +173,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea44cdcca148482e8f97a7e273a1370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Index: 0
-  Name: 
-  BitMask: 0
-  MeshPrototype: {fileID: 0}
-  RotationIndex: 0
-  FaceDetails:
+  <Name>k__BackingField: 
+  <Index>k__BackingField: 0
+  <BitMask>k__BackingField: 0
+  <MetaData>k__BackingField: 
+  <MeshPrototype>k__BackingField: {fileID: 0}
+  <Probability>k__BackingField: 0
+  <PLogP>k__BackingField: 0
+  <RotationIndex>k__BackingField: 0
+  <FaceDetails>k__BackingField:
     Forward:
       <FaceBit>k__BackingField: 0
       <Walkable>k__BackingField: 0

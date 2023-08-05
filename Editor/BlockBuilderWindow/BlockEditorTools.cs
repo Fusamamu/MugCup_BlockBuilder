@@ -87,20 +87,12 @@ namespace MugCup_BlockBuilder.Editor
                             
                             if (_currentEvent.button == 0)
                             {
-                                Debug.Log("Mouse Down");
-                                
                                 if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
                                 {
-                                    Debug.Log("Ray case hit");
-                                    
                                     var _selectedFace = BlockFaceUtil.GetSelectedFace(_hit);
-                                    
-                                    Debug.Log(_selectedFace);
                                     
                                     if (_hit.collider.TryGetComponent<GridElement>(out var _gridElement))
                                     {
-                                        Debug.Log("Found Grid Element");
-                                        
                                         if (_selectedFace == NormalFace.PosY)
                                         {
                                             Vector3 _targetPos = _hit.collider.transform.position;
@@ -112,7 +104,6 @@ namespace MugCup_BlockBuilder.Editor
                                     }
                                 }
                             }
-                            
                             break;
                         
                         case EventType.MouseMove:
@@ -122,24 +113,25 @@ namespace MugCup_BlockBuilder.Editor
                 
                 case 1: /*Subtract Block*/
                     
-                    // if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
-                    // {
-                    //     Debug.Log($"<color=yellow>[Info]:</color> <color=orange>Left Mouse Button Clicked.</color>");
-                    //     
-                    //     if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
-                    //     {
-                    //         var _object = _hit.collider.gameObject;
-                    //
-                    //         if (_object.TryGetComponent<Block>(out var _block))
-                    //         {
-                    //             BBEditorUtility.RecordGridBlockManagerChanges(() =>
-                    //             {
-                    //                 BBEditorManager.BlockManager.RemoveBlock(_block);
-                    //                 BBEditorManager.BlockManager.UpdateSurroundingBlocksData<Block>(_block.NodeGridPosition, CubeBlockSection.Middle);
-                    //             });
-                    //         }
-                    //     }
-                    // }
+                    if (_currentEvent.type == EventType.MouseDown && _currentEvent.button == 0)
+                    {
+                        if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                        {
+                            var _selectedFace = BlockFaceUtil.GetSelectedFace(_hit);
+                                    
+                            if (_hit.collider.TryGetComponent<GridElement>(out var _gridElement))
+                            {
+                                if (_selectedFace == NormalFace.PosY)
+                                {
+                                    Vector3 _targetPos = _hit.collider.transform.position;
+                                    var _pos  = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+                                    var _node = BBEditorManager.GridElementDataManager.GridElementData.GetNode(_pos);
+                                            
+                                    _node.Disable();
+                                }
+                            }
+                        }
+                    }
                     break;
             }
         }

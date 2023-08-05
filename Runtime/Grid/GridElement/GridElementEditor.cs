@@ -30,6 +30,11 @@ namespace MugCup_BlockBuilder
 			{
 				gridElement.Disable();
 			}
+			
+			if (GUILayout.Button("Update volume points data"))
+			{
+				gridElement.UpdateVolumePointsData();
+			}
 		}
 	}
 }

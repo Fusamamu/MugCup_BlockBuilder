@@ -11,6 +11,31 @@ namespace MugCup_BlockBuilder
     {
         public Module[] Modules;
 
+        public Dictionary<string, Module> GetModuleTable()
+        {
+            Dictionary<string, Module> _table = new();
+
+            return _table;
+        }
+
+        //This is duplicate from CornerMeshData
+        public Mesh GetCornerMesh(int _bitMask)
+        {
+            // var _prototypeData = GetPrototypeData(_bit);
+            //
+            // if (_prototypeData != null)
+            // {
+            //     return _prototypeData.MeshPrototype;
+            // }
+            
+            return null;
+        }
+
+        public Mesh GetCornerMesh(string _metaData)
+        {
+            return null;
+        }
+
         public void SetAllModuleProbability(float _value)
         {
             foreach (var _module in Modules)

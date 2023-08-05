@@ -21,10 +21,10 @@ namespace MugCup_BlockBuilder
         {
             DrawDefaultInspector();
 
-            if (GUILayout.Button("Try Update Data"))
-            {
-                modulePrototype.TryUpdateData();
-            }
+            // if (GUILayout.Button("Try Update Data"))
+            // {
+            //     modulePrototype.TryUpdateData();
+            // }
 
             if (GUILayout.Button("Create Prototype Data Object"))
             {

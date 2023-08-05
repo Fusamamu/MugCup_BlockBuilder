@@ -10,7 +10,7 @@ namespace MugCup_BlockBuilder
         
         public int Index    { get; set; }
         public int BitMask  { get; }
-        public int MetaData { get; }
+        public string MetaData { get; }
         
         public Mesh MeshPrototype { get; }
 

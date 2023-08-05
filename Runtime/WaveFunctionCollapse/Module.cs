@@ -14,7 +14,7 @@ namespace MugCup_BlockBuilder
         
         [field: SerializeField] public int Index    { get; set; }
         [field: SerializeField] public int BitMask  { get; private set; }
-        [field: SerializeField] public int MetaData { get; private set; }
+        [field: SerializeField] public string MetaData { get; private set; }
         
         [field: SerializeField] public Mesh MeshPrototype { get; private set; }
 

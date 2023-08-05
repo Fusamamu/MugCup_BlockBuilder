@@ -41,10 +41,10 @@ namespace MugCup_BlockBuilder.Editor
                 cornerMeshGenerator.ClearGeneratedMeshes();
             }
             
-            if (GUILayout.Button("Update Prototypes Data"))
-            {
-                cornerMeshGenerator.UpdatePrototypesData();
-            }
+            // if (GUILayout.Button("Update Prototypes Data"))
+            // {
+            //     cornerMeshGenerator.UpdatePrototypesData();
+            // }
             
             EditorGUILayout.Space(10);
             if (GUILayout.Button("Create New Corner Mesh Data"))
@@ -69,7 +69,6 @@ namespace MugCup_BlockBuilder.Editor
                 
                 cornerMeshGenerator.SaveAllGeneratedMeshes  (_generatedMeshFolderPath);
                 cornerMeshGenerator.SaveModules             (_prototypeDataFolderPath);
-                cornerMeshGenerator.SaveCornerMeshData      (_targetPath);
                 
                 cornerMeshGenerator
                     .StoreModulesPossibleNeighbors()
@@ -79,10 +78,10 @@ namespace MugCup_BlockBuilder.Editor
             }
             EditorGUILayout.Space(10);
 
-            if (GUILayout.Button("Add Prototype Data into CornerMeshData"))
-            {
-                cornerMeshGenerator.AddPrototypeDataIntoCornerMeshData();
-            }
+            // if (GUILayout.Button("Add Prototype Data into CornerMeshData"))
+            // {
+            //     cornerMeshGenerator.AddPrototypeDataIntoCornerMeshData();
+            // }
 
             if (GUILayout.Button("Print All Possible Bit Permutation"))
             {

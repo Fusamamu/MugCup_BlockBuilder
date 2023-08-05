@@ -12,7 +12,7 @@ namespace MugCup_BlockBuilder
         
         [field: SerializeField] public int Index    { get; set; }
         [field: SerializeField] public int BitMask  { get; private set; }
-        [field: SerializeField] public int MetaData { get; private set; }
+        [field: SerializeField] public string MetaData { get; private set; }
         
         [field: SerializeField] public Mesh MeshPrototype { get; private set; }
 
@@ -42,9 +42,27 @@ namespace MugCup_BlockBuilder
         [SerializeField] private bool ShowFaceBits;
         [SerializeField] private bool ShowBitInBinary;
 
+        public ModulePrototype SetName(string _name)
+        {
+            Name = _name;
+            return this;
+        }
+
         public ModulePrototype SetBitMask(int _bit)
         {
             BitMask = _bit;
+            return this;
+        }
+
+        public ModulePrototype SetMetaData(string _metaData)
+        {
+            MetaData = _metaData;
+            return this;
+        }
+
+        public ModulePrototype SetMesh(Mesh _mesh)
+        {
+            MeshPrototype = _mesh;
             return this;
         }
 
@@ -55,19 +73,19 @@ namespace MugCup_BlockBuilder
         }
         
 #if UNITY_EDITOR
-        public void TryUpdateData()
-        {
-            Name = gameObject.name;
-            
-            if (gameObject.TryGetComponent<MeshFilter>(out var _meshFilter))
-            {
-                MeshPrototype = _meshFilter.sharedMesh;
-            }
-
-            UpdateFaceBits();
-            
-            EditorUtility.SetDirty(this);
-        }
+        // public void TryUpdateData()
+        // {
+        //     Name = gameObject.name;
+        //     
+        //     if (gameObject.TryGetComponent<MeshFilter>(out var _meshFilter))
+        //     {
+        //         MeshPrototype = _meshFilter.sharedMesh;
+        //     }
+        //
+        //     UpdateFaceBits();
+        //     
+        //     EditorUtility.SetDirty(this);
+        // }
         
         public Module CreateModule()
         {

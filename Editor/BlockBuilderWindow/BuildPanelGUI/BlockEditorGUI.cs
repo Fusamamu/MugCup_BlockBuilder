@@ -159,6 +159,15 @@ namespace MugCup_BlockBuilder
                 BBEditorManager.InterfaceSetting.BuildToolTabSelection 
                     = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.BuildToolTabSelection, _buildingToolTabs, GUILayout.Height(30));
                 
+                EditorGUILayout.LabelField("Edit Block Type");
+                string[] _blockTypes = { "Grass", "Water", "Dirt", "Rock" };
+                BBEditorManager.InterfaceSetting.BlockTypeTabSelection 
+                    = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.BlockTypeTabSelection, _blockTypes, GUILayout.Height(30));
+                
+                string[] _blockTypeTabs = { "Change block type", "Remove block type" };
+                BBEditorManager.InterfaceSetting.EditBlockTypeToolTabSelection 
+                    = GUILayout.Toolbar(BBEditorManager.InterfaceSetting.EditBlockTypeToolTabSelection, _blockTypeTabs, GUILayout.Height(30));
+                
                 EditorGUILayout.LabelField("Edit Road Path Blocks");
                 string[] _pathBuildingToolTabs = { "Add Road Path", "Remove Road Path" };
                 BBEditorManager.InterfaceSetting.RoadBuildToolTabSelection 

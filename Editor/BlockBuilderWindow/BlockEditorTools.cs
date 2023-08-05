@@ -1,9 +1,11 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BlockBuilder.Core;
 using MugCup_BlockBuilder.Runtime;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace MugCup_BlockBuilder.Editor
 {
@@ -131,6 +133,60 @@ namespace MugCup_BlockBuilder.Editor
                                 }
                             }
                         }
+                    }
+                    break;
+            }
+        }
+
+        public static void UpdateMarchingCubeChangeBlockTypeMode(Event _event, Ray _ray)
+        {
+             switch (BBEditorManager.InterfaceSetting.EditBlockTypeToolTabSelection)
+            {
+                case 0: /*Change Block Type*/
+                    
+                    switch (_event.type)
+                    {
+                        case EventType.MouseDown:
+                            
+                            if (_event.button == 0)
+                            {
+                                if (Physics.Raycast(_ray.origin, _ray.direction, out RaycastHit _hit, Mathf.Infinity))
+                                {
+                                    if (_hit.collider.TryGetComponent<GridElement>(out var _gridElement))
+                                    {
+                                        var _blockTypeIndex = BBEditorManager.InterfaceSetting.BlockTypeTabSelection;
+
+                                        Char _selectedType = '\0';
+
+                                        if (_blockTypeIndex == 0)
+                                            _selectedType = '1';
+
+                                        if (_blockTypeIndex == 1)
+                                            _selectedType = '2';
+
+                                        Vector3 _targetPos = _hit.collider.transform.position;
+                                        var _pos  = new Vector3Int((int)_targetPos.x, (int)_targetPos.y, (int)_targetPos.z);
+
+                                        _gridElement.SetMetaType(_selectedType);
+                                        _gridElement.Enable();
+
+                                        // var _node = BBEditorManager.GridElementDataManager.GridElementData.GetNode(_pos);
+                                        // _node.Enable();
+                                    }
+                                }
+                            }
+                            break;
+                        
+                        case EventType.MouseMove:
+                            break;
+                    }
+                    break;
+                
+                case 1: /*Remove Block Type*/
+                    
+                    if (_event.type == EventType.MouseDown && _event.button == 0)
+                    {
+                        
                     }
                     break;
             }

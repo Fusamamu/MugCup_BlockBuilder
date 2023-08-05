@@ -133,6 +133,12 @@ namespace MugCup_BlockBuilder
                     UpdateVisualizePointer(_hit, Visualizer.PointerType.BLOCK_V1);
                     BlockEditorTools.UpdateBlockBuildTools(_currentEvent, _ray);
                     break;
+                
+                // case InterfaceSetting.EditMode.CHANGE_BLOCK_TYPE:
+                //                     
+                //     UpdateVisualizePointer(_hit, Visualizer.PointerType.BLOCK_V1);
+                //     //PathEditorTools.UpdateRoadBuildTools(_currentEvent, _ray);
+                //     break;
                                 
                 case InterfaceSetting.EditMode.EDIT_ROADS:
                                     
@@ -167,6 +173,12 @@ namespace MugCup_BlockBuilder
                                     
                     UpdateVisualizePointer(_hit, Visualizer.PointerType.BLOCK_V2);
                     BlockEditorTools.UpdateMarchingCubeEditMode(_currentEvent, _ray);
+                    break;
+                
+                case InterfaceSetting.EditMode.CHANGE_BLOCK_TYPE:
+                                    
+                    UpdateVisualizePointer(_hit, Visualizer.PointerType.BLOCK_V1);
+                    BlockEditorTools.UpdateMarchingCubeChangeBlockTypeMode(_currentEvent, _ray);
                     break;
                                 
                 case InterfaceSetting.EditMode.EDIT_ROADS:

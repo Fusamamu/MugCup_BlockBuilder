@@ -54,6 +54,12 @@ namespace MugCup_BlockBuilder
 		
 		public void SetShowGizmos(bool _value) { ShowGizmos = _value; }
 		public void SetShowPivot (bool _value) { ShowPivot  = _value; }
+
+		public GridElement SetMetaType(char _type)
+		{
+			MetaType = _type;
+			return this;
+		}
         
 		public void SetVolumePoints(VolumePoint[] _volumePoints)
 		{

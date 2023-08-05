@@ -14,13 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GridOffset: 0
   MapSizeArray: 000000000000000000000000
-  GridUnitSizeArray: 000000000000000000000000
   Row: 1
   Column: 1
   Height: 1
-  UnitRow: 8
-  UnitColumn: 8
-  UnitHeight: 8
+  UnitRow: 16
+  UnitColumn: 16
+  UnitHeight: 7
   BlockWidth: 1
   BlockHeight: 1
   BlockDepth: 1

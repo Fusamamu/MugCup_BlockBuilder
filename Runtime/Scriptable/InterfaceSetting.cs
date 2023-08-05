@@ -27,7 +27,8 @@ namespace BlockBuilder.Scriptable
             NONE,
             BLOCK_PLACEMENT, 
             EDIT_BLOCKS, 
-            EDIT_ROADS
+            EDIT_ROADS,
+            CHANGE_BLOCK_TYPE
         }
 
         [SerializeField] public BuildType SelectedBuildType = BuildType.MARCHING_CUBE;
@@ -38,6 +39,9 @@ namespace BlockBuilder.Scriptable
         [SerializeField] public int BlockPlacementToolTabSelection = -1;
         [SerializeField] public int BuildToolTabSelection          = -1;
         [SerializeField] public int RoadBuildToolTabSelection      = -1;
+        [SerializeField] public int EditBlockTypeToolTabSelection  = -1;
+
+        [SerializeField] public int BlockTypeTabSelection = -1;
 
         [SerializeField] public bool MapSettingFoldout = false;
 

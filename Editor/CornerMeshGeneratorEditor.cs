@@ -20,6 +20,8 @@ namespace MugCup_BlockBuilder.Editor
         private const string TargetFolder = "Packages/com.mugcupp.mugcup-blockbuilder/Package Resources/Meshes/Corner Meshes/Data";
         private const string NewCornerMeshDataFolder = "NewCornerMeshData";
 
+        private bool displayDebug;
+        
         [SerializeField] public int testBit;
 
         private void OnEnable()
@@ -30,24 +32,20 @@ namespace MugCup_BlockBuilder.Editor
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
+
+            EditorGUILayout.BeginVertical("GroupBox");
             
-            if (GUILayout.Button("Generate Corner Meshes"))
-            {
+            EditorGUILayout.LabelField("Corner mesh generator");
+            
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Generate"))
                 cornerMeshGenerator.GenerateCornerMeshes();
-            }
             
-            if (GUILayout.Button("Clear All Corner Meshes"))
-            {
+            if (GUILayout.Button("Clear All"))
                 cornerMeshGenerator.ClearGeneratedMeshes();
-            }
+            EditorGUILayout.EndHorizontal();
             
-            // if (GUILayout.Button("Update Prototypes Data"))
-            // {
-            //     cornerMeshGenerator.UpdatePrototypesData();
-            // }
-            
-            EditorGUILayout.Space(10);
-            if (GUILayout.Button("Create New Corner Mesh Data"))
+            if (GUILayout.Button("Create and save corner mesh module data"))
             {
                 var _targetPath = $"{TargetFolder}/{NewCornerMeshDataFolder}";
                 
@@ -76,42 +74,7 @@ namespace MugCup_BlockBuilder.Editor
                 
                 AssetDatabase.Refresh();
             }
-            EditorGUILayout.Space(10);
-
-            // if (GUILayout.Button("Add Prototype Data into CornerMeshData"))
-            // {
-            //     cornerMeshGenerator.AddPrototypeDataIntoCornerMeshData();
-            // }
-
-            if (GUILayout.Button("Print All Possible Bit Permutation"))
-            {
-                var _allBits = CornerMeshPermutation.GetBitMaskPermutation(256);
-
-                var _text = string.Empty;
-                foreach (var _bit in _allBits)
-                {
-                    _text += $"0b_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}\n";
-                }
-
-                _text += "\n";
-                foreach (var _bit in _allBits)
-                {
-                    _text += $"B_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}\n";
-                }
-                
-                _text += "\n";
-                foreach (var _bit in _allBits)
-                {
-                    _text += $"P_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}\n";
-                }
-
-                if (!Directory.Exists(Application.dataPath + "/GeneratedText"))
-                {
-                    Directory.CreateDirectory(Application.dataPath + "/GeneratedText");
-                }
-                    
-                File.WriteAllText(Application.dataPath + "/GeneratedText/AllBitPermutation.txt", _text);
-            }
+            EditorGUILayout.EndVertical();
 
             EditorGUI.BeginChangeCheck();
             
@@ -125,14 +88,48 @@ namespace MugCup_BlockBuilder.Editor
                 cornerMeshGenerator.SetShowDebugText  (showDebugText);
                 cornerMeshGenerator.SetShowBitInBinary(showBitInBinary);
             }
-
-            testBit = EditorGUILayout.IntField("Test Bit", testBit);
-
-            if (GUILayout.Button("Mirror Bit"))
+            
+            displayDebug = EditorGUILayout.Foldout(displayDebug, "Debug");
+            if (displayDebug)
             {
-                testBit = BitUtil.MirrorBitXAis(testBit);
+                testBit = EditorGUILayout.IntField("Test Bit", testBit);
+
+                if (GUILayout.Button("Mirror Bit"))
+                {
+                    testBit = BitUtil.MirrorBitXAis(testBit);
                 
-                Debug.Log($"{Convert.ToString(testBit, 2).PadLeft(8, '0').Insert(4, "_")}");
+                    Debug.Log($"{Convert.ToString(testBit, 2).PadLeft(8, '0').Insert(4, "_")}");
+                }
+                
+                if (GUILayout.Button("Print All Possible Bit Permutation"))
+                {
+                    var _allBits = CornerMeshPermutation.GetBitMaskPermutation(256);
+
+                    var _text = string.Empty;
+                    foreach (var _bit in _allBits)
+                    {
+                        _text += $"0b_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}\n";
+                    }
+
+                    _text += "\n";
+                    foreach (var _bit in _allBits)
+                    {
+                        _text += $"B_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}\n";
+                    }
+                
+                    _text += "\n";
+                    foreach (var _bit in _allBits)
+                    {
+                        _text += $"P_{Convert.ToString(_bit, 2).PadLeft(8, '0').Insert(4, "_")}\n";
+                    }
+
+                    if (!Directory.Exists(Application.dataPath + "/GeneratedText"))
+                    {
+                        Directory.CreateDirectory(Application.dataPath + "/GeneratedText");
+                    }
+                    
+                    File.WriteAllText(Application.dataPath + "/GeneratedText/AllBitPermutation.txt", _text);
+                }
             }
         }
     }

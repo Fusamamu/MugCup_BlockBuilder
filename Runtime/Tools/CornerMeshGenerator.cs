@@ -173,7 +173,11 @@ namespace MugCup_BlockBuilder.Runtime
             var _modulePrototype = _gameObject.AddComponent<ModulePrototype>();
         
             _meshFilter.sharedMesh = _mesh;
-            _renderer  .material   = DefaultMaterial;
+
+            var _materials = new Material[_mesh.subMeshCount];
+            for (var _i = 0; _i < _materials.Length; _i++)
+                _materials[_i] = DefaultMaterial;
+            _renderer.materials = _materials;
             
             _volumePoint    .SetBitMask(_bitMask);
             _modulePrototype
@@ -323,13 +327,23 @@ namespace MugCup_BlockBuilder.Runtime
         {
             var _newMesh = new Mesh
             {
-                vertices  = _mesh.vertices,
-                triangles = _mesh.triangles,
-                normals   = _mesh.normals,
-                tangents  = _mesh.tangents,
-                bounds    = _mesh.bounds,
-                uv        = _mesh.uv
+                vertices     = _mesh.vertices,
+                triangles    = _mesh.triangles,
+                normals      = _mesh.normals,
+                tangents     = _mesh.tangents,
+                bounds       = _mesh.bounds,
+                uv           = _mesh.uv,
+                subMeshCount = _mesh.subMeshCount
             };
+
+            if (_mesh.subMeshCount > 1)
+            {
+                for (var _i = 0; _i < _mesh.subMeshCount; _i++)
+                {
+                    int[] _triangles = _mesh.GetTriangles(_i);
+                    _newMesh.SetTriangles(_triangles, _i);
+                }
+            }
 
             return _newMesh;
         }

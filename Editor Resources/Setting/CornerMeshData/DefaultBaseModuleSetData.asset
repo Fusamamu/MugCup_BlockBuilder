@@ -62,6 +62,15 @@ MonoBehaviour:
         type: 3}
       HasRotateVariant: 1
       HasFlipXVariant: 0
+    - Name: M_2222_0000
+      BitMask: 240
+      ModuleID: 0
+      MetaData: 22220000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: f6738392d4f6b44158b1f9a23a303aa3,
+        type: 3}
+      HasRotateVariant: 0
+      HasFlipXVariant: 0
   - BitMaskGroup: 00000001
     HasRotateVariant: 1
     HasFlipXVariant: 0
@@ -188,7 +197,7 @@ MonoBehaviour:
       MeshFilterPrototype: {fileID: -5754084199372789682, guid: 867bb4d73a5bc40a2a18f1b9b43bb766,
         type: 3}
       HasRotateVariant: 1
-      HasFlipXVariant: 0
+      HasFlipXVariant: 1
     - Name: M_0022_0000
       BitMask: 48
       ModuleID: 0
@@ -248,6 +257,24 @@ MonoBehaviour:
       MetaData: 02220000
       Prefab: {fileID: 0}
       MeshFilterPrototype: {fileID: -5754084199372789682, guid: 96d486fdf642c4647a85688589ceb790,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+    - Name: M_0121_0000
+      BitMask: 112
+      ModuleID: 0
+      MetaData: 01210000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: a579bf98298eb4772a3395fdfaefdab2,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+    - Name: M_0212_0000
+      BitMask: 112
+      ModuleID: 0
+      MetaData: 02120000
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 069d4b464faf84c179393c35e98aa391,
         type: 3}
       HasRotateVariant: 1
       HasFlipXVariant: 0
@@ -338,6 +365,24 @@ MonoBehaviour:
         type: 3}
       HasRotateVariant: 1
       HasFlipXVariant: 0
+    - Name: M_1121_0001
+      BitMask: 241
+      ModuleID: 0
+      MetaData: 11210001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: c5da590bee4a0469890aa6644070b379,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 1
+    - Name: M_1221_0001
+      BitMask: 241
+      ModuleID: 0
+      MetaData: 12210001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 65286d8653ef84ed7a07e437bf5de2b3,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 1
   - BitMaskGroup: 00111111
     HasRotateVariant: 1
     HasFlipXVariant: 0

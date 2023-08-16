@@ -374,6 +374,15 @@ MonoBehaviour:
         type: 3}
       HasRotateVariant: 1
       HasFlipXVariant: 1
+    - Name: M_1211_0001
+      BitMask: 241
+      ModuleID: 0
+      MetaData: 12110001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: e00a3e0bdff4541b49eeccfbccedb573,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
     - Name: M_1221_0001
       BitMask: 241
       ModuleID: 0
@@ -383,6 +392,24 @@ MonoBehaviour:
         type: 3}
       HasRotateVariant: 1
       HasFlipXVariant: 1
+    - Name: M_2121_0001
+      BitMask: 241
+      ModuleID: 0
+      MetaData: 21210001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: bd84446e1818b40afb63e23a817b9ee8,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+    - Name: M_2221_0001
+      BitMask: 241
+      ModuleID: 0
+      MetaData: 22210001
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 72e232d39403b49c9a09f38c638d9db2,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
   - BitMaskGroup: 00111111
     HasRotateVariant: 1
     HasFlipXVariant: 0
@@ -405,6 +432,24 @@ MonoBehaviour:
       MetaData: 11110011
       Prefab: {fileID: 0}
       MeshFilterPrototype: {fileID: -5754084199372789682, guid: 46e34397d9dcf4d8aa1ea9d40ba72f30,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 0
+    - Name: M_1211_0011
+      BitMask: 243
+      ModuleID: 0
+      MetaData: 12110011
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 5c5bc9cca63cf4412aa2e82b2be10b6c,
+        type: 3}
+      HasRotateVariant: 1
+      HasFlipXVariant: 1
+    - Name: M_2211_0011
+      BitMask: 243
+      ModuleID: 0
+      MetaData: 22110011
+      Prefab: {fileID: 0}
+      MeshFilterPrototype: {fileID: -5754084199372789682, guid: 4727f62b2492a484a9e4e3cad2088428,
         type: 3}
       HasRotateVariant: 1
       HasFlipXVariant: 0

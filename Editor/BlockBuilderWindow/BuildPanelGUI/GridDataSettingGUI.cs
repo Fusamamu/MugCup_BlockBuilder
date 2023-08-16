@@ -84,7 +84,20 @@ namespace MugCup_BlockBuilder
                 BBEditorManager.MapTextureDataSettingSo.NoiseRedistribution = EditorGUILayout.FloatField("Noise Redistribution", BBEditorManager.MapTextureDataSettingSo.NoiseRedistribution);
                 BBEditorManager.MapTextureDataSettingSo.NoiseSeed           = EditorGUILayout.IntField  ("Noise Seed"          , BBEditorManager.MapTextureDataSettingSo.NoiseSeed          );
 
-                if (GUILayout.Button("Generate Texture"))
+                if (GUILayout.Button("Generate Noise Texture by Levels"))
+                {
+	                BBEditorManager.MapTextureDataSettingSo.GeneratedTexture = TextureGenerator.GeneratePerlinNoiseTextureByLevels
+	                (
+		                BBEditorManager.MapTextureDataSettingSo.TextureWidth, 
+		                BBEditorManager.MapTextureDataSettingSo.TextureHeight, 
+		                BBEditorManager.MapTextureDataSettingSo.NoiseScale,
+		                BBEditorManager.MapTextureDataSettingSo.NoiseFrequency,
+		                BBEditorManager.MapTextureDataSettingSo.NoiseRedistribution,
+		                BBEditorManager.MapTextureDataSettingSo.TerrainLevel
+	                );
+                }
+                
+                if (GUILayout.Button("Generate Perlin Noise Texture"))
                 {
 	                BBEditorManager.MapTextureDataSettingSo.GeneratedTexture = TextureGenerator.GeneratePerlinNoiseTexture
 	                (
@@ -92,9 +105,16 @@ namespace MugCup_BlockBuilder
 		                BBEditorManager.MapTextureDataSettingSo.TextureHeight, 
 		                BBEditorManager.MapTextureDataSettingSo.NoiseScale,
 		                BBEditorManager.MapTextureDataSettingSo.NoiseFrequency,
-		                BBEditorManager.MapTextureDataSettingSo.NoiseRedistribution,
-		                BBEditorManager.MapTextureDataSettingSo.TerrainLevel,
-		                BBEditorManager.MapTextureDataSettingSo.NoiseSeed
+		                BBEditorManager.MapTextureDataSettingSo.NoiseRedistribution
+	                );
+                }
+                
+                if (GUILayout.Button("Generate Falloff Texture"))
+                {
+	                BBEditorManager.MapTextureDataSettingSo.GeneratedTexture = TextureGenerator.GenerateFalloffTexture
+	                (
+		                BBEditorManager.MapTextureDataSettingSo.TextureWidth, 
+		                BBEditorManager.MapTextureDataSettingSo.TextureHeight
 	                );
                 }
 

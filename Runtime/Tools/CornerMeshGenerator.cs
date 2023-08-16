@@ -88,7 +88,7 @@ namespace MugCup_BlockBuilder.Runtime
                     {
                         var _needFlip = _isFlip && _index == 1;
                         
-                        var _bitMask  = _needFlip ? BitUtil   .MirrorBitXAis (_baseModule.BitMask ) : _baseModule.BitMask ;
+                        var _bitMask  = _needFlip ? BitUtil     .MirrorBitXAis (_baseModule.BitMask ) : _baseModule.BitMask ;
                         var _metaData = _needFlip ? MetaDataUtil.MirrorMetaData(_baseModule.MetaData) : _baseModule.MetaData;
                         
                         var _meshName   = MetaDataUtil.GetMetaDataName(_metaData);
@@ -315,9 +315,21 @@ namespace MugCup_BlockBuilder.Runtime
             
             _mesh.vertices = _vertices;
             
-            var _triangles = _mesh.triangles;
-            Array.Reverse(_triangles);
-            _mesh.triangles = _triangles;
+            if (_mesh.subMeshCount > 1)
+            {
+                for (var _i = 0; _i < _mesh.subMeshCount; _i++)
+                {
+                    var _triangles = _mesh.GetTriangles(_i);
+                    Array.Reverse(_triangles);
+                    _mesh.SetTriangles(_triangles, _i);
+                }
+            }
+            else
+            {
+                var _triangles = _mesh.triangles;
+                Array.Reverse(_triangles);
+                _mesh.triangles = _triangles;
+            }
 
             _mesh.RecalculateNormals();
             _mesh.RecalculateBounds();
